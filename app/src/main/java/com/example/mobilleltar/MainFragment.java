@@ -88,7 +88,6 @@ public class MainFragment extends Fragment {
         }
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler);
-        //gridLayoutManager = new GridLayoutManager(view.getContext(),1, LinearLayoutManager.VERTICAL,false);
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setHasFixedSize(true);
         adapter = new ItemAdapter(myItems);
@@ -98,7 +97,7 @@ public class MainFragment extends Fragment {
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
             }
         });
 

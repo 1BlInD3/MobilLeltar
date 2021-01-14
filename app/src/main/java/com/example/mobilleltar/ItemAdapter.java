@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,11 @@ import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
-
-   private static int position;
-
     private ArrayList<Item> mList;
-
+    private static int pos = -1;
+    private static int lastPosition = -1;
+    private static int counter = 0;
+    private static SparseBooleanArray selectedItems = new SparseBooleanArray();
     public interface OnItemClick
     {
         void onItemClick(int position);
@@ -46,7 +47,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         private TextView textView5;
 
 
-        public ItemViewHolder(View itemView, final OnItemClick listener) {
+        public ItemViewHolder(final View itemView, final OnItemClick listener) {
             super(itemView);
 
             textView = (TextView)itemView.findViewById(R.id.text);
@@ -54,27 +55,52 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             textView3 = (TextView)itemView.findViewById(R.id.text3);
             textView4 = (TextView)itemView.findViewById(R.id.text4);
             textView5 = (TextView)itemView.findViewById(R.id.text6);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(listener != null)
                     {
-                         position = getAdapterPosition();
-                         if(position != RecyclerView.NO_POSITION)
-                        {
-                            listener.onItemClick(position);
+                        pos = getAdapterPosition();
+                            if(counter == 0)
+                            {
+                            Log.d("IFELSE","IF");
+                            if (pos != RecyclerView.NO_POSITION) {
+                                listener.onItemClick(pos);
+                                if (selectedItems.get(getAdapterPosition(), false)) {
+                                    selectedItems.delete(getAdapterPosition());
+                                    itemView.setSelected(false);
 
-                        }
+                                } else {
+                                    selectedItems.put(getAdapterPosition(), true);
+                                    itemView.setSelected(true);
+                                    lastPosition = pos;
+                                }
+                            }
+                                counter = 1;
+                            }else if(counter == 1 && pos == lastPosition)
+                            {
+                                Log.d("IFELSE", "ELSE");
+                                counter = 0;
+                                //listener.onItemClick(pos);
+                                if (selectedItems.get(lastPosition, false)) {
+                                    selectedItems.delete(pos);
+                                    itemView.setSelected(false);
+
+                                } else {
+                                    selectedItems.put(lastPosition, true);
+                                    itemView.setSelected(true);
+                                    //lastPosition = pos;
+                                }
+                            }
                     }
+
                 }
             });
 
         }
 
     }
-
-
+    
 
     @NonNull
     @Override
@@ -103,12 +129,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.textView3.setText(currentItem.getmRajzszam());
         holder.textView4.setText(currentItem.getmValami());
         holder.textView5.setText(String.valueOf(currentItem.getmCount()));
-        
+        if(lastPosition == position)
+        {
+            selectedItems.get(position,true);
+            holder.itemView.setSelected(true);
+        }else
+        {
+            selectedItems.get(position,false);
+            holder.itemView.setSelected(false);
+        }
     }
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
+
 
 }
