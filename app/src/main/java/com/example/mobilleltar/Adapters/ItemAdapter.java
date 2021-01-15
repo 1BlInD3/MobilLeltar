@@ -76,6 +76,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                 counter = 1;
                             }else if(counter == 1 && pos == lastPosition)
                             {
+                                listener.onItemClick(pos);
                                 Log.d("IFELSE", "ELSE");
                                 counter = 0;
                                 //listener.onItemClick(pos);
@@ -134,6 +135,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         {
             selectedItems.get(position,false);
             holder.itemView.setSelected(false);
+            //lastPosition = -1;
         }
     }
 

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
@@ -48,7 +49,10 @@ public class MainFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabChange tabChange;
-    //private TabChange loadFor;
+    private Button editBtn;
+    private String a,b,c,d;
+    private int lastPos = -1;
+    private int count = 0;
 
     public MainFragment() {
         // Required empty public constructor
@@ -93,15 +97,14 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final MainActivity mainActivity = (MainActivity)getActivity();
+        editBtn = (Button)view.findViewById(R.id.editButton);
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.viewpager);
         FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.frameLayout2);
         View child = getLayoutInflater().inflate(R.layout.header_proba,null);
         frameLayout.addView(child);
 
-       myItems = new ArrayList<>();
-
-        //myItems.add(new Item("    ERTEK    ","DÁTUM","CUCC"));
+        myItems = new ArrayList<>();
 
         for(int i = 0; i < 45; i++)
         {
@@ -114,35 +117,50 @@ public class MainFragment extends Fragment {
         adapter = new ItemAdapter(myItems);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        editBtn.setEnabled(false);
 
-
-
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tabChange.tabChangeListener(0);
+                tabChange.loadForChange(a,b,c,d);
+                editBtn.setEnabled(false);
+            }
+        });
 
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
-                tabChange.tabChangeListener(0);
-                tabChange.loadForChange(myItems.get(position).getmRajzszam(),myItems.get(position).getmDatum(),myItems.get(position).getmValami(),String.valueOf(myItems.get(position).getmCount()));
+                if(count == 0)
+                {
+                editBtn.setEnabled(true);
+                a = myItems.get(position).getmRajzszam();
+                b = myItems.get(position).getmDatum();
+                c = myItems.get(position).getmValami();
+                d = String.valueOf(myItems.get(position).getmCount());
+                lastPos = position;
+                count = 1;
+                }
+                else if(lastPos == position)
+                {
+                    editBtn.setEnabled(false);
+                    count = 0;
+                    lastPos = -1;
+                }
             }
         });
 
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof TabChange)
-        {
+        if (context instanceof TabChange) {
             tabChange = (TabChange) context;
+        } else {
+            throw new RuntimeException(context.toString() + "must implement tabchange");
         }
-        else
-            {
-                throw  new RuntimeException(context.toString()+"must implement tabchange");
-            }
-
     }
 
     @Override
