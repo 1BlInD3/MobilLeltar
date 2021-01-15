@@ -34,4 +34,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void tabChangeListener(int index) {
         tabbedFragment.updateTabView(index);
     }
+
+    @Override
+    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg) {
+        tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg);
+    }
 }

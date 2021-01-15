@@ -48,6 +48,7 @@ public class MainFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabChange tabChange;
+    //private TabChange loadFor;
 
     public MainFragment() {
         // Required empty public constructor
@@ -83,6 +84,7 @@ public class MainFragment extends Fragment {
     public interface TabChange
     {
         void tabChangeListener (int index);
+        void loadForChange (String cikkszam,String megnevezes1, String megnevezes2, String mennyiseg);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class MainFragment extends Fragment {
             public void onItemClick(int position) {
                 Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
                 tabChange.tabChangeListener(0);
+                tabChange.loadForChange(myItems.get(position).getmRajzszam(),myItems.get(position).getmDatum(),myItems.get(position).getmValami(),String.valueOf(myItems.get(position).getmCount()));
             }
         });
 
@@ -139,6 +142,7 @@ public class MainFragment extends Fragment {
             {
                 throw  new RuntimeException(context.toString()+"must implement tabchange");
             }
+
     }
 
     @Override

@@ -7,6 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
 import com.example.mobilleltar.R;
@@ -21,7 +24,10 @@ public class TabbedFragment extends Fragment{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
+    private TextView cikkszam;
+    private TextView megnevezes;
+    private TextView megnevezes2;
+    private EditText mennyiseg;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,6 +76,11 @@ public class TabbedFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
 
+      /*  cikkszam = (TextView)view.findViewById(R.id.cikkszamTxt);
+        megnevezes = (TextView)view.findViewById(R.id.cikkszamNameText);
+        mennyiseg = (EditText)view.findViewById(R.id.mennyisegText);
+        megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);*/
+
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
@@ -84,5 +95,19 @@ public class TabbedFragment extends Fragment{
     {
         TabLayout.Tab tab = tabLayout.getTabAt(a);
         tab.select();
+    }
+    public void setDataForChange(String a,String b, String c, String d)
+    {
+        cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamTxt);
+        megnevezes = (TextView)getActivity().findViewById(R.id.cikkszamNameText);
+        mennyiseg = (EditText)getActivity().findViewById(R.id.mennyisegText);
+        megnevezes2 = (TextView)getActivity().findViewById(R.id.megjegyzesText);
+
+
+        cikkszam.setText(a);
+        megnevezes.setText(b);
+        mennyiseg.setText(c);
+        megnevezes2.setText(d);
+        //Toast.makeText(getContext(),a+b+c+d,Toast.LENGTH_SHORT).show();
     }
 }
