@@ -1,19 +1,16 @@
-package com.example.mobilleltar;
+package com.example.mobilleltar.Adapters;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.mobilleltar.DataItems.Item;
+import com.example.mobilleltar.R;
 
 import java.util.ArrayList;
 
@@ -100,7 +97,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         }
 
     }
-    
+
 
     @NonNull
     @Override

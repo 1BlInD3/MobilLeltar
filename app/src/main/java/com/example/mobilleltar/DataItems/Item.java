@@ -1,4 +1,4 @@
-package com.example.mobilleltar;
+package com.example.mobilleltar.DataItems;
 
 public class Item
 {

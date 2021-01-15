@@ -1,16 +1,25 @@
-package com.example.mobilleltar;
+package com.example.mobilleltar.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
 import android.widget.Toast;
+
+import com.example.mobilleltar.Adapters.ItemAdapter;
+import com.example.mobilleltar.Adapters.ViewPagerAdapter;
+import com.example.mobilleltar.DataItems.Item;
+import com.example.mobilleltar.MainActivity;
+import com.example.mobilleltar.R;
 
 import java.util.ArrayList;
 
@@ -36,6 +45,9 @@ public class MainFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private ItemAdapter adapter;
     private  ArrayList<Item> myItems;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabChange tabChange;
 
     public MainFragment() {
         // Required empty public constructor
@@ -68,12 +80,19 @@ public class MainFragment extends Fragment {
         }
     }
 
+    public interface TabChange
+    {
+        void tabChangeListener (int index);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final MainActivity mainActivity = (MainActivity)getActivity();
+        tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
+        viewPager = (ViewPager)view.findViewById(R.id.viewpager);
         FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.frameLayout2);
         View child = getLayoutInflater().inflate(R.layout.header_proba,null);
         frameLayout.addView(child);
@@ -94,14 +113,37 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+
+
+
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-              //  Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), String.valueOf(myItems.get(position).getmCount()), Toast.LENGTH_SHORT).show();
+                tabChange.tabChangeListener(0);
             }
         });
 
         return view;
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof TabChange)
+        {
+            tabChange = (TabChange) context;
+        }
+        else
+            {
+                throw  new RuntimeException(context.toString()+"must implement tabchange");
+            }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        tabChange = null;
+    }
 }
