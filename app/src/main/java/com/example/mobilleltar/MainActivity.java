@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.example.mobilleltar.Fragments.LoginFragment;
 import com.example.mobilleltar.Fragments.MainFragment;
@@ -13,7 +15,7 @@ import com.example.mobilleltar.Fragments.TabbedFragment;
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange {
 
     private TabbedFragment tabbedFragment;
-
+    private long backPressedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void LoadTabbedFragment()
     {
         tabbedFragment = new TabbedFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
     }
 
     public void LoadMenuFragment()
@@ -55,5 +57,19 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg) {
         tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg);
     }
+
+  /* @Override
+    public void onBackPressed() {
+
+        backPressedTime = System.currentTimeMillis();
+
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentByTag("TabbedFrag");
+        if(fragment!=null)
+        {
+            MenuFragment menuFragment = new MenuFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
+        }
+    }*/
 
 }

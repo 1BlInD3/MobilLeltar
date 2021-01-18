@@ -1,5 +1,7 @@
 package com.example.mobilleltar.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -71,11 +73,35 @@ public class MenuFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
         leltarBtn = (Button) view.findViewById(R.id.leltarButton);
+        kilepBtn = (Button)view.findViewById(R.id.kilepButton);
 
         leltarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.LoadTabbedFragment();
+            }
+        });
+
+        kilepBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Figyelem!").setMessage("Biztos ki akarsz lépni?")
+                        .setNegativeButton("Igen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().finish();
+                                System.exit(0);
+                            }
+                        })
+                        .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                builder.create();
+                builder.show();
             }
         });
 

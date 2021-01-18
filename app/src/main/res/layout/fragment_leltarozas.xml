@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.LeltarozasFragment"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    tools:context=".Fragments.LeltarozasFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -123,6 +123,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <Button
+        android:id="@+id/rakhelyButton"
+        android:layout_width="121dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginBottom="72dp"
+        android:text="Új rakhely"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/megjegyzesText" />
+
+    <Button
+        android:id="@+id/kilepButton"
+        android:layout_width="110dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="188dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginBottom="72dp"
+        android:text="Kilépés"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/megjegyzesText" />
 
 
 </android.support.constraint.ConstraintLayout>

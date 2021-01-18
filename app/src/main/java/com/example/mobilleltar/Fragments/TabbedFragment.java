@@ -3,6 +3,7 @@ package com.example.mobilleltar.Fragments;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,17 +76,17 @@ public class TabbedFragment extends Fragment{
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
-
         cikkszam = (TextView)view.findViewById(R.id.cikkszamTxt);
         megnevezes = (TextView)view.findViewById(R.id.cikkszamNameText);
         mennyiseg = (EditText)view.findViewById(R.id.mennyisegText);
         megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
 
        // cikkszam.isFocusable();
-
+        FragmentManager manager = getChildFragmentManager();
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
+        tabLayout.bringToFront();
         viewPager = (ViewPager)view.findViewById(R.id.viewpager);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(manager);
         adapter.AddFragment(new LeltarozasFragment(),"Leltározás");
         adapter.AddFragment(new MainFragment(),"Felvitt tételek");
         viewPager.setAdapter(adapter);
