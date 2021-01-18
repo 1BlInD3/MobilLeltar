@@ -66,6 +66,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                 if (selectedItems.get(getAdapterPosition(), false)) {
                                     selectedItems.delete(getAdapterPosition());
                                     itemView.setSelected(false);
+                                    lastPosition = -1;
 
                                 } else {
                                     selectedItems.put(getAdapterPosition(), true);
@@ -83,6 +84,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                 if (selectedItems.get(lastPosition, false)) {
                                     selectedItems.delete(pos);
                                     itemView.setSelected(false);
+                                    lastPosition = -1;
 
                                 } else {
                                     selectedItems.put(lastPosition, true);
@@ -98,7 +100,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         }
 
     }
-
 
     @NonNull
     @Override
@@ -131,10 +132,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         {
             selectedItems.get(position,true);
             holder.itemView.setSelected(true);
+           // selectedItems.delete(position);
+
         }else
         {
             selectedItems.get(position,false);
             holder.itemView.setSelected(false);
+            //selectedItems.delete(position);
             //lastPosition = -1;
         }
     }
