@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
 import com.example.mobilleltar.Fragments.LoginFragment;
 import com.example.mobilleltar.Fragments.MainFragment;
 import com.example.mobilleltar.Fragments.MenuFragment;
@@ -46,6 +47,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         MenuFragment menuFragment = new MenuFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
+    }
+
+    public void LoadMenuFragment2()
+    {
+        MenuFragment menuFragment = new MenuFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,menuFragment).commit();
+    }
+
+    public void LoadCikklekerdezesFragment()
+    {
+        CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
     }
 
     @Override

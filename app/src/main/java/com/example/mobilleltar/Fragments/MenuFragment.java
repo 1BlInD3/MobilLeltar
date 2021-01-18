@@ -74,6 +74,14 @@ public class MenuFragment extends Fragment {
 
         leltarBtn = (Button) view.findViewById(R.id.leltarButton);
         kilepBtn = (Button)view.findViewById(R.id.kilepButton);
+        lekerdezesBtn = (Button)view.findViewById(R.id.lekerdezesButton);
+
+        lekerdezesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.LoadCikklekerdezesFragment();
+            }
+        });
 
         leltarBtn.setOnClickListener(new View.OnClickListener() {
             @Override

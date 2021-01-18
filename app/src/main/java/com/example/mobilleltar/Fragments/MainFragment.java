@@ -99,6 +99,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d("VALTOZAS","ONCREATEVIEW");
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final MainActivity mainActivity = (MainActivity) getActivity();
         editBtn = (Button) view.findViewById(R.id.editButton);
@@ -127,9 +128,10 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 tabChange.tabChangeListener(0);
                 tabChange.loadForChange(a, b, c, d);
-                editBtn.setEnabled(false);
+               // editBtn.setEnabled(false);
                  //Refresh2();
-                //recyclerView.findViewHolderForAdapterPosition(lastPos).itemView.setSelected(false);
+               // recyclerView.findViewHolderForAdapterPosition(lastPos+5).itemView.findViewById(R.id.frag_container).performClick();
+               // adapter.notifyDataSetChanged();
                 /* lastPos = -1;*/
                 //count = 0;
             }
@@ -138,6 +140,7 @@ public class MainFragment extends Fragment {
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClick() {
             @Override
             public void onItemClick(int position) {
+                adapter.notifyDataSetChanged();
                 if (count == 0) {
                     editBtn.setEnabled(true);
                     a = myItems.get(position).getmRajzszam();
@@ -145,7 +148,7 @@ public class MainFragment extends Fragment {
                     c = myItems.get(position).getmValami();
                     d = String.valueOf(myItems.get(position).getmCount());
                     lastPos = position;
-                    count = 1;
+                   // count = 1;
                 } else if (lastPos == position) {
                     editBtn.setEnabled(false);
                     count = 0;

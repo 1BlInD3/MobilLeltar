@@ -58,25 +58,28 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                     if(listener != null)
                     {
                         pos = getAdapterPosition();
-                            if(counter == 0)
-                            {
+                           // if(counter == 0)
+                         //   {
                             Log.d("IFELSE","IF");
                             if (pos != RecyclerView.NO_POSITION) {
                                 listener.onItemClick(pos);
                                 if (selectedItems.get(getAdapterPosition(), false)) {
                                     selectedItems.delete(getAdapterPosition());
                                     itemView.setSelected(false);
+                                   // itemView.notifyAll();
                                     lastPosition = -1;
 
                                 } else {
                                     selectedItems.put(getAdapterPosition(), true);
                                     itemView.setSelected(true);
+                                    selectedItems.delete(getAdapterPosition());
+                                 //   itemView.notifyAll();
                                     lastPosition = pos;
                                 }
                             }
-                                counter = 1;
-                            }else if(counter == 1 && pos == lastPosition)
-                            {
+                               // counter = 1;
+                          //  }else if(counter == 1 && pos == lastPosition)
+                          /* {
                                 listener.onItemClick(pos);
                                 Log.d("IFELSE", "ELSE");
                                 counter = 0;
@@ -90,8 +93,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                     selectedItems.put(lastPosition, true);
                                     itemView.setSelected(true);
                                     //lastPosition = pos;
-                                }
-                            }
+                                }*/
+                           // }
                     }
 
                 }
