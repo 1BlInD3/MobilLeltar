@@ -9,7 +9,7 @@ public class PolcItems
     private String mIntRem;
     private String mAllapot;
 
-    public PolcItems (Double mennyiseg,String mertekegyseg, String megnevezes1, String megnevezes2, String intRem, String allapot)
+    public PolcItems (Double mennyiseg, String mertekegyseg, String megnevezes1, String megnevezes2, String intRem, String allapot)
     {
         mMennyiseg = mennyiseg;
         mEgyseg = mertekegyseg;
