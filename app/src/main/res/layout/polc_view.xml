@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_selector">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="1dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/background_selector">
+
+            <TextView
+                android:id="@+id/mennyisegText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:text="ELSO SOR" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="1dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/unitText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:text="ELSO SOR" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="2dp"
+            android:layout_marginLeft="144dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/megjegyzes1Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="MASIK SOR"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="2dp"
+            android:layout_marginLeft="246dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/megjegyzes2Text"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="HARMADIK SOR"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="2dp"
+            android:layout_marginLeft="348dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">>
+
+            <TextView
+                android:id="@+id/intRemText"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="HARMADIK SOR"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="2dp"
+            android:layout_marginLeft="450dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">>
+
+            <TextView
+                android:id="@+id/allapotText"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="HARMADIK SOR"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+</RelativeLayout>

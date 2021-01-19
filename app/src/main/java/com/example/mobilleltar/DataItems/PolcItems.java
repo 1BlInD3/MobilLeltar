@@ -3,14 +3,16 @@ package com.example.mobilleltar.DataItems;
 public class PolcItems
 {
     private Double mMennyiseg;
+    private String mEgyseg;
     private String mMegnevezes1;
     private String mMegnevezes2;
     private String mIntRem;
     private String mAllapot;
 
-    public PolcItems (Double mennyiseg, String megnevezes1, String megnevezes2, String intRem, String allapot)
+    public PolcItems (Double mennyiseg,String mertekegyseg, String megnevezes1, String megnevezes2, String intRem, String allapot)
     {
         mMennyiseg = mennyiseg;
+        mEgyseg = mertekegyseg;
         mMegnevezes1 = megnevezes1;
         mMegnevezes2 = megnevezes2;
         mIntRem = intRem;
@@ -19,6 +21,10 @@ public class PolcItems
 
     public Double getmMennyiseg() {
         return mMennyiseg;
+    }
+
+    public String getmEgyseg() {
+        return mEgyseg;
     }
 
     public String getmMegnevezes1() {
