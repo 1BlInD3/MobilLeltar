@@ -43,11 +43,12 @@ public class PolcResultFragment extends Fragment {
             "                         MAX([SC01003]) as Description2,MAX([SC01093]) as IntRem,MAX([SC01094]) as IntRem2,MAX(rtrim(Description)) as Unit FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] " +
             "                               left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 " +
             "                            left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode " +
-            "                            LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and BinNumber='STD01'group by SC33001, SC33010, SC33038 order by Description2";
+            "                            LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and BinNumber='%s'group by SC33001, SC33010, SC33038 order by Description2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ArrayList<PolcItems> myPolcItems = new ArrayList<>();
 
     public PolcResultFragment() {
         // Required empty public constructor
@@ -86,33 +87,15 @@ public class PolcResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikk_result, container, false);
 
-        ArrayList<PolcItems> myPolcItems = new ArrayList<>();
 
          StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
          StrictMode.setThreadPolicy(policy);
-        /*for(int i = 0; i< 50 ; i++)
-            myPolcItems.add(new PolcItems(12.1,"db","Anya","csavar","ez nemtom mi","szabad"));*/
 
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connection = DriverManager.getConnection(URL);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
+         if(Connected(URL))
+         {
+             RunSql();
+         }
 
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            while (resultSet.next()){
-            String a = resultSet.getString("Unit");
-                Log.d("Mertekegyseg",a);
-                myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"),a,resultSet.getString("Description1"),
-                        resultSet.getString("Description2"),resultSet.getString("IntRem"),resultSet.getString("QcCategory")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
 
         recyclerView = (RecyclerView)view.findViewById(R.id.polcRecycler);
@@ -124,5 +107,35 @@ public class PolcResultFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    private boolean Connected(String url)
+    {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connection = DriverManager.getConnection(url);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        if(connection != null)
+            return true;
+        else
+            return false;
+    }
+    private void RunSql()
+    {
+        try {
+            Statement statement = connection.createStatement();
+            sql = String.format(sql,"STD01");
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                String a = resultSet.getString("Unit");
+                Log.d("Mertekegyseg",a);
+                myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"),a,resultSet.getString("Description1"),
+                        resultSet.getString("Description2"),resultSet.getString("IntRem"),resultSet.getString("QcCategory")));
+            }
+        } catch (Exception e){
+
+        }
     }
 }
