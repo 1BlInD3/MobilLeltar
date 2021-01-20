@@ -22,49 +22,17 @@ import java.sql.SQLException;
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange {
 
     private TabbedFragment tabbedFragment;
-    private String URL = "jdbc:jtds:sqlserver://10.0.0.18;databaseName=EllenallasMeres;user=MvWrite;password=Mv2019;loginTimeout=2";
-    private Connection connection;
-    //private long backPressedTime;
+    private MenuFragment menuFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-       // StrictMode.setThreadPolicy(policy);
         LoginFragment loginFragment = new LoginFragment();
         getSupportActionBar().hide();
-        //mainFragment = new MainFragment();
-       /* FragmentManager mangaer = getSupportFragmentManager();
-        Fragment fragment = mangaer.findFragmentById(R.id.frag_container);
 
-        if(fragment == null)
-        {
-            fragment = new TabbedFragment();
-            mangaer.beginTransaction().add(R.id.frag_container,fragment).commit();
-        }*/
-
-      /*  try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection(URL);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(connection != null)
-        {
-            Toast.makeText(this,"Van hálózat",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this,"Nem tud csatlakozni",Toast.LENGTH_SHORT).show();
-        }*/
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment,"LoginFrag").commit();
     }
 
     public void LoadTabbedFragment()
@@ -75,14 +43,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     public void LoadMenuFragment()
     {
-        MenuFragment menuFragment = new MenuFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
+        menuFragment = new MenuFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
     }
 
     public void LoadPolcResults()
     {
         PolcResultFragment polcResultFragment = new PolcResultFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"LoadPolcFrag").commit();
     }
 
     public void LoadCikklekerdezesFragment()
@@ -114,5 +82,53 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
         }
     }*/
+  public boolean FragmentName()
+  {
+      FragmentManager manager = getSupportFragmentManager();
+      MenuFragment  menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
+      TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
+      if(menuFragment != null)
+      {
+          return  true;
+      }
+      else
+      {
+          return false;
+      }
+  }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+      if(FragmentName())
+      {
+          if(keyCode == 8)
+          {
+              //Toast.makeText(getApplicationContext(),"Ez az ",Toast.LENGTH_SHORT).show();
+              LoadTabbedFragment();
+          }
+          else if (keyCode == 9)
+          {
+              Toast.makeText(getApplicationContext(),"Nem  az ",Toast.LENGTH_SHORT).show();
+          }
+          else if (keyCode == 10)
+          {
+              LoadCikklekerdezesFragment();
+          }
+          return super.onKeyDown(keyCode, event);
+      }
+
+     /*  if(FragmentName())
+       {
+         //  if(keyCode == KeyEvent.KEYCODE_BUTTON_8)
+         //  {
+               Toast.makeText(getApplicationContext(),"Ez az ",Toast.LENGTH_SHORT).show();
+          // }
+       }
+       else
+       {
+           Toast.makeText(getApplicationContext(),"Nem  az ",Toast.LENGTH_SHORT).show();
+       }*/
+        return super.onKeyDown(keyCode, event);
+    }
 }

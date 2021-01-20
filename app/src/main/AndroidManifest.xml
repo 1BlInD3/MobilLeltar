@@ -3,6 +3,7 @@
     package="com.example.mobilleltar">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="com.honeywell.decode.permission.DECODE"/>
 
     <application
         android:allowBackup="true"

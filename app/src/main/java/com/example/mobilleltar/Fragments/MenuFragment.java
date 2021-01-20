@@ -115,4 +115,5 @@ public class MenuFragment extends Fragment {
 
         return view;
     }
+
 }
