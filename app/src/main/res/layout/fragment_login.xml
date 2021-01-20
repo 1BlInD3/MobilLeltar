@@ -7,7 +7,7 @@
     tools:context=".Fragments.LoginFragment">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/idText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="39dp"
         android:text="Felhasználó"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/idText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

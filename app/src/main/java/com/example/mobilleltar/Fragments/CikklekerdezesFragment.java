@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.mobilleltar.MainActivity;
 import com.example.mobilleltar.R;
@@ -15,6 +16,9 @@ import com.example.mobilleltar.R;
  * create an instance of this fragment.
  */
 public class CikklekerdezesFragment extends Fragment {
+
+
+    private TextView lekerdezesTxt;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,10 +65,14 @@ public class CikklekerdezesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
-
+        lekerdezesTxt = (TextView)view.findViewById(R.id.lekerdezesText);
         MainActivity mainActivity = (MainActivity)getActivity();
-        mainActivity.LoadPolcResults();
+       // mainActivity.LoadPolcResults();
 
         return view;
+    }
+    public void SetBinOrItem(String code)
+    {
+        lekerdezesTxt.setText(code);
     }
 }

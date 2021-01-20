@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobilleltar.MainActivity;
@@ -27,6 +28,8 @@ public class LeltarozasFragment extends Fragment {
 
     private Button rakhelyBtn;
     private Button kilepesBtn;
+    private TextView rakhelyTxt;
+    private TextView cikkszamTxt;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,6 +72,9 @@ public class LeltarozasFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_leltarozas, container, false);
         final MainActivity mainActivity = (MainActivity)getActivity();
+        rakhelyTxt = (TextView)view.findViewById(R.id.rakhelyText);
+        rakhelyTxt.setText("");
+        cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
 
@@ -104,5 +110,16 @@ public class LeltarozasFragment extends Fragment {
         });
 
         return view;
+    }
+    public void SetBinOrItem(String code)
+    {
+        if(rakhelyTxt.getText()=="")
+        {
+            rakhelyTxt.setText(code);
+        }
+        else
+        {
+            cikkszamTxt.setText(code);
+        }
     }
 }

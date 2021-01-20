@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
 import com.example.mobilleltar.R;
@@ -76,7 +75,7 @@ public class TabbedFragment extends Fragment{
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
-        cikkszam = (TextView)view.findViewById(R.id.cikkszamTxt);
+        cikkszam = (TextView)view.findViewById(R.id.cikkszamText);
         megnevezes = (TextView)view.findViewById(R.id.cikkszamNameText);
         mennyiseg = (EditText)view.findViewById(R.id.mennyisegText);
         megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
@@ -101,7 +100,7 @@ public class TabbedFragment extends Fragment{
     }
     public void setDataForChange(String a,String b, String c, String d)
     {
-        cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamTxt);
+        cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamText);
         megnevezes = (TextView)getActivity().findViewById(R.id.cikkszamNameText);
         mennyiseg = (EditText)getActivity().findViewById(R.id.mennyisegText);
         megnevezes2 = (TextView)getActivity().findViewById(R.id.megjegyzesText);
