@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
 import com.example.mobilleltar.R;
@@ -37,6 +38,7 @@ public class TabbedFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Fragment page;
 
     public TabbedFragment() {
         // Required empty public constructor
@@ -80,6 +82,8 @@ public class TabbedFragment extends Fragment{
         mennyiseg = (EditText)view.findViewById(R.id.mennyisegText);
         megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
 
+      //  LeltarozasFragment leltarozasFragment = (LeltarozasFragment) getChildFragmentManager().beginTransaction().
+
        // cikkszam.isFocusable();
         FragmentManager manager = getChildFragmentManager();
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
@@ -90,6 +94,36 @@ public class TabbedFragment extends Fragment{
         adapter.AddFragment(new MainFragment(),"Felvitt tételek");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        //page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 0);
+       // Fragment page2 = getChildFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager + ":" + 1);
+
+     /*   viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if(i == 0)
+                {
+                    Toast.makeText(getContext(),"ELSO",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(),"Masodik",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+
+
+            }
+        });*/
+
         return view;
     }
 
@@ -112,4 +146,30 @@ public class TabbedFragment extends Fragment{
         megnevezes2.setText(d);
         //Toast.makeText(getContext(),a+b+c+d,Toast.LENGTH_SHORT).show();
     }
+
+  /*  public void GetFragmentAtPosition(String code)
+    {
+        page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 0);
+        if(page != null)
+        {
+            switch (viewPager.getCurrentItem()) {
+                case 0:
+                    LeltarozasFragment leltarozasFragment = (LeltarozasFragment) page;
+                    leltarozasFragment.SetBinOrItem(code);
+                    break;
+                case 1:
+                    MainFragment mainFragment = (MainFragment)page;
+                    break;
+            }
+        }
+    }*/
+
+    public void GetFragmentAtPosition(String code)
+    {
+       Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).SetBinOrItem(code);
+        }
+    }
+
 }

@@ -170,14 +170,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(loginFragment != null)
                 {
                     loginFragment.SetId(barcodeData);
+                    loginFragment.onDestroy();
                 }
                 else if(tabbedFragment != null)
                 {
-                    Toast.makeText(getApplicationContext(),"Tabbed",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"Tabbed",Toast.LENGTH_SHORT).show();
+                    tabbedFragment.GetFragmentAtPosition(barcodeData);
+                    tabbedFragment.onDestroy();
                 }
                 else if (cikklekerdezesFragment != null)
                 {
                     cikklekerdezesFragment.SetBinOrItem(barcodeData);
+                    cikklekerdezesFragment.onDestroy();
                 }
                // Toast.makeText(getApplicationContext(),barcodeData,Toast.LENGTH_SHORT).show();
             }
