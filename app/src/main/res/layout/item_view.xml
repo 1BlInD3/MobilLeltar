@@ -19,7 +19,7 @@
                 android:background="@drawable/background_selector">
 
                 <TextView
-                    android:id="@+id/mennyisegText"
+                    android:id="@+id/mennyisegText1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -38,7 +38,7 @@
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/megjegyzes1Text"
+                    android:id="@+id/raktarText1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -57,7 +57,7 @@
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/megjegyzes2Text"
+                    android:id="@+id/allapotText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"

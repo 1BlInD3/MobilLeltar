@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
 import com.example.mobilleltar.Fragments.LoginFragment;
 import com.example.mobilleltar.Fragments.MainFragment;
@@ -94,6 +95,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
+    }
+
+    public void LoadCikkResult()
+    {
+        CikkResultFragment cikkResultFragment = CikkResultFragment.newInstance(barcodeData);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
     }
 
     @Override

@@ -100,11 +100,13 @@ public class CikklekerdezesFragment extends Fragment {
             else if(LoadCikk(code))
             {
                 //cikkes cucc
+                mainActivity.LoadCikkResult();
                 Toast.makeText(getContext(), "Nem polc", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(getContext(), "Nem polc", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Egyik sem", Toast.LENGTH_SHORT).show();
+               // mainActivity.LoadCikkResult();
             }
         }
 

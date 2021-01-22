@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/mennyisegText"
+            android:id="@+id/mennyisegText1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="@+id/cardView7">
 
         <TextView
-            android:id="@+id/unitText"
+            android:id="@+id/polcText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toTopOf="@+id/cardView8">
 
         <TextView
-            android:id="@+id/megjegyzes1Text"
+            android:id="@+id/raktarText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -79,7 +79,7 @@
         app:layout_constraintTop_toTopOf="@+id/cardView9">
 
         <TextView
-            android:id="@+id/megjegyzes2Text"
+            android:id="@+id/allapotText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
