@@ -1,14 +1,24 @@
 package com.example.mobilleltar.Fragments;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mobilleltar.DataItems.PolcItems;
 import com.example.mobilleltar.MainActivity;
 import com.example.mobilleltar.R;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,17 +27,20 @@ import com.example.mobilleltar.R;
  */
 public class CikklekerdezesFragment extends Fragment {
 
-
+    private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
+    private Connection connection;
     private TextView lekerdezesTxt;
+    private String sql ="";
+    private MainActivity mainActivity;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+  //  private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+   // private String mParam2;
 
     public CikklekerdezesFragment() {
         // Required empty public constructor
@@ -38,15 +51,14 @@ public class CikklekerdezesFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment CikklekerdezesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CikklekerdezesFragment newInstance(String param1, String param2) {
+    public static CikklekerdezesFragment newInstance(String param1) {
         CikklekerdezesFragment fragment = new CikklekerdezesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+       // args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +68,7 @@ public class CikklekerdezesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+           // mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -65,8 +77,13 @@ public class CikklekerdezesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
         lekerdezesTxt = (TextView)view.findViewById(R.id.lekerdezesText);
-        MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity = (MainActivity)getActivity();
        // mainActivity.LoadPolcResults();
 
         return view;
@@ -74,5 +91,89 @@ public class CikklekerdezesFragment extends Fragment {
     public void SetBinOrItem(String code)
     {
         lekerdezesTxt.setText(code);
+        if(Connected(URL))
+        {
+            if(LoadPolc(code))
+            {
+                mainActivity.LoadPolcResults();
+            }
+            else if(LoadCikk(code))
+            {
+                //cikkes cucc
+                Toast.makeText(getContext(), "Nem polc", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Nem polc", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+    }
+
+    private boolean LoadPolc(String code)
+    {
+        try {
+            Statement statement = connection.createStatement();
+            sql = String.format(getResources().getString(R.string.polcSql),code);
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next() == false)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        } catch (Exception e){
+            Toast.makeText(getContext(),"",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
+    private boolean LoadCikk(String code)
+    {
+        try {
+            Statement statement = connection.createStatement();
+            sql = String.format(getResources().getString(R.string.cikkSql),code);
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next() == false)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        } catch (Exception e){
+            Toast.makeText(getContext(),"Nem bírja az STD01-et",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
+    private boolean Connected(String url)
+    {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connection = DriverManager.getConnection(url);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        if(connection != null)
+        {
+           // Toast.makeText(getContext(),"10mp alatt megvolt",Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else
+        {
+            Toast.makeText(getContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+    private void RunSql(String code)
+    {
+
     }
 }

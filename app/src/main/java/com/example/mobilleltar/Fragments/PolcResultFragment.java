@@ -36,18 +36,15 @@ public class PolcResultFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager manager;
-    private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=2";
+    private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
     private Connection connection;
-    private String sql ="SELECT SC33001 as [StockItem]," +
-            "                           SUM(SC33005) as [BalanceQty],SUM(SC33008) as [ReceivedQty],MAX(VF_SY240300_QTCategory.TextDescription) as QcCategory,MAX([SC01002]) as Description1," +
-            "                         MAX([SC01003]) as Description2,MAX([SC01093]) as IntRem,MAX([SC01094]) as IntRem2,MAX(rtrim(Description)) as Unit FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] " +
-            "                               left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 " +
-            "                            left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode " +
-            "                            LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and BinNumber='%s'group by SC33001, SC33010, SC33038 order by Description2";
+    private String sql =""; //"SELECT SC33001 as [StockItem], SUM(SC33005) as [BalanceQty],SUM(SC33008) as [ReceivedQty],MAX(VF_SY240300_QTCategory.TextDescription) as QcCategory,MAX([SC01002]) as Description1, MAX([SC01003]) as Description2,MAX([SC01093]) as IntRem,MAX([SC01094]) as IntRem2,MAX(rtrim(Description)) as Unit FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and BinNumber='%s'group by SC33001, SC33010, SC33038 order by Description2";
+    private String cikksql = "SELECT SUM(SC33005) as [BalanceQty], MAX([SC33004])as BinNumber,MAX([ScaCompDB].[dbo].SC230300.SC23002) AS Warehouse, MAX(VF_SY240300_QTCategory.TextDescription) as QcCategory, MAX([SC01002]) as Description1, MAX([SC01003]) as Description2, MAX([SC01093]) as IntRem, MAX([Description]) as Unit, SC33001 as [StockItem] FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode LEFT OUTER JOIN [ScaCompDB].[dbo].SC230300 ON [ScaCompDB].[dbo].SC230300.SC23001 = [ScaCompDB].[dbo].SC330300.SC33002 LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and SC33001=\'030801001\' group by SC33001, SC33004, SC33010, case when isnull(SC33038,\'\')=\'\' then \'00\' else SC33038 end";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+  //  private String mParam2;
     private ArrayList<PolcItems> myPolcItems = new ArrayList<>();
 
     public PolcResultFragment() {
@@ -59,15 +56,15 @@ public class PolcResultFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     *
      * @return A new instance of fragment CikkResultFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PolcResultFragment newInstance(String param1, String param2) {
+    public static PolcResultFragment newInstance(String param1) {
         PolcResultFragment fragment = new PolcResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,7 +74,7 @@ public class PolcResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            //mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -93,7 +90,7 @@ public class PolcResultFragment extends Fragment {
 
          if(Connected(URL))
          {
-             RunSql();
+             RunSql(mParam1);
          }
 
 
@@ -118,24 +115,46 @@ public class PolcResultFragment extends Fragment {
             e.printStackTrace();
         }
         if(connection != null)
+        {
+            Toast.makeText(getContext(),"10mp alatt megvolt",Toast.LENGTH_LONG).show();
             return true;
+        }
         else
+        {
+            Toast.makeText(getContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
             return false;
+        }
     }
-    private void RunSql()
+    public void RunSql(String code)
     {
         try {
             Statement statement = connection.createStatement();
-            sql = String.format(sql,"STD01");
+            sql = String.format(getResources().getString(R.string.polcSql),code);
             ResultSet resultSet = statement.executeQuery(sql);
-            while (resultSet.next()){
-                String a = resultSet.getString("Unit");
-                Log.d("Mertekegyseg",a);
-                myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"),a,resultSet.getString("Description1"),
-                        resultSet.getString("Description2"),resultSet.getString("IntRem"),resultSet.getString("QcCategory")));
+            if(resultSet.next() == false)
+            {
+                Toast.makeText(getContext(), "Üres", Toast.LENGTH_LONG).show();
             }
-        } catch (Exception e){
+            else
+            {
+                do {
+                        String a = resultSet.getString("Unit");
+                        Log.d("Mertekegyseg", a);
+                        myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"), a, resultSet.getString("Description1"),
+                                resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
+                }
+                while (resultSet.next());
+                Toast.makeText(getContext(), "STD1 siker", Toast.LENGTH_LONG).show();
+            }
+                /*while (resultSet.next()) {
+                    String a = resultSet.getString("Unit");
+                    Log.d("Mertekegyseg", a);
+                    myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"), a, resultSet.getString("Description1"),
+                            resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
+                }*/
 
+        } catch (Exception e){
+            Toast.makeText(getContext(),"Nem bírja az STD01-et",Toast.LENGTH_LONG).show();
         }
     }
 }

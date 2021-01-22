@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private BarcodeReader barcodeReader;
     private AidcManager manager;
 
+    private String barcodeData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,13 +86,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     public void LoadPolcResults()
     {
-        PolcResultFragment polcResultFragment = new PolcResultFragment();
+        PolcResultFragment polcResultFragment = PolcResultFragment.newInstance(barcodeData);               //new PolcResultFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"LoadPolcFrag").commit();
     }
 
     public void LoadCikklekerdezesFragment()
     {
-        CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();
+        CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
     }
 
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String barcodeData = barcodeReadEvent.getBarcodeData();
+                barcodeData = barcodeReadEvent.getBarcodeData();
                 //String timestamp = barcodeReadEvent.getTimestamp();
                 FragmentManager manager = getSupportFragmentManager();
                 LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
