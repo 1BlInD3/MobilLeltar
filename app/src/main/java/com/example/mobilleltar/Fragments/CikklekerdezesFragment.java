@@ -78,12 +78,12 @@ public class CikklekerdezesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+       // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+       // StrictMode.setThreadPolicy(policy);
 
 
         lekerdezesTxt = (TextView)view.findViewById(R.id.lekerdezesText);
-        mainActivity = (MainActivity)getActivity();
+       // mainActivity = (MainActivity)getActivity();
        // mainActivity.LoadPolcResults();
 
         return view;
@@ -91,28 +91,9 @@ public class CikklekerdezesFragment extends Fragment {
     public void SetBinOrItem(String code)
     {
         lekerdezesTxt.setText(code);
-        if(Connected(URL))
-        {
-            if(LoadPolc(code))
-            {
-                mainActivity.LoadPolcResults();
-            }
-            else if(LoadCikk(code))
-            {
-                //cikkes cucc
-                mainActivity.LoadCikkResult();
-                Toast.makeText(getContext(), "Nem polc", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Egyik sem", Toast.LENGTH_SHORT).show();
-               // mainActivity.LoadCikkResult();
-            }
-        }
-
-
     }
 
+    /*
     private boolean LoadPolc(String code)
     {
         try {
@@ -174,8 +155,12 @@ public class CikklekerdezesFragment extends Fragment {
             return false;
         }
     }
-    private void RunSql(String code)
-    {
-
-    }
+    private void RunSql(String code) throws SQLException {
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connection = DriverManager.getConnection(URL);
+    }*/
 }

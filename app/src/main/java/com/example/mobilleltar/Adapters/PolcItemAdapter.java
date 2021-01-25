@@ -31,9 +31,9 @@ public class PolcItemAdapter extends RecyclerView.Adapter<PolcItemAdapter.Polcit
             mennyiseg = (TextView)itemView.findViewById(R.id.mennyisegText1);
             unit = (TextView)itemView.findViewById(R.id.polcText);
             megnevezes1 = (TextView)itemView.findViewById(R.id.raktarText1);
-            megnevezes2 = (TextView)itemView.findViewById(R.id.allapotText);
+            megnevezes2 = (TextView)itemView.findViewById(R.id.megnevezes2);
             intRem = (TextView)itemView.findViewById(R.id.intRemText);
-            allapot = (TextView)itemView.findViewById(R.id.allapotText);
+            allapot = (TextView)itemView.findViewById(R.id.allapot);
 
         }
     }

@@ -57,7 +57,7 @@
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/allapotText"
+                    android:id="@+id/allapot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -95,7 +95,7 @@
                 android:layout_marginBottom="2dp">>
 
                 <TextView
-                    android:id="@+id/allapotText"
+                    android:id="@+id/allapot"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:maxLines="1"

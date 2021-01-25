@@ -63,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="MASIK SOR"
             android:textAlignment="textEnd"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -79,11 +78,10 @@
         app:layout_constraintTop_toTopOf="@+id/cardView9">
 
         <TextView
-            android:id="@+id/allapotText"
+            android:id="@+id/megnevezes2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:text="HARMADIK SOR"
             android:textAlignment="textEnd"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -103,7 +101,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:text="HARMADIK SOR"
             android:textAlignment="textEnd"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -120,11 +117,10 @@
         app:layout_constraintTop_toTopOf="@+id/cardView10">
 
         <TextView
-            android:id="@+id/allapotText"
+            android:id="@+id/allapot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:text="HARMADIK SOR"
             android:textAlignment="textEnd"
             android:textColor="@android:color/black"
             android:textSize="16sp" />

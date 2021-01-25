@@ -48,9 +48,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             super(itemView);
 
             textView = (TextView)itemView.findViewById(R.id.raktarText1);
-            textView2 = (TextView)itemView.findViewById(R.id.allapotText);
+            textView2 = (TextView)itemView.findViewById(R.id.allapot);
             textView3 = (TextView)itemView.findViewById(R.id.intRemText);
-            textView4 = (TextView)itemView.findViewById(R.id.allapotText);
+            textView4 = (TextView)itemView.findViewById(R.id.allapot);
             textView5 = (TextView)itemView.findViewById(R.id.mennyisegText1);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

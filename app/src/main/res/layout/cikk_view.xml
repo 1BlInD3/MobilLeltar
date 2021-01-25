@@ -79,7 +79,7 @@
         app:layout_constraintTop_toTopOf="@+id/cardView9">
 
         <TextView
-            android:id="@+id/allapotText"
+            android:id="@+id/allapot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
@@ -87,6 +87,7 @@
             android:textAlignment="textEnd"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

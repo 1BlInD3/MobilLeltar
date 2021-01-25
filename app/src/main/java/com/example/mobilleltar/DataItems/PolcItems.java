@@ -1,6 +1,8 @@
 package com.example.mobilleltar.DataItems;
 
-public class PolcItems
+import java.io.Serializable;
+
+public class PolcItems implements Serializable
 {
     private Double mMennyiseg;
     private String mEgyseg;

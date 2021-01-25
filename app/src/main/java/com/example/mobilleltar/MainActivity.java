@@ -1,15 +1,23 @@
 package com.example.mobilleltar;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.example.mobilleltar.DataItems.CikkItems;
+import com.example.mobilleltar.DataItems.PolcItems;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
+import com.example.mobilleltar.Fragments.EmptyFragment;
 import com.example.mobilleltar.Fragments.LoginFragment;
 import com.example.mobilleltar.Fragments.MainFragment;
 import com.example.mobilleltar.Fragments.MenuFragment;
@@ -25,7 +33,10 @@ import com.honeywell.aidc.UnsupportedPropertyException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener {
 
@@ -36,6 +47,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private AidcManager manager;
 
     private String barcodeData;
+    private String decodedData;
+
+    private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
+    private Connection connection;
+
+    private String sql="";
+    private ArrayList<PolcItems> pi = new ArrayList<>();
+    private ArrayList<CikkItems> ci = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +65,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportActionBar().hide();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment,"LoginFrag").commit();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        filter.addAction(getResources().getString(R.string.dw_action));
+        registerReceiver(myBroadcastReceiver, filter);
 
         AidcManager.create(this, new AidcManager.CreatedCallback() {
             @Override
@@ -87,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     public void LoadPolcResults()
     {
-        PolcResultFragment polcResultFragment = PolcResultFragment.newInstance(barcodeData);               //new PolcResultFragment();
+        PolcResultFragment polcResultFragment = /*PolcResultFragment.newInstance(decodedData);    */  new PolcResultFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"LoadPolcFrag").commit();
     }
 
@@ -99,8 +123,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     public void LoadCikkResult()
     {
-        CikkResultFragment cikkResultFragment = CikkResultFragment.newInstance(barcodeData);
+        CikkResultFragment cikkResultFragment = CikkResultFragment.newInstance(decodedData);
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
+    }
+    public void LoadEmptyFragment()
+    {
+        EmptyFragment emptyFragment = new EmptyFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
     }
 
     @Override
@@ -189,7 +218,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
                 else if (cikklekerdezesFragment != null)
                 {
+                    LoadEmptyFragment();
+                    pi.clear();
                     cikklekerdezesFragment.SetBinOrItem(barcodeData);
+                    SQL();
                     cikklekerdezesFragment.onDestroy();
                 }
                // Toast.makeText(getApplicationContext(),barcodeData,Toast.LENGTH_SHORT).show();
@@ -241,5 +273,149 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if (manager != null) {
             manager.close();
         }
+    }
+
+    private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Bundle b = intent.getExtras();
+
+            //
+            // The following is useful for debugging to verify
+            // the format of received intents from DataWedge:
+            //
+            // for (String key : b.keySet())
+            // {
+            //   Log.v(LOG_TAG, key);
+            // }
+            //
+
+            if (action.equals(getResources().getString(R.string.dw_action))) {
+                //
+                //  Received a barcode scan
+                //
+
+                try {
+                    displayScanResult(intent, "via Broadcast");
+                } catch (Exception e) {
+
+                    //
+                    // Catch if the UI does not exist when broadcast is received
+                    //
+                }
+            }
+        }
+    };
+
+    private void displayScanResult(Intent initiatingIntent, String howDataReceived)
+    {
+       // String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
+        decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+        //String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+
+
+        FragmentManager manager = getSupportFragmentManager();
+        LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
+        TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
+        CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
+        if(loginFragment != null)
+        {
+            loginFragment.SetId(decodedData);
+            loginFragment.onDestroy();
+        }
+        else if(tabbedFragment != null)
+        {
+            //Toast.makeText(getApplicationContext(),"Tabbed",Toast.LENGTH_SHORT).show();
+            tabbedFragment.GetFragmentAtPosition(decodedData);
+            tabbedFragment.onDestroy();
+        }
+        else if (cikklekerdezesFragment != null)
+        {
+            cikklekerdezesFragment.SetBinOrItem(decodedData);
+            cikklekerdezesFragment.onDestroy();
+        }
+
+    }
+
+    class SqlRunnable implements Runnable
+    {
+        @Override
+        public void run() {
+            try {
+                Connect(barcodeData);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void Connect(String code) throws SQLException {
+        PolcResultFragment polcResultFragment = new PolcResultFragment();
+        Bundle bundle = new Bundle();
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connection = DriverManager.getConnection(URL);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        if(connection != null)
+        {
+            Statement statement = connection.createStatement();
+            sql = String.format(getResources().getString(R.string.polcSql),code);
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next() == false)
+            {
+                //Toast.makeText(getApplicationContext(), "Üres", Toast.LENGTH_LONG).show();
+                Log.d("HONEY", "DISConnect: ");
+                Statement statement2 = connection.createStatement();
+                sql = String.format(getResources().getString(R.string.cikkSql),code);
+                ResultSet resultSet1 = statement2.executeQuery(sql);
+                if(resultSet1.next() == false)
+                {
+                    Log.d("HONEY", "DISConnect1: ");
+                }else
+                {
+                    Log.d("HONEY", "Connect1: ");
+                    do {
+                        //  String a = resultSet.getString("Unit");
+                        //  Log.d("Mertekegyseg", a);
+                   /* myCikkItems.add(new CikkItems(resultSet.getDouble("BalanceQty"),resultSet.getString("BinNumber"),
+                            resultSet.getString("Warehouse"), resultSet.getString("QcCategory")));*/
+                   ci.add(new CikkItems(resultSet.getDouble("BalanceQty"),resultSet.getString("BinNumber"),
+                           resultSet.getString("Warehouse"), resultSet.getString("QcCategory")));
+
+                    }
+                    while (resultSet1.next());
+                }
+
+
+            }
+            else
+            {
+                Log.d("HONEY", "Connect: ");
+                do {
+
+                    pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"),
+                            resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
+
+                }
+                while (resultSet.next());
+                bundle.putSerializable("polc",pi);
+                polcResultFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
+
+            }
+        }
+        else
+        {
+            //Toast.makeText(getApplicationContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
+            Log.d("HONEY", "XConnect: ");
+
+        }
+    }
+    public void SQL()
+    {
+        SqlRunnable sqlRunnable = new SqlRunnable();
+        new Thread(sqlRunnable).start();
     }
 }

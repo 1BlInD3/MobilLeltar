@@ -80,6 +80,7 @@ public class MenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.LoadCikklekerdezesFragment();
+               // mainActivity.SQL();
             }
         });
 
