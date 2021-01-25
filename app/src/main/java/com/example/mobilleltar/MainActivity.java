@@ -142,19 +142,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg);
     }
 
-  /* @Override
-    public void onBackPressed() {
-
-        backPressedTime = System.currentTimeMillis();
-
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag("TabbedFrag");
-        if(fragment!=null)
-        {
-            MenuFragment menuFragment = new MenuFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
-        }
-    }*/
   public boolean FragmentName()
   {
       FragmentManager manager = getSupportFragmentManager();
@@ -177,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
       {
           if(keyCode == 8)
           {
-              //Toast.makeText(getApplicationContext(),"Ez az ",Toast.LENGTH_SHORT).show();
               LoadTabbedFragment();
           }
           else if (keyCode == 9)
@@ -212,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
                 else if(tabbedFragment != null)
                 {
-                    //Toast.makeText(getApplicationContext(),"Tabbed",Toast.LENGTH_SHORT).show();
                     tabbedFragment.GetFragmentAtPosition(barcodeData);
                     tabbedFragment.onDestroy();
                 }
@@ -220,11 +205,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     LoadEmptyFragment();
                     pi.clear();
+                    ci.clear();
                     cikklekerdezesFragment.SetBinOrItem(barcodeData);
                     SQL();
                     cikklekerdezesFragment.onDestroy();
                 }
-               // Toast.makeText(getApplicationContext(),barcodeData,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -236,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, "Barcode read failed",
+                Toast.makeText(MainActivity.this, "Nem sikerült leolvasni",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -281,28 +266,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             String action = intent.getAction();
             Bundle b = intent.getExtras();
 
-            //
-            // The following is useful for debugging to verify
-            // the format of received intents from DataWedge:
-            //
-            // for (String key : b.keySet())
-            // {
-            //   Log.v(LOG_TAG, key);
-            // }
-            //
-
             if (action.equals(getResources().getString(R.string.dw_action))) {
-                //
-                //  Received a barcode scan
-                //
 
                 try {
                     displayScanResult(intent, "via Broadcast");
                 } catch (Exception e) {
 
-                    //
-                    // Catch if the UI does not exist when broadcast is received
-                    //
                 }
             }
         }
@@ -326,13 +295,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         else if(tabbedFragment != null)
         {
-            //Toast.makeText(getApplicationContext(),"Tabbed",Toast.LENGTH_SHORT).show();
             tabbedFragment.GetFragmentAtPosition(decodedData);
             tabbedFragment.onDestroy();
         }
         else if (cikklekerdezesFragment != null)
         {
+            /*cikklekerdezesFragment.SetBinOrItem(decodedData);
+
+            cikklekerdezesFragment.onDestroy();*/
+            barcodeData = decodedData;
+            LoadEmptyFragment();
+            pi.clear();
+            ci.clear();
             cikklekerdezesFragment.SetBinOrItem(decodedData);
+            SQL();
             cikklekerdezesFragment.onDestroy();
         }
 
@@ -351,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
     private void Connect(String code) throws SQLException {
         PolcResultFragment polcResultFragment = new PolcResultFragment();
+        CikkResultFragment cikkResultFragment = new CikkResultFragment();
         Bundle bundle = new Bundle();
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -365,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next() == false)
             {
-                //Toast.makeText(getApplicationContext(), "Üres", Toast.LENGTH_LONG).show();
                 Log.d("HONEY", "DISConnect: ");
                 Statement statement2 = connection.createStatement();
                 sql = String.format(getResources().getString(R.string.cikkSql),code);
@@ -377,40 +353,33 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     Log.d("HONEY", "Connect1: ");
                     do {
-                        //  String a = resultSet.getString("Unit");
-                        //  Log.d("Mertekegyseg", a);
-                   /* myCikkItems.add(new CikkItems(resultSet.getDouble("BalanceQty"),resultSet.getString("BinNumber"),
-                            resultSet.getString("Warehouse"), resultSet.getString("QcCategory")));*/
-                   ci.add(new CikkItems(resultSet.getDouble("BalanceQty"),resultSet.getString("BinNumber"),
-                           resultSet.getString("Warehouse"), resultSet.getString("QcCategory")));
+
+                        ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
 
                     }
                     while (resultSet1.next());
+                    bundle.putSerializable("cikk",ci);
+                    cikkResultFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
                 }
-
-
             }
             else
             {
                 Log.d("HONEY", "Connect: ");
                 do {
 
-                    pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"),
-                            resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
+                    pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"), resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
 
                 }
                 while (resultSet.next());
                 bundle.putSerializable("polc",pi);
                 polcResultFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
-
             }
         }
         else
         {
-            //Toast.makeText(getApplicationContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
             Log.d("HONEY", "XConnect: ");
-
         }
     }
     public void SQL()

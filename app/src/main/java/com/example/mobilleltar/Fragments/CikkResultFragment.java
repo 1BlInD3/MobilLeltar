@@ -33,7 +33,6 @@ public class CikkResultFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-  //  private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,8 +42,6 @@ public class CikkResultFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager manager;
     private ArrayList<CikkItems> myCikkItems = new ArrayList<>();
-    private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
-    private Connection connection;
     private String sql ="";
     public CikkResultFragment() {
         // Required empty public constructor
@@ -73,7 +70,6 @@ public class CikkResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-          //  mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -83,16 +79,10 @@ public class CikkResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikk_result2, container, false);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        if(Connected(URL))
-        {
-            RunSql(mParam1);
-        }
-
+        myCikkItems.clear();
+        LoadCikk();
         recyclerView = (RecyclerView)view.findViewById(R.id.cikkRecycler);
-        recyclerView.hasFixedSize();
+        recyclerView.setHasFixedSize(true);
         manager = new LinearLayoutManager(view.getContext());
         adapter = new CikkItemAdapter(myCikkItems);
 
@@ -102,55 +92,12 @@ public class CikkResultFragment extends Fragment {
         return view;
     }
 
-    private boolean Connected(String url)
+    private void LoadCikk()
     {
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connection = DriverManager.getConnection(url);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        if(connection != null)
+        ArrayList<CikkItems> test = (ArrayList<CikkItems>)getArguments().getSerializable("cikk");
+        for(int i = 0; i<test.size(); i++)
         {
-            Toast.makeText(getContext(),"10mp alatt megvolt",Toast.LENGTH_LONG).show();
-            return true;
-        }
-        else
-        {
-            Toast.makeText(getContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
-    public void RunSql(String code)
-    {
-        try {
-            Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.cikkSql),code);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next() == false)
-            {
-                Toast.makeText(getContext(), "Üres", Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                do {
-                  //  String a = resultSet.getString("Unit");
-                  //  Log.d("Mertekegyseg", a);
-                    myCikkItems.add(new CikkItems(resultSet.getDouble("BalanceQty"),resultSet.getString("BinNumber"),
-                            resultSet.getString("Warehouse"), resultSet.getString("QcCategory")));
-                }
-                while (resultSet.next());
-                Toast.makeText(getContext(), "STD1 siker", Toast.LENGTH_LONG).show();
-            }
-                /*while (resultSet.next()) {
-                    String a = resultSet.getString("Unit");
-                    Log.d("Mertekegyseg", a);
-                    myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"), a, resultSet.getString("Description1"),
-                            resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
-                }*/
-
-        } catch (Exception e){
-            Toast.makeText(getContext(),"Nem bírja az STD01-et",Toast.LENGTH_LONG).show();
+            myCikkItems.add(new CikkItems(test.get(i).getmMennyiseg(),test.get(i).getmPolc(),test.get(i).getmRaktar(),test.get(i).getmAllapot()));
         }
     }
 }

@@ -81,7 +81,6 @@ public class PolcResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikk_result, container, false);
 
         ClearItems();
@@ -95,8 +94,6 @@ public class PolcResultFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
-        //myPolcItems.clear();
-
         return view;
     }
 
@@ -107,62 +104,9 @@ public class PolcResultFragment extends Fragment {
         {
             myPolcItems.add(new PolcItems(test.get(i).getmMennyiseg(),test.get(i).getmEgyseg(),test.get(i).getmMegnevezes1(),test.get(i).getmMegnevezes2(),test.get(i).getmIntRem(),test.get(i).getmAllapot()));
         }
-        //adapter.notifyDataSetChanged();
     }
     public void ClearItems()
     {
         myPolcItems.clear();
     }
-
-  /*  private boolean Connected(String url)
-    {
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connection = DriverManager.getConnection(url);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        if(connection != null)
-        {
-            Toast.makeText(getContext(),"10mp alatt megvolt",Toast.LENGTH_LONG).show();
-            return true;
-        }
-        else
-        {
-            Toast.makeText(getContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
-    public void RunSql(String code)
-    {
-        try {
-            Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.polcSql),code);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next() == false)
-            {
-                Toast.makeText(getContext(), "Üres", Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                do {
-                        String a = resultSet.getString("Unit");
-                        Log.d("Mertekegyseg", a);
-                        myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"), a, resultSet.getString("Description1"),
-                                resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
-                }
-                while (resultSet.next());
-                Toast.makeText(getContext(), "STD1 siker", Toast.LENGTH_LONG).show();
-            }
-                /*while (resultSet.next()) {
-                    String a = resultSet.getString("Unit");
-                    Log.d("Mertekegyseg", a);
-                    myPolcItems.add(new PolcItems(resultSet.getDouble("BalanceQty"), a, resultSet.getString("Description1"),
-                            resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
-                }
-
-        } catch (Exception e){
-            Toast.makeText(getContext(),"Nem bírja az STD01-et",Toast.LENGTH_LONG).show();
-        }
-    }*/
 }
