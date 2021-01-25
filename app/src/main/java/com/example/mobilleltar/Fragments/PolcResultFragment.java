@@ -36,10 +36,7 @@ public class PolcResultFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager manager;
-  //  private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
-    private Connection connection;
-    private String sql =""; //"SELECT SC33001 as [StockItem], SUM(SC33005) as [BalanceQty],SUM(SC33008) as [ReceivedQty],MAX(VF_SY240300_QTCategory.TextDescription) as QcCategory,MAX([SC01002]) as Description1, MAX([SC01003]) as Description2,MAX([SC01093]) as IntRem,MAX([SC01094]) as IntRem2,MAX(rtrim(Description)) as Unit FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and BinNumber='%s'group by SC33001, SC33010, SC33038 order by Description2";
-   // private String cikksql = "SELECT SUM(SC33005) as [BalanceQty], MAX([SC33004])as BinNumber,MAX([ScaCompDB].[dbo].SC230300.SC23002) AS Warehouse, MAX(VF_SY240300_QTCategory.TextDescription) as QcCategory, MAX([SC01002]) as Description1, MAX([SC01003]) as Description2, MAX([SC01093]) as IntRem, MAX([Description]) as Unit, SC33001 as [StockItem] FROM [ScaCompDB].[dbo].[VF_SC360300_StockBinNo] left outer join [ScaCompDB].[dbo].SC330300 on BinNumber = SC33004 left outer join [ScaCompDB].[dbo].[SC010300] on SC33001 = SC01001 left join [ScaCompDB].[dbo].[VF_SCUN0300_UnitCode] on SC01133 = UnitCode LEFT OUTER JOIN [ScaCompDB].[dbo].SC230300 ON [ScaCompDB].[dbo].SC230300.SC23001 = [ScaCompDB].[dbo].SC330300.SC33002 LEFT OUTER JOIN [ScaCompDB].[dbo].VF_SY240300_QTCategory ON  SC33038 = VF_SY240300_QTCategory.Key1 where SC33005 > 0 and SC33001=\'030801001\' group by SC33001, SC33004, SC33010, case when isnull(SC33038,\'\')=\'\' then \'00\' else SC33038 end";
+    private String sql ="";
 
 
     // TODO: Rename and change types of parameters
@@ -83,7 +80,7 @@ public class PolcResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cikk_result, container, false);
 
-        ClearItems();
+        myPolcItems.clear();
         LoadPolc();
 
         recyclerView = (RecyclerView)view.findViewById(R.id.polcRecycler);
@@ -104,9 +101,5 @@ public class PolcResultFragment extends Fragment {
         {
             myPolcItems.add(new PolcItems(test.get(i).getmMennyiseg(),test.get(i).getmEgyseg(),test.get(i).getmMegnevezes1(),test.get(i).getmMegnevezes2(),test.get(i).getmIntRem(),test.get(i).getmAllapot()));
         }
-    }
-    public void ClearItems()
-    {
-        myPolcItems.clear();
     }
 }

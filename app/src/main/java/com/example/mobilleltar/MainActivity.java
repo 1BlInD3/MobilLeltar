@@ -300,9 +300,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         else if (cikklekerdezesFragment != null)
         {
-            /*cikklekerdezesFragment.SetBinOrItem(decodedData);
-
-            cikklekerdezesFragment.onDestroy();*/
             barcodeData = decodedData;
             LoadEmptyFragment();
             pi.clear();
@@ -311,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             SQL();
             cikklekerdezesFragment.onDestroy();
         }
-
     }
 
     class SqlRunnable implements Runnable
@@ -338,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(connection != null)
         {
             Statement statement = connection.createStatement();
+            statement.setQueryTimeout(10);
             sql = String.format(getResources().getString(R.string.polcSql),code);
             ResultSet resultSet = statement.executeQuery(sql);
             if(resultSet.next() == false)
@@ -348,7 +345,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 ResultSet resultSet1 = statement2.executeQuery(sql);
                 if(resultSet1.next() == false)
                 {
-                    Log.d("HONEY", "DISConnect1: ");
+                    Log.d("HONEY", "XConnect: ");
+                    EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
                 }else
                 {
                     Log.d("HONEY", "Connect1: ");
@@ -380,6 +379,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         else
         {
             Log.d("HONEY", "XConnect: ");
+           /* EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
+            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
         }
     }
     public void SQL()
