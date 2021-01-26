@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/background_selector"
     android:backgroundTint="@color/tabindicatorColor">
 
@@ -12,16 +13,16 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:background="@drawable/background_selector"
+        app:cardBackgroundColor="@color/header"
         app:cardCornerRadius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/mennyisegText1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
@@ -36,12 +37,12 @@
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
+        app:cardBackgroundColor="@color/header"
         app:cardCornerRadius="1dp"
         app:layout_constraintStart_toEndOf="@+id/cardView7"
         app:layout_constraintTop_toTopOf="@+id/cardView7">
 
         <TextView
-            android:id="@+id/polcText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -56,12 +57,12 @@
         android:layout_width="120dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
+        app:cardBackgroundColor="@color/header"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView8"
         app:layout_constraintTop_toTopOf="@+id/cardView8">
 
         <TextView
-            android:id="@+id/raktarText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -76,12 +77,12 @@
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
+        app:cardBackgroundColor="@color/header"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView9"
         app:layout_constraintTop_toTopOf="@+id/cardView9">
 
         <TextView
-            android:id="@+id/allapot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"

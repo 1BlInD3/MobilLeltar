@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.CikkItemAdapter;
@@ -33,10 +35,14 @@ public class CikkResultFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-   // private String mParam2;
+    private String mParam2;
+    private String mParam3;
+
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -56,11 +62,12 @@ public class CikkResultFragment extends Fragment {
      * @return A new instance of fragment CikkResultFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CikkResultFragment newInstance(String param1) {
+    public static CikkResultFragment newInstance(String param1,String param2, String param3) {
         CikkResultFragment fragment = new CikkResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-       // args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM2, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,6 +77,8 @@ public class CikkResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam3 = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -78,6 +87,18 @@ public class CikkResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikk_result2, container, false);
+
+        TextView megjegyzes1Txt = (TextView)view.findViewById(R.id.megjegyzes1CikkText);
+        TextView megjegyzes2Txt = (TextView)view.findViewById(R.id.megjegyzes2CikkText);
+        TextView unitTxt = (TextView)view.findViewById(R.id.unitCikkText);
+
+        megjegyzes1Txt.setText(getArguments().getString("megjegyzes"));
+        megjegyzes2Txt.setText(getArguments().getString("megjegyzes2"));
+        unitTxt.setText(getArguments().getString("unit"));
+
+        FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.cikkHeaderFrame);
+        View child = getLayoutInflater().inflate(R.layout.cikk_header,null);
+        frameLayout.addView(child);
 
         myCikkItems.clear();
         LoadCikk();

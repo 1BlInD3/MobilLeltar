@@ -346,6 +346,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
                     }else
                     {
+                        String megjegyzes1,megjegyzes2,unit;
+                        megjegyzes1 = resultSet1.getString("Description1");
+                        megjegyzes2 = resultSet1.getString("Description2");
+                        unit = resultSet1.getString("Unit");
                         Log.d("HONEY", "Connect1: ");
                         do {
 
@@ -354,6 +358,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                         while (resultSet1.next());
                         bundle.putSerializable("cikk",ci);
+                        bundle.putString("megjegyzes",megjegyzes1);
+                        bundle.putString("megjegyzes2",megjegyzes2);
+                        bundle.putString("unit",unit);
                         cikkResultFragment.setArguments(bundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
                     }
@@ -374,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
             catch (Exception e)
             {
-                EmptyFragment emptyFragment = EmptyFragment.newInstance("Nem sikerült 10 mp alatt betölteni","");
+                EmptyFragment emptyFragment = EmptyFragment.newInstance("A feldolgozás során hiba lépett fel","");
                 getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
             }
         }
