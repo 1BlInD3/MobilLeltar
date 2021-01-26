@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.PolcItemAdapter;
@@ -79,6 +80,10 @@ public class PolcResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cikk_result, container, false);
+
+        FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.polcHeaderFrame);
+        View child = getLayoutInflater().inflate(R.layout.polc_header,null);
+        frameLayout.addView(child);
 
         myPolcItems.clear();
         LoadPolc();

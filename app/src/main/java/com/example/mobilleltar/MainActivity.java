@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
     }
 
-    public void LoadPolcResults()
+    /*public void LoadPolcResults()
     {
-        PolcResultFragment polcResultFragment = /*PolcResultFragment.newInstance(decodedData);    */  new PolcResultFragment();
+        PolcResultFragment polcResultFragment = /*PolcResultFragment.newInstance(decodedData);      new PolcResultFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"LoadPolcFrag").commit();
-    }
+    }*/
 
     public void LoadCikklekerdezesFragment()
     {
@@ -121,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
     }
 
-    public void LoadCikkResult()
+   /* public void LoadCikkResult()
     {
         CikkResultFragment cikkResultFragment = CikkResultFragment.newInstance(decodedData);
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
-    }
+    }*/
     public void LoadEmptyFragment()
     {
         EmptyFragment emptyFragment = new EmptyFragment();
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
   {
       FragmentManager manager = getSupportFragmentManager();
       MenuFragment  menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
-      TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
+      //TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
       if(menuFragment != null)
       {
           return  true;
@@ -212,19 +212,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
             }
         });
-
     }
 
     @Override
     public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(MainActivity.this, "Nem sikerült leolvasni",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(MainActivity.this, "Nem sikerült leolvasni",
+                Toast.LENGTH_SHORT).show());
 
     }
 
@@ -264,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Bundle b = intent.getExtras();
+           // Bundle b = intent.getExtras();
 
             if (action.equals(getResources().getString(R.string.dw_action))) {
 
@@ -333,54 +327,62 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         if(connection != null)
         {
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(10);
-            sql = String.format(getResources().getString(R.string.polcSql),code);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next() == false)
-            {
-                Log.d("HONEY", "DISConnect: ");
-                Statement statement2 = connection.createStatement();
-                sql = String.format(getResources().getString(R.string.cikkSql),code);
-                ResultSet resultSet1 = statement2.executeQuery(sql);
-                if(resultSet1.next() == false)
+            try {
+                Statement statement = connection.createStatement();
+                statement.setQueryTimeout(10);
+                sql = String.format(getResources().getString(R.string.polcSql),code);
+                ResultSet resultSet = statement.executeQuery(sql);
+                if(!resultSet.next())
                 {
-                    Log.d("HONEY", "XConnect: ");
-                    EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
-                }else
+                    Log.d("HONEY", "DISConnect: ");
+                    Statement statement2 = connection.createStatement();
+                    statement2.setQueryTimeout(10);
+                    sql = String.format(getResources().getString(R.string.cikkSql),code);
+                    ResultSet resultSet1 = statement2.executeQuery(sql);
+                    if(!resultSet1.next())
+                    {
+                        Log.d("HONEY", "DUPLA NULLA: ");
+                        EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                    }else
+                    {
+                        Log.d("HONEY", "Connect1: ");
+                        do {
+
+                            ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
+
+                        }
+                        while (resultSet1.next());
+                        bundle.putSerializable("cikk",ci);
+                        cikkResultFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
+                    }
+                }
+                else
                 {
-                    Log.d("HONEY", "Connect1: ");
+                    Log.d("HONEY", "Connect: ");
                     do {
 
-                        ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
+                        pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"), resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
 
                     }
-                    while (resultSet1.next());
-                    bundle.putSerializable("cikk",ci);
-                    cikkResultFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
+                    while (resultSet.next());
+                    bundle.putSerializable("polc",pi);
+                    polcResultFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
                 }
             }
-            else
+            catch (Exception e)
             {
-                Log.d("HONEY", "Connect: ");
-                do {
-
-                    pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"), resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
-
-                }
-                while (resultSet.next());
-                bundle.putSerializable("polc",pi);
-                polcResultFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
+                EmptyFragment emptyFragment = EmptyFragment.newInstance("Nem sikerült 10 mp alatt betölteni","");
+                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
             }
         }
         else
         {
             Log.d("HONEY", "XConnect: ");
-           /* EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
-            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
+            EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs hálózat","");
+            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
         }
     }
     public void SQL()
