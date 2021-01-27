@@ -31,7 +31,7 @@ public class MenuFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private boolean mParam1;
     private String mParam2;
 
     public MenuFragment() {
@@ -47,10 +47,10 @@ public class MenuFragment extends Fragment {
      * @return A new instance of fragment MenuFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MenuFragment newInstance(String param1, String param2) {
+    public static MenuFragment newInstance(Boolean param1, String param2) {
         MenuFragment fragment = new MenuFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putBoolean(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +60,7 @@ public class MenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getBoolean(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -75,6 +75,13 @@ public class MenuFragment extends Fragment {
         leltarBtn = (Button) view.findViewById(R.id.leltarButton);
         kilepBtn = (Button)view.findViewById(R.id.kilepButton);
         lekerdezesBtn = (Button)view.findViewById(R.id.lekerdezesButton);
+        ellenorzoBtn = (Button)view.findViewById(R.id.ellenorzoButton);
+
+        if(!mParam1)
+        {
+            leltarBtn.setEnabled(false);
+            ellenorzoBtn.setEnabled(false);
+        }
 
         lekerdezesBtn.setOnClickListener(new View.OnClickListener() {
             @Override

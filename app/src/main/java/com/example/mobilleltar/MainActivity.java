@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private TabbedFragment tabbedFragment;
     private MenuFragment menuFragment;
+    private LoginFragment loginFragment;
 
     private BarcodeReader barcodeReader;
     private AidcManager manager;
@@ -54,14 +56,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private String sql="";
     private ArrayList<PolcItems> pi = new ArrayList<>();
+
     private ArrayList<CikkItems> ci = new ArrayList<>();
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LoginFragment loginFragment = new LoginFragment();
+        loginFragment = new LoginFragment();
         getSupportActionBar().hide();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment,"LoginFrag").commit();
@@ -194,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(loginFragment != null)
                 {
                     loginFragment.SetId(barcodeData);
-                    loginFragment.onDestroy();
+                    CheckRights();
                 }
                 else if(tabbedFragment != null)
                 {
@@ -252,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if (manager != null) {
             manager.close();
         }
+        //unregisterReceiver(myBroadcastReceiver);
     }
 
     private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
@@ -315,6 +320,36 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     }
+    class SQLCheckrights implements Runnable
+    {
+        @Override
+        public void run() {
+            try {
+                RightCheck(barcodeData);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    class TextChange implements Runnable
+    {
+        String mText;
+
+        TextChange(String text)
+        {
+            mText = text;
+        }
+
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    loginFragment.SetId(mText);
+                }
+            });
+        }
+    }
     private void Connect(String code) throws SQLException {
         PolcResultFragment polcResultFragment = new PolcResultFragment();
         CikkResultFragment cikkResultFragment = new CikkResultFragment();
@@ -329,7 +364,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         {
             try {
                 Statement statement = connection.createStatement();
-                statement.setQueryTimeout(10);
                 sql = String.format(getResources().getString(R.string.polcSql),code);
                 ResultSet resultSet = statement.executeQuery(sql);
                 if(!resultSet.next())
@@ -346,10 +380,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
                     }else
                     {
-                        String megjegyzes1,megjegyzes2,unit;
+                        String megjegyzes1,megjegyzes2,unit,intrem;
                         megjegyzes1 = resultSet1.getString("Description1");
                         megjegyzes2 = resultSet1.getString("Description2");
                         unit = resultSet1.getString("Unit");
+                        intrem = resultSet1.getString("IntRem");
                         Log.d("HONEY", "Connect1: ");
                         do {
 
@@ -361,6 +396,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         bundle.putString("megjegyzes",megjegyzes1);
                         bundle.putString("megjegyzes2",megjegyzes2);
                         bundle.putString("unit",unit);
+                        bundle.putString("intrem",intrem);
                         cikkResultFragment.setArguments(bundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
                     }
@@ -392,9 +428,57 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
         }
     }
+
+    private void RightCheck(String barcodeData) throws SQLException {
+        MenuFragment menuFragment;
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connection = DriverManager.getConnection(URL);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        if(connection != null)
+        {
+            Statement statement = connection.createStatement();
+            String rightSql = String.format(getResources().getString(R.string.jog),barcodeData);
+            ResultSet resultSet = statement.executeQuery(rightSql);
+            if(!resultSet.next())
+            {
+               // loginFragment.SetId("Nincs jogosultságod belépni");
+                SetText("Nincs jogosultságod belépni");
+            }
+            else
+            {
+                if(resultSet.getInt("Jog") == 1)
+                {
+                    menuFragment = MenuFragment.newInstance(true,"");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
+                }
+                else
+                {
+                    menuFragment = MenuFragment.newInstance(false,"");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
+                }
+            }
+        }
+        else
+        {
+           SetText("Hálózati probléma");
+        }
+    }
     public void SQL()
     {
         SqlRunnable sqlRunnable = new SqlRunnable();
         new Thread(sqlRunnable).start();
+    }
+    private void CheckRights()
+    {
+        SQLCheckrights sqlCheckrights = new SQLCheckrights();
+        new Thread(sqlCheckrights).start();
+    }
+    private void SetText(String text)
+    {
+        TextChange textChange = new TextChange(text);
+        new Thread(textChange).start();
     }
 }

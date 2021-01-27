@@ -91,10 +91,12 @@ public class CikkResultFragment extends Fragment {
         TextView megjegyzes1Txt = (TextView)view.findViewById(R.id.megjegyzes1CikkText);
         TextView megjegyzes2Txt = (TextView)view.findViewById(R.id.megjegyzes2CikkText);
         TextView unitTxt = (TextView)view.findViewById(R.id.unitCikkText);
+        TextView intRemTxt = (TextView)view.findViewById(R.id.intRemCikkText);
 
         megjegyzes1Txt.setText(getArguments().getString("megjegyzes"));
         megjegyzes2Txt.setText(getArguments().getString("megjegyzes2"));
         unitTxt.setText(getArguments().getString("unit"));
+        intRemTxt.setText(getArguments().getString("intrem"));
 
         FrameLayout frameLayout = (FrameLayout)view.findViewById(R.id.cikkHeaderFrame);
         View child = getLayoutInflater().inflate(R.layout.cikk_header,null);
