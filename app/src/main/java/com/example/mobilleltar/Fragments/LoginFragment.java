@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.mobilleltar.MainActivity;
@@ -20,6 +21,7 @@ public class LoginFragment extends Fragment {
 
     private Button okBtn;
     private TextView idTxt;
+    private ProgressBar progressBar;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,6 +68,8 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        progressBar = (ProgressBar)view.findViewById(R.id.loginProgress);
+        progressBar.setVisibility(View.GONE);
         idTxt = (TextView)view.findViewById(R.id.idText);
         okBtn = (Button)view.findViewById(R.id.okButton);
         final MainActivity mainActivity = (MainActivity)getActivity();
@@ -81,5 +85,13 @@ public class LoginFragment extends Fragment {
     public void SetId(String employeeCode)
     {
         idTxt.setText(employeeCode);
+    }
+    public void StartSpinning()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    public void StopSpinning()
+    {
+        progressBar.setVisibility(View.GONE);
     }
 }

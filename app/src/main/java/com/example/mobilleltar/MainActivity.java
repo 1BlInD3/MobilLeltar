@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -39,9 +42,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+//jogosultsagot elmenteni és a nyomógombokat letiltani ahhoz képest
+
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener {
 
+    private static final String TAG = "MainActivity";
     private TabbedFragment tabbedFragment;
+    
     private MenuFragment menuFragment;
     private LoginFragment loginFragment;
 
@@ -59,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
+
+    private boolean hasRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,19 +175,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
       if(FragmentName())
       {
-          if(keyCode == 8)
-          {
-              LoadTabbedFragment();
-          }
-          else if (keyCode == 9)
-          {
-              Toast.makeText(getApplicationContext(),"Nem  az ",Toast.LENGTH_SHORT).show();
-          }
-          else if (keyCode == 10)
-          {
-              LoadCikklekerdezesFragment();
-          }
-          return super.onKeyDown(keyCode, event);
+              if (hasRight && keyCode == 8) {
+                  LoadTabbedFragment();
+              } else if (keyCode == 9) {
+                  Toast.makeText(getApplicationContext(), "Nincs jogosultságod belépni ", Toast.LENGTH_SHORT).show();
+              } else if (keyCode == 10) {
+                  LoadCikklekerdezesFragment();
+              }
+              else if(keyCode == 11)
+              {
+                  finishAndRemoveTask();
+              }
+              return super.onKeyDown(keyCode, event);
       }
       return super.onKeyDown(keyCode, event);
     }
@@ -198,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(loginFragment != null)
                 {
                     loginFragment.SetId(barcodeData);
+                    loginFragment.StartSpinning();
                     CheckRights();
                 }
                 else if(tabbedFragment != null)
@@ -227,6 +236,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (barcodeReader != null) {
@@ -237,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show();
             }
         }
+        Log.d(TAG, "onResume: ");
     }
 
     @Override
@@ -245,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if (barcodeReader != null) {
             barcodeReader.release();
         }
+        Log.d(TAG, "onPause: ");
     }
     @Override
     public void onDestroy() {
@@ -256,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if (manager != null) {
             manager.close();
         }
+        Log.d(TAG, "onDestroy: ");
         //unregisterReceiver(myBroadcastReceiver);
     }
 
@@ -290,7 +314,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(loginFragment != null)
         {
             loginFragment.SetId(decodedData);
-            loginFragment.onDestroy();
+           // loginFragment.SetId(barcodeData);
+            CheckRights();
+            //loginFragment.onDestroy();
         }
         else if(tabbedFragment != null)
         {
@@ -346,6 +372,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 @Override
                 public void run() {
                     loginFragment.SetId(mText);
+                    loginFragment.StopSpinning();
                 }
             });
         }
@@ -451,11 +478,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 if(resultSet.getInt("Jog") == 1)
                 {
+                    hasRight = true;
                     menuFragment = MenuFragment.newInstance(true,"");
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
                 else
                 {
+                    hasRight = false;
                     menuFragment = MenuFragment.newInstance(false,"");
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
@@ -481,4 +510,5 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         TextChange textChange = new TextChange(text);
         new Thread(textChange).start();
     }
+
 }
