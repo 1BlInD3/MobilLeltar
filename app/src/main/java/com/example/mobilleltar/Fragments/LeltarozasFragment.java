@@ -30,6 +30,8 @@ public class LeltarozasFragment extends Fragment {
     private Button kilepesBtn;
     private TextView rakhelyTxt;
     private TextView cikkszamTxt;
+    private String ID;
+    private MainActivity mainActivity;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -71,7 +73,7 @@ public class LeltarozasFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_leltarozas, container, false);
-        final MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity = (MainActivity)getActivity();
         rakhelyTxt = (TextView)view.findViewById(R.id.rakhelyText);
         rakhelyTxt.setText("");
         cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
@@ -113,7 +115,12 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetBinOrItem(String code)
     {
+
         if(rakhelyTxt.getText()=="")
+        {
+            rakhelyTxt.setText(code);
+        }
+        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat")
         {
             rakhelyTxt.setText(code);
         }
@@ -121,5 +128,13 @@ public class LeltarozasFragment extends Fragment {
         {
             cikkszamTxt.setText(code);
         }
+    }
+    public void SetID(String code)
+    {
+        ID = code;
+    }
+    public void sjkdfns()
+    {
+       // mainActivity.PolcThread();
     }
 }

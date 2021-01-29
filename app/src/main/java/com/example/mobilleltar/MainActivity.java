@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
-import android.os.PersistableBundle;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,8 +61,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
+    private Handler handler1 = new Handler();
 
+    public String DolgKod;
     private boolean hasRight;
+
+    public boolean isPolc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,13 +205,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(loginFragment != null)
                 {
                     loginFragment.SetId(barcodeData);
+                    DolgKod = barcodeData;
                     loginFragment.StartSpinning();
                     CheckRights();
                 }
                 else if(tabbedFragment != null)
                 {
-                    tabbedFragment.GetFragmentAtPosition(barcodeData);
-                    tabbedFragment.onDestroy();
+                    PolcThread();
+                    tabbedFragment.GetID(DolgKod);
+                    //tabbedFragment.GetFragmentAtPosition(barcodeData);
+                    //tabbedFragment.onDestroy();
                 }
                 else if (cikklekerdezesFragment != null)
                 {
@@ -377,6 +379,58 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             });
         }
     }
+
+    Runnable checkPolc = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                PolcCheck(barcodeData);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    class IsPolc implements Runnable
+    {
+        String mCode;
+        IsPolc(String code)
+        {
+            mCode = code;
+        }
+        @Override
+        public void run() {
+            handler1.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.GetFragmentAtPosition(mCode);
+                }
+            });
+        }
+    }
+
+    private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(URL);
+        if(connection!=null) {
+            Statement statement = connection.createStatement();
+            sql = String.format(getResources().getString(R.string.polcSql), code);
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (!resultSet.next()) {
+                GetPolc("Nem polc");
+
+            } else {
+                GetPolc(barcodeData);
+            }
+        }
+        else
+        {
+           GetPolc("Nincs hálózat");
+        }
+    }
+
     private void Connect(String code) throws SQLException {
         PolcResultFragment polcResultFragment = new PolcResultFragment();
         CikkResultFragment cikkResultFragment = new CikkResultFragment();
@@ -511,4 +565,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         new Thread(textChange).start();
     }
 
+    public void PolcThread()
+    {
+
+        new Thread(checkPolc).start();
+        //return false;
+    }
+    public void GetPolc(String code)
+    {
+        IsPolc isPolc = new IsPolc(code);
+        new Thread(isPolc).start();
+    }
 }

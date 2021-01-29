@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
 import com.example.mobilleltar.R;
@@ -168,6 +169,13 @@ public class TabbedFragment extends Fragment{
        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         if (viewPager.getCurrentItem() == 0 && page != null) {
             ((LeltarozasFragment)page).SetBinOrItem(code);
+        }
+    }
+    public void GetID(String code)
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).SetID(code);
         }
     }
 
