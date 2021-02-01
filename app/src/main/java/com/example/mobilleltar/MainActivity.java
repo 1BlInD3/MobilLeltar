@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "QUERY";
     private TabbedFragment tabbedFragment;
     
     private MenuFragment menuFragment;
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private String decodedData;
 
     private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
+    private String connectionString = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10";
     private Connection connection;
 
     private String sql="";
@@ -505,6 +506,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     }
                     else
                     {
+
                         StopAnimation();
                         GetFocus();
                         GetPolc(barcodeData);
@@ -523,6 +525,32 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         StopAnimation();
                         isPolc = true;
                         GetPolc(barcodeData);
+                        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+                        connection = DriverManager.getConnection(connectionString);
+                        Statement polcState = connection.createStatement();
+                        String a;
+                        a = String.format(getResources().getString(R.string.polcStatus),code);
+                        ResultSet polcResult = polcState.executeQuery(a);
+                        if(!polcResult.next())
+                        {
+                            //ide ha még nem volt ilyen polc
+                            Log.d(TAG, "PolcCheck: ilyen még nem volt");
+                        }
+                        else if(polcResult.getInt("Statusz")==1)
+                        {
+                            //Ide ha már vettem fel rá valamit
+                            Log.d(TAG, "PolcCheck: van rajta valami");
+                        }
+                        else if(polcResult.getInt("Statusz")==2)
+                        {
+                            //Ide ha fullosan zárolt
+                            Log.d(TAG, "PolcCheck: fullosan zárolt");
+                        }
+                        else if(polcResult.getInt("Statusz")==0)
+                        {
+                            //Ide ha üres a polc
+                        }
+
                     }
                 }
         }
