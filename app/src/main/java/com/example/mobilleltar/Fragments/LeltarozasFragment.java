@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class LeltarozasFragment extends Fragment {
     private String ID;
     private MainActivity mainActivity;
     private ProgressBar progressBar;
+    private EditText mennyisegTxt;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,8 +84,10 @@ public class LeltarozasFragment extends Fragment {
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
-
+        mennyisegTxt = (EditText)view.findViewById(R.id.mennyisegText1);
+        mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
+
 
         kilepesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +130,7 @@ public class LeltarozasFragment extends Fragment {
             rakhelyTxt.setText(code);
             //rakhelyTxt.setEnabled(false);
         }
-        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat")
+        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben")
         {
             rakhelyTxt.setText(code);
             //rakhelyTxt.setEnabled(false);
@@ -152,5 +156,9 @@ public class LeltarozasFragment extends Fragment {
     public void StopProgress()
     {
         progressBar.setVisibility(View.GONE);
+    }
+    public void SetFocus()
+    {
+        mennyisegTxt.requestFocus();
     }
 }

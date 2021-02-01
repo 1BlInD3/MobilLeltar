@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private Handler handler1 = new Handler();
     private Handler handler2 = new Handler();
     private Handler handler3 = new Handler();
+    private Handler handler4 = new Handler();
 
     public String DolgKod;
     private boolean hasRight;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(getResources().getString(R.string.dw_action));
-        registerReceiver(myBroadcastReceiver, filter);
+//        registerReceiver(myBroadcastReceiver, filter);
 
         AidcManager.create(this, new AidcManager.CreatedCallback() {
             @Override
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
               }
               return super.onKeyDown(keyCode, event);
       }
+      menuFragment.onDestroy();
       return super.onKeyDown(keyCode, event);
     }
 
@@ -217,13 +219,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     DolgKod = barcodeData;
                     loginFragment.StartSpinning();
                     CheckRights();
+                    loginFragment.onDestroy();
                 }
                 else if(tabbedFragment != null)
                 {
                     PolcThread();
                     tabbedFragment.GetID(DolgKod);
                     //tabbedFragment.GetFragmentAtPosition(barcodeData);
-                    //tabbedFragment.onDestroy();
+                    tabbedFragment.onDestroy();
+                }
+                else if(menuFragment != null)
+                {
+                    menuFragment.onDestroy();
                 }
                 else if (cikklekerdezesFragment != null)
                 {
@@ -444,6 +451,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     };
 
+    Runnable focus = new Runnable() {
+        @Override
+        public void run() {
+               handler4.post(new Runnable() {
+                   @Override
+                   public void run() {
+                        tabbedFragment.SetFocus();
+                   }
+               });
+        }
+    };
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -464,6 +482,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 else
                 {
                     StopAnimation();
+                    GetFocus();
                     GetPolc(barcodeData);
                 }
 
@@ -639,5 +658,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void StopAnimation()
     {
         new Thread(Animation2).start();
+    }
+    public void GetFocus()
+    {
+        new Thread(focus).start();
     }
 }
