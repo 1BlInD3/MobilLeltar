@@ -126,11 +126,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,blankFragment).commit();
     }
 
-    public void LoadMenuFragment()
+   /* public void LoadMenuFragment()
     {
         menuFragment = new MenuFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
-    }
+    }*/
 
     /*public void LoadPolcResults()
     {
@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
   {
       FragmentManager manager = getSupportFragmentManager();
       menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
-      //TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
       if(menuFragment != null && menuFragment.isVisible())
       {
           return  true;
@@ -185,14 +184,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
       if(FragmentName())
       {
-              if (hasRight && keyCode == 8) {
+              if (hasRight && keyCode == 8)
+              {
                   LoadTabbedFragment();
-                 // GetRidOfFragment("MenuFrag");
-              } else if (keyCode == 9) {
+              }
+              else if (keyCode == 9)
+              {
                   Toast.makeText(getApplicationContext(), "Nincs jogosultságod belépni ", Toast.LENGTH_SHORT).show();
-              } else if (keyCode == 10) {
+              } else if (keyCode == 10)
+              {
                   LoadCikklekerdezesFragment();
-                 // GetRidOfFragment("MenuFrag");
               }
               else if(keyCode == 11)
               {
@@ -221,14 +222,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     DolgKod = barcodeData;
                     loginFragment.StartSpinning();
                     CheckRights();
-                    loginFragment.onDestroy();
+                    //loginFragment.onDestroy();
                 }
                 else if(tabbedFragment != null && tabbedFragment.isVisible())
                 {
                     PolcThread();
                     tabbedFragment.GetID(DolgKod);
-                    //tabbedFragment.GetFragmentAtPosition(barcodeData);
-                    tabbedFragment.onDestroy();
+                    //tabbedFragment.onDestroy();
                 }
                 else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
                 {
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     ci.clear();
                     cikklekerdezesFragment.SetBinOrItem(barcodeData);
                     SQL();
-                    cikklekerdezesFragment.onDestroy();
+                    //cikklekerdezesFragment.onDestroy();
                 }
             }
         });
@@ -479,9 +479,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
                 else
                 {
-                    StopAnimation();
-                    GetFocus();
-                    GetPolc(barcodeData);
+                    if(!isPolc)
+                    {
+                        StopAnimation();
+                        GetPolc("Nem polc");
+                    }
+                    else
+                    {
+                        StopAnimation();
+                        GetFocus();
+                        GetPolc(barcodeData);
+                    }
                 }
 
             } else {
