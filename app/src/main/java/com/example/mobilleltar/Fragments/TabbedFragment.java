@@ -78,13 +78,8 @@ public class TabbedFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
         cikkszam = (TextView)view.findViewById(R.id.cikkszamText);
-        megnevezes = (TextView)view.findViewById(R.id.cikkszamNameText);
         mennyiseg = (EditText)view.findViewById(R.id.mennyisegText1);
         megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
-
-      //  LeltarozasFragment leltarozasFragment = (LeltarozasFragment) getChildFragmentManager().beginTransaction().
-
-       // cikkszam.isFocusable();
         FragmentManager manager = getChildFragmentManager();
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
         tabLayout.bringToFront();
@@ -94,35 +89,6 @@ public class TabbedFragment extends Fragment{
         adapter.AddFragment(new MainFragment(),"Felvitt tételek");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
-        //page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 0);
-       // Fragment page2 = getChildFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager + ":" + 1);
-
-     /*   viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                if(i == 0)
-                {
-                    Toast.makeText(getContext(),"ELSO",Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getContext(),"Masodik",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-
-
-            }
-        });*/
 
         return view;
     }
@@ -135,34 +101,14 @@ public class TabbedFragment extends Fragment{
     public void setDataForChange(String a,String b, String c, String d)
     {
         cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamText);
-        megnevezes = (TextView)getActivity().findViewById(R.id.cikkszamNameText);
         mennyiseg = (EditText)getActivity().findViewById(R.id.mennyisegText1);
         megnevezes2 = (TextView)getActivity().findViewById(R.id.megjegyzesText);
 
 
         cikkszam.setText(a);
-        megnevezes.setText(b);
         mennyiseg.setText(c);
         megnevezes2.setText(d);
-        //Toast.makeText(getContext(),a+b+c+d,Toast.LENGTH_SHORT).show();
     }
-
-  /*  public void GetFragmentAtPosition(String code)
-    {
-        page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 0);
-        if(page != null)
-        {
-            switch (viewPager.getCurrentItem()) {
-                case 0:
-                    LeltarozasFragment leltarozasFragment = (LeltarozasFragment) page;
-                    leltarozasFragment.SetBinOrItem(code);
-                    break;
-                case 1:
-                    MainFragment mainFragment = (MainFragment)page;
-                    break;
-            }
-        }
-    }*/
 
     public void GetFragmentAtPosition(String code)
     {
@@ -197,6 +143,13 @@ public class TabbedFragment extends Fragment{
         Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         if (viewPager.getCurrentItem() == 0 && page != null) {
             ((LeltarozasFragment)page).SetFocus();
+        }
+    }
+    public void SetViews(String a, String b, String c)
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).SetViews(a,b,c);
         }
     }
 

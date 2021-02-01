@@ -69,11 +69,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private Handler handler2 = new Handler();
     private Handler handler3 = new Handler();
     private Handler handler4 = new Handler();
+    private Handler handler5 = new Handler();
 
     public String DolgKod;
     private boolean hasRight;
 
     public boolean isPolc = false;
+    private String mdesc1,mdesc2,munit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,6 +457,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
+    class SetViews implements Runnable
+    {
+        SetViews(String desc1, String desc2, String unit)
+        {
+            mdesc1 = desc1;
+            mdesc2 = desc2;
+            munit = unit;
+        }
+        @Override
+        public void run() {
+            handler5.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.SetViews(mdesc1,mdesc2,munit);
+                }
+            });
+        }
+    }
+
     Runnable Animation2 = new Runnable() {
         @Override
         public void run() {
@@ -506,7 +527,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     }
                     else
                     {
-
+                        mdesc1 = resultSet1.getString("Description1");
+                        mdesc2 = resultSet1.getString("Description2");
+                        munit = resultSet1.getString("Unit");
+                        SetViews(mdesc1,mdesc2,munit);
                         StopAnimation();
                         GetFocus();
                         GetPolc(barcodeData);
@@ -718,5 +742,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void GetFocus()
     {
         new Thread(focus).start();
+    }
+    public void SetViews(String desc1, String desc2, String unit)
+    {
+        SetViews setViews = new SetViews(desc1,desc2,unit);
+        new Thread(setViews).start();
     }
 }

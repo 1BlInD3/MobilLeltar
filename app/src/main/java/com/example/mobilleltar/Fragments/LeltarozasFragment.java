@@ -36,6 +36,9 @@ public class LeltarozasFragment extends Fragment {
     private MainActivity mainActivity;
     private ProgressBar progressBar;
     private EditText mennyisegTxt;
+    private TextView unitTxt;
+    private TextView desc1Txt;
+    private TextView desc2Txt;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,6 +83,9 @@ public class LeltarozasFragment extends Fragment {
         mainActivity = (MainActivity)getActivity();
         rakhelyTxt = (TextView)view.findViewById(R.id.rakhelyText);
         rakhelyTxt.setText("");
+        unitTxt = (TextView)view.findViewById(R.id.unitLeltar);
+        desc1Txt = (TextView)view.findViewById(R.id.desc1);
+        desc2Txt = (TextView)view.findViewById(R.id.desc2);
         cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
@@ -160,5 +166,11 @@ public class LeltarozasFragment extends Fragment {
     public void SetFocus()
     {
         mennyisegTxt.requestFocus();
+    }
+    public void SetViews(String desc1, String desc2, String unit)
+    {
+        desc1Txt.setText(desc1);
+        desc2Txt.setText(desc2);
+        unitTxt.setText(unit);
     }
 }

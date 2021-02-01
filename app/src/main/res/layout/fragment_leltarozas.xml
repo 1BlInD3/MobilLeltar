@@ -64,36 +64,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
-        android:text="IDE_JÖN_A_CIKKSZÁM"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/cikkszamNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="45dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
         android:id="@+id/textview10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="29dp"
+        android:layout_marginTop="116dp"
         android:text="Mennyiség: "
-        app:layout_constraintEnd_toStartOf="@+id/mennyisegText1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cikkszamNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
         android:text="Megjegyzés"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,20 +89,20 @@
 
     <EditText
         android:id="@+id/mennyisegText1"
-        android:layout_width="80dp"
+        android:layout_width="77dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="118dp"
+        android:layout_marginBottom="52dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="@+id/textview10"
+        app:layout_constraintBottom_toTopOf="@+id/megjegyzesText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textview10" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/megjegyzesText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
@@ -127,7 +115,7 @@
         android:id="@+id/rakhelyButton"
         android:layout_width="121dp"
         android:layout_height="43dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="76dp"
         android:layout_marginBottom="72dp"
         android:text="Új rakhely"
@@ -139,12 +127,12 @@
         android:id="@+id/kilepButton"
         android:layout_width="110dp"
         android:layout_height="42dp"
-        android:layout_marginStart="188dp"
         android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
         android:text="Kilépés"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/megjegyzesText" />
 
     <ProgressBar
@@ -158,6 +146,34 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/desc1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/desc2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/desc1" />
+
+    <TextView
+        android:id="@+id/unitLeltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintBottom_toTopOf="@+id/megjegyzesText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.237"
+        app:layout_constraintStart_toEndOf="@+id/mennyisegText1" />
 
 
 </android.support.constraint.ConstraintLayout>
