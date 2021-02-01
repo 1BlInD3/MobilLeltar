@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class LeltarozasFragment extends Fragment {
     private TextView cikkszamTxt;
     private String ID;
     private MainActivity mainActivity;
+    private ProgressBar progressBar;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -79,6 +81,9 @@ public class LeltarozasFragment extends Fragment {
         cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
+        progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
+
+        progressBar.setVisibility(View.GONE);
 
         kilepesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,8 +144,13 @@ public class LeltarozasFragment extends Fragment {
     {
         ID = code;
     }
-    public void SetItem(String code)
+
+    public void StartProgress()
     {
-        cikkszamTxt.setText(code);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    public void StopProgress()
+    {
+        progressBar.setVisibility(View.GONE);
     }
 }

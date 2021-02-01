@@ -178,5 +178,19 @@ public class TabbedFragment extends Fragment{
             ((LeltarozasFragment)page).SetID(code);
         }
     }
+    public void StartSpinning()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).StartProgress();
+        }
+    }
+    public void StopSpinning()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).StopProgress();
+        }
+    }
 
 }

@@ -64,11 +64,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
     private Handler handler1 = new Handler();
+    private Handler handler2 = new Handler();
+    private Handler handler3 = new Handler();
 
     public String DolgKod;
     private boolean hasRight;
 
-    public boolean isPolc;
+    public boolean isPolc = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -417,33 +419,70 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             });
         }
     }
+    class Animation implements Runnable
+    {
+        @Override
+        public void run() {
+            handler2.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.StartSpinning();
+                }
+            });
+        }
+    }
+
+    Runnable Animation2 = new Runnable() {
+        @Override
+        public void run() {
+            handler3.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.StopSpinning();
+                }
+            });
+        }
+    };
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
+        StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(URL);
         if(connection!=null) {
             Statement statement = connection.createStatement();
             sql = String.format(getResources().getString(R.string.polcSql), code);
             ResultSet resultSet = statement.executeQuery(sql);
-            if (!resultSet.next()) {
+            if (!resultSet.next()) {             //Megnézem hogy polc-e
                 Statement statement1 = connection.createStatement();
                 sql = String.format(getResources().getString(R.string.cikkSql),code);
                 ResultSet resultSet1 = statement1.executeQuery(sql);
-                if(!resultSet1.next())
+                if(!resultSet1.next()) //Megnézem hogy cikk-e
                 {
+                    StopAnimation();
                     GetPolc("Nincs a rendszerben");
                 }
                 else
                 {
+                    StopAnimation();
                     GetPolc(barcodeData);
                 }
 
             } else {
-                GetPolc(barcodeData);
+                if(isPolc)
+                {
+                    StopAnimation();
+                    GetPolc("Cikket vigyél fel");
+                }
+                else {
+                    StopAnimation();
+                    isPolc = true;
+                    GetPolc(barcodeData);
+                }
             }
         }
         else
         {
+            StopAnimation();
            GetPolc("Nincs hálózat");
         }
     }
@@ -591,5 +630,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         IsPolc isPolc = new IsPolc(code);
         new Thread(isPolc).start();
+    }
+    public void StartAnimation()
+    {
+        Animation animation = new Animation();
+        new Thread(animation).start();
+    }
+    public void StopAnimation()
+    {
+        new Thread(Animation2).start();
     }
 }
