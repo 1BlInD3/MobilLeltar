@@ -180,8 +180,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
   }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
+        //
+        if(tabbedFragment != null && tabbedFragment.isVisible())
+        {
+            isPolc = false;
+        }
+        super.onBackPressed();
+    }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
       if(FragmentName())
       {
               if (hasRight && keyCode == 8)
@@ -200,6 +210,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                   finishAndRemoveTask();
               }
               return super.onKeyDown(keyCode, event);
+      }
+      if(tabbedFragment != null && tabbedFragment.isVisible())
+      {
+          if(keyCode == 111)
+          {
+             isPolc = false;
+          }
       }
       return super.onKeyDown(keyCode, event);
     }
@@ -464,11 +481,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(URL);
-        if(connection!=null) {
+        if(connection!=null)
+        {
             Statement statement = connection.createStatement();
             sql = String.format(getResources().getString(R.string.polcSql), code);
             ResultSet resultSet = statement.executeQuery(sql);
-            if (!resultSet.next()) {             //Megnézem hogy polc-e
+            if (!resultSet.next())
+            {             //Megnézem hogy polc-e
                 Statement statement1 = connection.createStatement();
                 sql = String.format(getResources().getString(R.string.cikkSql),code);
                 ResultSet resultSet1 = statement1.executeQuery(sql);
@@ -491,19 +510,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         GetPolc(barcodeData);
                     }
                 }
-
-            } else {
-                if(isPolc)
-                {
-                    StopAnimation();
-                    GetPolc("Cikket vigyél fel");
-                }
-                else {
-                    StopAnimation();
-                    isPolc = true;
-                    GetPolc(barcodeData);
-                }
             }
+            else
+                {
+                    if(isPolc)
+                    {
+                        StopAnimation();
+                        GetPolc("Cikket vigyél fel");
+                    }
+                    else
+                    {
+                        StopAnimation();
+                        isPolc = true;
+                        GetPolc(barcodeData);
+                    }
+                }
         }
         else
         {
