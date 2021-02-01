@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(getResources().getString(R.string.dw_action));
-//        registerReceiver(myBroadcastReceiver, filter);
+        registerReceiver(myBroadcastReceiver, filter);
 
         AidcManager.create(this, new AidcManager.CreatedCallback() {
             @Override
@@ -167,9 +168,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
   public boolean FragmentName()
   {
       FragmentManager manager = getSupportFragmentManager();
-      MenuFragment  menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
+      menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
       //TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
-      if(menuFragment != null)
+      if(menuFragment != null && menuFragment.isVisible())
       {
           return  true;
       }
@@ -186,10 +187,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
       {
               if (hasRight && keyCode == 8) {
                   LoadTabbedFragment();
+                 // GetRidOfFragment("MenuFrag");
               } else if (keyCode == 9) {
                   Toast.makeText(getApplicationContext(), "Nincs jogosultságod belépni ", Toast.LENGTH_SHORT).show();
               } else if (keyCode == 10) {
                   LoadCikklekerdezesFragment();
+                 // GetRidOfFragment("MenuFrag");
               }
               else if(keyCode == 11)
               {
@@ -197,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
               }
               return super.onKeyDown(keyCode, event);
       }
-      menuFragment.onDestroy();
       return super.onKeyDown(keyCode, event);
     }
 
@@ -213,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
                 TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
                 CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
-                if(loginFragment != null)
+                if(loginFragment != null && loginFragment.isVisible())
                 {
                     loginFragment.SetId(barcodeData);
                     DolgKod = barcodeData;
@@ -221,18 +223,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     CheckRights();
                     loginFragment.onDestroy();
                 }
-                else if(tabbedFragment != null)
+                else if(tabbedFragment != null && tabbedFragment.isVisible())
                 {
                     PolcThread();
                     tabbedFragment.GetID(DolgKod);
                     //tabbedFragment.GetFragmentAtPosition(barcodeData);
                     tabbedFragment.onDestroy();
                 }
-                else if(menuFragment != null)
-                {
-                    menuFragment.onDestroy();
-                }
-                else if (cikklekerdezesFragment != null)
+                else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
                 {
                     LoadEmptyFragment();
                     pi.clear();
@@ -298,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             manager.close();
         }
         Log.d(TAG, "onDestroy: ");
-        //unregisterReceiver(myBroadcastReceiver);
+        unregisterReceiver(myBroadcastReceiver);
     }
 
     private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
@@ -623,6 +621,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         {
            SetText("Hálózati probléma");
         }
+
     }
 
     public void SQL()

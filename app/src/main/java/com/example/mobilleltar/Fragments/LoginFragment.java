@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.LoadMenuFragment();
+               // mainActivity.LoadMenuFragment();
             }
         });
 

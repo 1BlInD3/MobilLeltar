@@ -92,7 +92,7 @@ public class LeltarozasFragment extends Fragment {
         kilepesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.LoadMenuFragment();
+            //    mainActivity.LoadMenuFragment();
             }
         });
 
