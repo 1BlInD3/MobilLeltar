@@ -14,9 +14,11 @@ import android.widget.Toast;
 
 import com.example.mobilleltar.DataItems.CikkItems;
 import com.example.mobilleltar.DataItems.PolcItems;
+import com.example.mobilleltar.Fragments.BlankFragment;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
 import com.example.mobilleltar.Fragments.EmptyFragment;
+import com.example.mobilleltar.Fragments.LeltarozasFragment;
 import com.example.mobilleltar.Fragments.LoginFragment;
 import com.example.mobilleltar.Fragments.MainFragment;
 import com.example.mobilleltar.Fragments.MenuFragment;
@@ -113,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         tabbedFragment = new TabbedFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
+    }
+    public void LoadBlank()
+    {
+        BlankFragment blankFragment = new BlankFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,blankFragment).commit();
     }
 
     public void LoadMenuFragment()
@@ -419,7 +426,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             sql = String.format(getResources().getString(R.string.polcSql), code);
             ResultSet resultSet = statement.executeQuery(sql);
             if (!resultSet.next()) {
-                GetPolc("Nem polc");
+                Statement statement1 = connection.createStatement();
+                sql = String.format(getResources().getString(R.string.cikkSql),code);
+                ResultSet resultSet1 = statement1.executeQuery(sql);
+                if(!resultSet1.next())
+                {
+                    GetPolc("Nincs a rendszerben");
+                }
+                else
+                {
+                    GetPolc(barcodeData);
+                }
 
             } else {
                 GetPolc(barcodeData);
@@ -549,6 +566,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            SetText("Hálózati probléma");
         }
     }
+
     public void SQL()
     {
         SqlRunnable sqlRunnable = new SqlRunnable();
@@ -564,10 +582,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         TextChange textChange = new TextChange(text);
         new Thread(textChange).start();
     }
-
     public void PolcThread()
     {
-
         new Thread(checkPolc).start();
         //return false;
     }

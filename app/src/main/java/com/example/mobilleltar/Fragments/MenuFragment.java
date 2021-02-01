@@ -88,6 +88,13 @@ public class MenuFragment extends Fragment {
             ellenorzoBtn.setEnabled(false);
         }
 
+        ellenorzoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.LoadBlank();
+            }
+        });
+
         lekerdezesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

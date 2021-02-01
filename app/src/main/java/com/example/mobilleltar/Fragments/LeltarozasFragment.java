@@ -119,13 +119,19 @@ public class LeltarozasFragment extends Fragment {
         if(rakhelyTxt.getText()=="")
         {
             rakhelyTxt.setText(code);
+            //rakhelyTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat")
         {
             rakhelyTxt.setText(code);
+            //rakhelyTxt.setEnabled(false);
         }
-        else
+        else if(rakhelyTxt.getText()!="")
         {
+            if(rakhelyTxt.getText() == code)
+            {
+                cikkszamTxt.setText("Ez polc, cikket vegyél fel");
+            }
             cikkszamTxt.setText(code);
         }
     }
@@ -133,8 +139,8 @@ public class LeltarozasFragment extends Fragment {
     {
         ID = code;
     }
-    public void sjkdfns()
+    public void SetItem(String code)
     {
-       // mainActivity.PolcThread();
+        cikkszamTxt.setText(code);
     }
 }
