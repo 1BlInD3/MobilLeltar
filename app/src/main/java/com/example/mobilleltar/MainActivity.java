@@ -204,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
               else if (keyCode == 9)
               {
                   Toast.makeText(getApplicationContext(), "Nincs jogosultságod belépni ", Toast.LENGTH_SHORT).show();
-              } else if (keyCode == 10)
+              }
+              else if (keyCode == 10)
               {
                   LoadCikklekerdezesFragment();
               }
@@ -220,6 +221,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           {
              isPolc = false;
           }
+       /*   else if (keyCode == 66)
+          {
+              tabbedFragment.HasFocus();
+          }*/
+
       }
       return super.onKeyDown(keyCode, event);
     }
@@ -747,5 +753,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         SetViews setViews = new SetViews(desc1,desc2,unit);
         new Thread(setViews).start();
+    }
+    public void ClearViews()
+    {
+        tabbedFragment.ClearAllViews();
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class LeltarozasFragment extends Fragment {
     private TextView unitTxt;
     private TextView desc1Txt;
     private TextView desc2Txt;
+    private TextView megjegyzesTxt;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -91,6 +93,9 @@ public class LeltarozasFragment extends Fragment {
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
         mennyisegTxt = (EditText)view.findViewById(R.id.mennyisegText1);
+        megjegyzesTxt = (TextView)view.findViewById(R.id.megjegyzesText);
+        megjegyzesTxt.setEnabled(false);
+        mennyisegTxt.setEnabled(false);
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
 
@@ -126,6 +131,23 @@ public class LeltarozasFragment extends Fragment {
             }
         });
 
+        megjegyzesTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("LELTAR", "onClick: MEGNYOMTAM");
+                megjegyzesTxt.setEnabled(false);
+                mainActivity.ClearViews();
+            }
+        });
+
+        mennyisegTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    megjegyzesTxt.setEnabled(true);
+                    megjegyzesTxt.requestFocus();
+            }
+        });
+
         return view;
     }
     public void SetBinOrItem(String code)
@@ -134,12 +156,10 @@ public class LeltarozasFragment extends Fragment {
         if(rakhelyTxt.getText()=="")
         {
             rakhelyTxt.setText(code);
-            //rakhelyTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben")
         {
             rakhelyTxt.setText(code);
-            //rakhelyTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()!="")
         {
@@ -165,6 +185,7 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetFocus()
     {
+        mennyisegTxt.setEnabled(true);
         mennyisegTxt.requestFocus();
     }
     public void SetViews(String desc1, String desc2, String unit)
@@ -172,5 +193,15 @@ public class LeltarozasFragment extends Fragment {
         desc1Txt.setText(desc1);
         desc2Txt.setText(desc2);
         unitTxt.setText(unit);
+    }
+    public void ClearAllViews()
+    {
+        cikkszamTxt.setText("");
+        desc1Txt.setText("");
+        desc2Txt.setText("");
+        unitTxt.setText("");
+        mennyisegTxt.setText("");
+        megjegyzesTxt.setText("");
+
     }
 }

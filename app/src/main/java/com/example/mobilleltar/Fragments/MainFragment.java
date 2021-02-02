@@ -215,23 +215,4 @@ public class MainFragment extends Fragment {
         Log.d("VALTAS", "DESTROY");
     }
 
-    public void Refresh()
-    {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
-        }
-        ft.detach(this).attach(this).commit();
-    }
-    public void Refresh2()
-    {
-        Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_container);
-        if (currentFragment instanceof MainFragment) {
-        FragmentTransaction fragTransaction =   (getActivity()).getSupportFragmentManager().beginTransaction();
-        fragTransaction.detach(currentFragment);
-        fragTransaction.attach(currentFragment);
-        fragTransaction.commit();}
-    }
-
-
 }
