@@ -1,6 +1,7 @@
 package com.example.mobilleltar.Fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,10 +42,17 @@ public class LeltarozasFragment extends Fragment {
     private TextView desc1Txt;
     private TextView desc2Txt;
     private TextView megjegyzesTxt;
-
+    private TabbedFragment tabbedFragment;
+    private SetTableView setTableView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String a,b,c,d, mDesc1,mDesc2,mUnit,mMegj;
+
+    public interface SetTableView
+    {
+        void setDataToSend(String a, String b, String c, String d, String e);
+    }
 
     public LeltarozasFragment() {
         // Required empty public constructor
@@ -92,13 +100,13 @@ public class LeltarozasFragment extends Fragment {
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
-        mennyisegTxt = (EditText)view.findViewById(R.id.mennyisegText1);
+        mennyisegTxt = (EditText)view.findViewById(R.id.cikkszamHeader);
         megjegyzesTxt = (TextView)view.findViewById(R.id.megjegyzesText);
         megjegyzesTxt.setEnabled(false);
         mennyisegTxt.setEnabled(false);
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
-
+        tabbedFragment = new TabbedFragment();
 
         kilepesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +143,11 @@ public class LeltarozasFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("LELTAR", "onClick: MEGNYOMTAM");
+                b = String.valueOf(megjegyzesTxt.getText());
                 megjegyzesTxt.setEnabled(false);
                 mainActivity.ClearViews();
+              //  valami();
+                setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
             }
         });
 
@@ -145,6 +156,7 @@ public class LeltarozasFragment extends Fragment {
             public void onClick(View v) {
                     megjegyzesTxt.setEnabled(true);
                     megjegyzesTxt.requestFocus();
+                    c = String.valueOf(mennyisegTxt.getText());
             }
         });
 
@@ -168,6 +180,7 @@ public class LeltarozasFragment extends Fragment {
                 cikkszamTxt.setText("Ez polc, cikket vegyél fel");
             }
             cikkszamTxt.setText(code);
+            a = code;
         }
     }
     public void SetID(String code)
@@ -190,9 +203,13 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetViews(String desc1, String desc2, String unit)
     {
-        desc1Txt.setText(desc1);
-        desc2Txt.setText(desc2);
-        unitTxt.setText(unit);
+        mDesc1 = desc1;
+        mDesc2 = desc2;
+        mUnit = unit;
+
+        desc1Txt.setText(mDesc1);
+        desc2Txt.setText(mDesc2);
+        unitTxt.setText(mUnit);
     }
     public void ClearAllViews()
     {
@@ -203,5 +220,28 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
 
+    }
+  /*  public void TryToSet(String a, String b, String c, String d, String e)
+    {
+        tabbedFragment.PushData(String.valueOf(cikkszamTxt.getText()),String.valueOf(desc1Txt.getText()),String.valueOf(desc2Txt.getText()),String.valueOf(mennyisegTxt.getText()),String.valueOf(megjegyzesTxt.getText()));
+    }*/
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof SetTableView)
+        {
+            setTableView = (SetTableView) context;
+        }
+        else
+            {
+                throw new RuntimeException(context.toString() + "must implement tabchange");
+            }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        setTableView = null;
     }
 }

@@ -27,10 +27,10 @@ public class CikkItemAdapter extends RecyclerView.Adapter<CikkItemAdapter.CikkIt
         public CikkItemHolder(@NonNull View itemView) {
             super(itemView);
 
-            mennyisegTxt = (TextView)itemView.findViewById(R.id.mennyisegText1);
+            mennyisegTxt = (TextView)itemView.findViewById(R.id.cikkszamHeader);
             polcTxt = (TextView)itemView.findViewById(R.id.polcText);
-            raktarTxt = (TextView)itemView.findViewById(R.id.raktarText1);
-            allapotTxt = (TextView)itemView.findViewById(R.id.allapot);
+            raktarTxt = (TextView)itemView.findViewById(R.id.desc1Header);
+            allapotTxt = (TextView)itemView.findViewById(R.id.megjegyzesHeader);
         }
     }
 

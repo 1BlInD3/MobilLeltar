@@ -11,7 +11,7 @@
             android:layout_height="match_parent">
 
             <android.support.v7.widget.CardView
-                android:layout_width="40dp"
+                android:layout_width="100dp"
                 android:layout_height="30dp"
                 app:cardCornerRadius="1dp"
                 android:layout_marginTop="2dp"
@@ -19,49 +19,30 @@
                 android:background="@drawable/background_selector">
 
                 <TextView
-                    android:id="@+id/mennyisegText1"
+                    android:id="@+id/cikkszamHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:text="Cikkszám"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    tools:text="ELSO SOR" />
+                    android:textSize="16sp" />
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 app:cardCornerRadius="1dp"
-                android:layout_marginLeft="42dp"
+                android:layout_marginLeft="102dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/raktarText1"
+                    android:id="@+id/desc1Header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    tools:text="ELSO SOR" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                app:cardCornerRadius="2dp"
-                android:layout_marginLeft="144dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp">
-
-                <TextView
-                    android:id="@+id/allapot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="MASIK SOR"
+                    android:text="Megjegyzés1"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
@@ -71,16 +52,35 @@
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 app:cardCornerRadius="2dp"
-                android:layout_marginLeft="246dp"
+                android:layout_marginLeft="204dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/intRemText"
+                    android:id="@+id/desc2Header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Megjegyzes2"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="2dp"
+                android:layout_marginLeft="306dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:id="@+id/mennyisegHeader"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:maxLines="1"
-                    android:text="HARMADIK SOR"
+                    android:text="Mennyiség"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
@@ -90,16 +90,16 @@
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 app:cardCornerRadius="2dp"
-                android:layout_marginLeft="348dp"
+                android:layout_marginLeft="408dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp">>
 
                 <TextView
-                    android:id="@+id/allapot"
+                    android:id="@+id/megjegyzesHeader"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:maxLines="1"
-                    android:text="HARMADIK SOR"
+                    android:text="Megjegyzés"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />

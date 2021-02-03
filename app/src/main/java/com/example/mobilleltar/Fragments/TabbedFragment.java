@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
+import com.example.mobilleltar.MainActivity;
 import com.example.mobilleltar.R;
 
 /**
@@ -39,6 +39,7 @@ public class TabbedFragment extends Fragment{
     private String mParam1;
     private String mParam2;
     private Fragment page;
+    private MainActivity mainActivity;
 
     public TabbedFragment() {
         // Required empty public constructor
@@ -69,6 +70,7 @@ public class TabbedFragment extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -76,9 +78,10 @@ public class TabbedFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        mainActivity = (MainActivity)getActivity();
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
         cikkszam = (TextView)view.findViewById(R.id.cikkszamText);
-        mennyiseg = (EditText)view.findViewById(R.id.mennyisegText1);
+        mennyiseg = (EditText)view.findViewById(R.id.cikkszamHeader);
         megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
         FragmentManager manager = getChildFragmentManager();
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
@@ -86,7 +89,7 @@ public class TabbedFragment extends Fragment{
         viewPager = (ViewPager)view.findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(manager);
         adapter.AddFragment(new LeltarozasFragment(),"Leltározás");
-        adapter.AddFragment(new MainFragment(),"Felvitt tételek");
+        adapter.AddFragment(mainActivity.mainFragment,"Felvitt tételek");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -101,7 +104,7 @@ public class TabbedFragment extends Fragment{
     public void setDataForChange(String a,String b, String c, String d)
     {
         cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamText);
-        mennyiseg = (EditText)getActivity().findViewById(R.id.mennyisegText1);
+        mennyiseg = (EditText)getActivity().findViewById(R.id.cikkszamHeader);
         megnevezes2 = (TextView)getActivity().findViewById(R.id.megjegyzesText);
 
 
@@ -158,6 +161,16 @@ public class TabbedFragment extends Fragment{
         if (viewPager.getCurrentItem() == 0 && page != null) {
             ((LeltarozasFragment)page).ClearAllViews();
         }
+    }
+    public void PushData(String a,String b, String c, String d,String e)
+    {
+        /*Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 1 && page != null) {
+           ((MainFragment)page).AddDataToItems(a,b,c,d,e);
+        }*/
+        //MainFragment mainFragment = new MainFragment();
+       // mainFragment.AddDataToItems(a,b,c,d,e);
+        mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);
     }
 
 }

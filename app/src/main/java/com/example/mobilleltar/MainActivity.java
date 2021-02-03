@@ -42,10 +42,11 @@ import java.util.ArrayList;
 
 //jogosultsagot elmenteni és a nyomógombokat letiltani ahhoz képest
 
-public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView {
 
     private static final String TAG = "QUERY";
     private TabbedFragment tabbedFragment;
+    public MainFragment mainFragment = new MainFragment();
     
     private MenuFragment menuFragment;
     private LoginFragment loginFragment;
@@ -375,6 +376,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             SQL();
             cikklekerdezesFragment.onDestroy();
         }
+    }
+
+    @Override
+    public void setDataToSend(String a, String b, String c, String d, String e) {
+        tabbedFragment.PushData(a,b,c,d,e);
     }
 
     class SqlRunnable implements Runnable

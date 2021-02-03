@@ -82,6 +82,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("VALTAS", "ONCREATE");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -91,15 +92,14 @@ public class MainFragment extends Fragment {
 
     public interface TabChange {
         void tabChangeListener(int index);
-
         void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d("VALTOZAS","ONCREATEVIEW");
+
+        Log.d("VALTAS","ONCREATEVIEW");
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         final MainActivity mainActivity = (MainActivity) getActivity();
         editBtn = (Button) view.findViewById(R.id.editButton);
@@ -111,9 +111,9 @@ public class MainFragment extends Fragment {
 
         myItems = new ArrayList<>();
 
-        for (int i = 0; i < 45; i++) {
+      /*  for (int i = 0; i < 45; i++) {
             myItems.add(new Item("500000dfghjfdghfdh", "2021.01.06", "ABC012345565562fghf47", "VALAMIdsklfnskljdnfa", i + 1));
-        }
+        }*/
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         layoutManager = new LinearLayoutManager(view.getContext());
@@ -128,12 +128,6 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 tabChange.tabChangeListener(0);
                 tabChange.loadForChange(a, b, c, d);
-               // editBtn.setEnabled(false);
-                 //Refresh2();
-               // recyclerView.findViewHolderForAdapterPosition(lastPos+5).itemView.findViewById(R.id.frag_container).performClick();
-               // adapter.notifyDataSetChanged();
-                /* lastPos = -1;*/
-                //count = 0;
             }
         });
 
@@ -143,10 +137,10 @@ public class MainFragment extends Fragment {
                 adapter.notifyDataSetChanged();
                 if (count == 0) {
                     editBtn.setEnabled(true);
-                    a = myItems.get(position).getmRajzszam();
-                    b = myItems.get(position).getmDatum();
-                    c = myItems.get(position).getmValami();
-                    d = String.valueOf(myItems.get(position).getmCount());
+                    a = myItems.get(position).getmCikkszam();
+                    b = myItems.get(position).getmMegnevezes1();
+                    c = myItems.get(position).getmMegnevezes2();
+                    d = String.valueOf(myItems.get(position).getmMennyiseg());
                     lastPos = position;
                    // count = 1;
                 } else if (lastPos == position) {
@@ -214,5 +208,9 @@ public class MainFragment extends Fragment {
         super.onDestroy();
         Log.d("VALTAS", "DESTROY");
     }
-
+    public void AddDataToItems(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes)
+    {
+        myItems.add(new Item(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes));
+        adapter.notifyDataSetChanged();
+    }
 }

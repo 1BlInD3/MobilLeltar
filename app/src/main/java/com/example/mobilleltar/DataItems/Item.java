@@ -2,38 +2,38 @@ package com.example.mobilleltar.DataItems;
 
 public class Item
 {
-    private String mMertErtek;
-    private String mDatum;
-    private String mRajzszam;
-    private String mValami;
-    private int mCount;
+    private String mCikkszam;
+    private String mMegnevezes1;
+    private String mMegnevezes2;
+    private String mMennyiseg;
+    private String mMegjegyzes;
 
-    public Item(String ertek, String datum, String rajsszam,String valami,int count)
+    public Item(String cikk, String megn1, String megn2,String mennyiseg,String megj)
     {
-        mMertErtek = ertek;
-        mDatum = datum;
-        mRajzszam = rajsszam;
-        mValami = valami;
-        mCount = count;
+        mCikkszam = cikk;
+        mMegnevezes1 = megn1;
+        mMegnevezes2 = megn2;
+        mMennyiseg = mennyiseg;
+        mMegjegyzes = megj;
     }
 
-    public String getmMertErtek() {
-        return mMertErtek;
+    public String getmCikkszam() {
+        return mCikkszam;
     }
 
-    public String getmDatum() {
-        return mDatum;
+    public String getmMegnevezes1() {
+        return mMegnevezes1;
     }
 
-    public String getmRajzszam() {
-        return mRajzszam;
+    public String getmMegnevezes2() {
+        return mMegnevezes2;
     }
 
-    public String getmValami() {
-        return mValami;
+    public String getmMennyiseg() {
+        return mMennyiseg;
     }
 
-    public int getmCount() {
-        return mCount;
+    public String getmMegjegyzes() {
+        return mMegjegyzes;
     }
 }

@@ -47,11 +47,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         public ItemViewHolder(final View itemView, final OnItemClick listener) {
             super(itemView);
 
-            textView = (TextView)itemView.findViewById(R.id.raktarText1);
-            textView2 = (TextView)itemView.findViewById(R.id.allapot);
-            textView3 = (TextView)itemView.findViewById(R.id.intRemText);
-            textView4 = (TextView)itemView.findViewById(R.id.allapot);
-            textView5 = (TextView)itemView.findViewById(R.id.mennyisegText1);
+            textView = (TextView)itemView.findViewById(R.id.cikkszamHeader);
+            textView2 = (TextView)itemView.findViewById(R.id.desc1Header);
+            textView3 = (TextView)itemView.findViewById(R.id.desc2Header);
+            textView4 = (TextView)itemView.findViewById(R.id.mennyisegHeader);
+            textView5 = (TextView)itemView.findViewById(R.id.megjegyzesHeader);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,11 +126,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     {
 
         Item currentItem = mList.get(position);
-        holder.textView.setText(currentItem.getmMertErtek());
-        holder.textView2.setText(currentItem.getmDatum());
-        holder.textView3.setText(currentItem.getmRajzszam());
-        holder.textView4.setText(currentItem.getmValami());
-        holder.textView5.setText(String.valueOf(currentItem.getmCount()));
+        holder.textView.setText(currentItem.getmCikkszam());
+        holder.textView2.setText(currentItem.getmMegnevezes1());
+        holder.textView3.setText(currentItem.getmMegnevezes2());
+        holder.textView4.setText(currentItem.getmMennyiseg());
+        holder.textView5.setText(currentItem.getmMegjegyzes());
         if(lastPosition == position)
         {
             selectedItems.get(position,true);
