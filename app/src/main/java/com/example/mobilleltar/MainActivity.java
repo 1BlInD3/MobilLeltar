@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private Handler handler3 = new Handler();
     private Handler handler4 = new Handler();
     private Handler handler5 = new Handler();
+    private Handler handler6 = new Handler();
 
     public String DolgKod;
     private boolean hasRight;
@@ -253,8 +254,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
                 else if(tabbedFragment != null && tabbedFragment.isVisible())
                 {
-                    PolcThread();
-                    tabbedFragment.GetID(DolgKod);
+                    if(!tabbedFragment.IsMainFragment()) {
+                        PolcThread();
+                        tabbedFragment.GetID(DolgKod);
+                    }
                     //tabbedFragment.onDestroy();
                 }
                 else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
@@ -500,6 +503,29 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     };
 
+   class ListCucc implements Runnable
+   {
+        String ma,mb,mc,md,me;
+        ListCucc (String a,String b,String c,String d,String e)
+       {
+           ma = a;
+           mb = b;
+           mc = c;
+           md = d;
+           me = e;
+       }
+
+       @Override
+       public void run() {
+           handler6.post(new Runnable() {
+               @Override
+               public void run() {
+                   tabbedFragment.PushData(ma,mb,mc,md,me);
+               }
+           });
+       }
+   }
+
     Runnable focus = new Runnable() {
         @Override
         public void run() {
@@ -548,9 +574,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         GetPolc(barcodeData);
                     }
                 }
-            }
+            }//HA POLC
             else
-                {
+                {   //HA MÁR VETTEM FEL POLCOT
                     if(isPolc)
                     {
                         StopAnimation();
@@ -558,7 +584,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     }
                     else
                     {
-                        StopAnimation();
+                        // HA POLC, MEGNÉZEM A STÁTUSZÁT
                         isPolc = true;
                         GetPolc(barcodeData);
                         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -571,20 +597,56 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         {
                             //ide ha még nem volt ilyen polc
                             Log.d(TAG, "PolcCheck: ilyen még nem volt");
+                            StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
                             //Ide ha már vettem fel rá valamit
+                            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+                            connection = DriverManager.getConnection(connectionString);
+                            Statement polcItemState = connection.createStatement();
+                            String query = String.format(getResources().getString(R.string.polcItems),code);
+                            ResultSet itemResult = polcItemState.executeQuery(query);
+                            String item,quantity,x;
+                            if(!itemResult.next())
+                            {
+
+                            }
+                            else
+                                {
+                                    do {
+                                        item = itemResult.getString("Cikkszam");
+                                        quantity = itemResult.getString("Mennyiseg");
+                                        x = String.format(getResources().getString(R.string.cikkSql),item);
+                                        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+                                        connection = DriverManager.getConnection(connectionString);
+                                        Statement cikk = connection.createStatement();
+                                        ResultSet resultSet1 = cikk.executeQuery(x);
+                                        if(!resultSet1.next())
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            SendList(item,quantity,resultSet1.getString("Description1"),resultSet1.getString("Description2"),"");
+                                        }
+                                        Log.d(TAG, "PolcCheck: " + item+quantity+x);
+                                    }
+                                    while (itemResult.next());
+                                }
                             Log.d(TAG, "PolcCheck: van rajta valami");
+                            StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==2)
                         {
                             //Ide ha fullosan zárolt
                             Log.d(TAG, "PolcCheck: fullosan zárolt");
+                            StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
                             //Ide ha üres a polc
+                            StopAnimation();
                         }
 
                     }
@@ -763,5 +825,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void ClearViews()
     {
         tabbedFragment.ClearAllViews();
+    }
+    public void SendList(String a,String b,String c,String d,String e)
+    {
+        ListCucc listCucc = new ListCucc(a,b,c,d,e);
+        new Thread(listCucc).start();
     }
 }

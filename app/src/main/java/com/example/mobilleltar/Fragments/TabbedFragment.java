@@ -164,13 +164,17 @@ public class TabbedFragment extends Fragment{
     }
     public void PushData(String a,String b, String c, String d,String e)
     {
-        /*Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        if (viewPager.getCurrentItem() == 1 && page != null) {
-           ((MainFragment)page).AddDataToItems(a,b,c,d,e);
-        }*/
+
         //MainFragment mainFragment = new MainFragment();
        // mainFragment.AddDataToItems(a,b,c,d,e);
         mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);
     }
-
+    public boolean IsMainFragment()
+    {
+         Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 1 && page != null) {
+          return true;
+        }
+        return false;
+    }
 }
