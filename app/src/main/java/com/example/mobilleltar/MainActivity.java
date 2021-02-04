@@ -529,6 +529,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        }
    }
 
+   class RaktarName implements Runnable
+   {
+       String raktarName;
+       RaktarName(String raktar)
+       {
+           raktarName = raktar;
+       }
+
+       @Override
+       public void run() {
+           handler.post(new Runnable() {
+               @Override
+               public void run() {
+                    tabbedFragment.SetInternalName(raktarName);
+               }
+           });
+       }
+   }
+
     Runnable focus = new Runnable() {
         @Override
         public void run() {
@@ -547,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(connection!=null)
         {
             Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.polcSql), code);
+            sql = String.format(getResources().getString(R.string.isPolc), code);
             ResultSet resultSet = statement.executeQuery(sql);
             if (!resultSet.next())
             {             //Megnézem hogy polc-e
@@ -585,6 +604,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }//HA POLC
             else
                 {   //HA MÁR VETTEM FEL POLCOT
+                    String raktar = resultSet.getString("InternalName");
                     if(isPolc)
                     {
                         StopAnimation();
@@ -595,6 +615,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         // HA POLC, MEGNÉZEM A STÁTUSZÁT
                         isPolc = true;
                         GetPolc(barcodeData);
+                        SetRaktar(raktar);
                         Class.forName("net.sourceforge.jtds.jdbc.Driver");
                         connection = DriverManager.getConnection(connectionString);
                         Statement polcState = connection.createStatement();
@@ -814,5 +835,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         ListCucc listCucc = new ListCucc(a,b,c,d,e);
         new Thread(listCucc).start();
+    }
+    public void SetRaktar(String raktar)
+    {
+        RaktarName raktarName = new RaktarName(raktar);
+        new Thread(raktarName).start();
     }
 }

@@ -42,6 +42,7 @@ public class LeltarozasFragment extends Fragment {
     private TextView desc1Txt;
     private TextView desc2Txt;
     private TextView megjegyzesTxt;
+    private TextView internalNameTxt;
     private TabbedFragment tabbedFragment;
     private SetTableView setTableView;
     // TODO: Rename and change types of parameters
@@ -103,6 +104,7 @@ public class LeltarozasFragment extends Fragment {
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
         mennyisegTxt = (EditText)view.findViewById(R.id.cikkszamHeader);
         megjegyzesTxt = (TextView)view.findViewById(R.id.megjegyzesText);
+        internalNameTxt = (TextView)view.findViewById(R.id.internalNameText);
         megjegyzesTxt.setEnabled(false);
         mennyisegTxt.setEnabled(false);
         mennyisegTxt.setFocusable(true);
@@ -259,5 +261,9 @@ public class LeltarozasFragment extends Fragment {
     {
         mennyisegTxt.setEnabled(true);
         mennyisegTxt.requestFocus();
+    }
+    public void SetRaktar(String raktar)
+    {
+        internalNameTxt.setText(raktar);
     }
 }

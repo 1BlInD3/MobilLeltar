@@ -190,4 +190,11 @@ public class TabbedFragment extends Fragment{
             ((LeltarozasFragment)page).EnableViews();
         }
     }
+    public void SetInternalName(String internalName)
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).SetRaktar(internalName);
+        }
+    }
 }
