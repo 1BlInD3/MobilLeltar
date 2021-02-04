@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public boolean isPolc = false;
     private String mdesc1,mdesc2,munit;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,11 +167,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
 
     @Override
-    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg) {
-        tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg);
+    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes) {
+        tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes);
     }
 
-  public boolean FragmentName()
+    @Override
+    public void isUpdate(boolean update) {
+        tabbedFragment.IsUpdate(update);
+        tabbedFragment.EnableViews();
+    }
+
+    public boolean FragmentName()
   {
       FragmentManager manager = getSupportFragmentManager();
       menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
@@ -223,10 +230,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           {
              isPolc = false;
           }
-       /*   else if (keyCode == 66)
-          {
-              tabbedFragment.HasFocus();
-          }*/
 
       }
       return super.onKeyDown(keyCode, event);
@@ -551,7 +554,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 Statement statement1 = connection.createStatement();
                 sql = String.format(getResources().getString(R.string.cikkSql),code);
                 ResultSet resultSet1 = statement1.executeQuery(sql);
-                if(!resultSet1.next()) //Megnézem hogy cikk-e
+                if(code.equals("EMPTY")) //Megnézem hogy cikk-e
+                {
+                    StopAnimation();
+                    GetPolc("A polc üres");
+                }
+                else if (!resultSet1.next())
                 {
                     StopAnimation();
                     GetPolc("Nincs a rendszerben");
@@ -701,7 +709,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
             catch (Exception e)
             {
-                EmptyFragment emptyFragment = EmptyFragment.newInstance("A feldolgozás során hiba lépett fel","");
+                String a = e.getMessage();
+                EmptyFragment emptyFragment = EmptyFragment.newInstance(a,"");
                 getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
             }
         }

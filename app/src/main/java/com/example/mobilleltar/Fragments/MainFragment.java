@@ -54,7 +54,7 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
     private TabChange tabChange;
     private Button editBtn;
-    private String a, b, c, d;
+    private String a, b, c, d, e;
     private int lastPos = -1;
     private int count = 0;
 
@@ -92,7 +92,8 @@ public class MainFragment extends Fragment {
 
     public interface TabChange {
         void tabChangeListener(int index);
-        void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg);
+        void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes);
+        void isUpdate (boolean update);
     }
 
     @Override
@@ -127,7 +128,8 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 tabChange.tabChangeListener(0);
-                tabChange.loadForChange(a, b, c, d);
+                tabChange.loadForChange(a, b, c, d, e);
+                tabChange.isUpdate(true);
             }
         });
 
@@ -138,9 +140,10 @@ public class MainFragment extends Fragment {
                 if (count == 0) {
                     editBtn.setEnabled(true);
                     a = myItems.get(position).getmCikkszam();
-                    b = myItems.get(position).getmMegnevezes1();
-                    c = myItems.get(position).getmMegnevezes2();
-                    d = String.valueOf(myItems.get(position).getmMennyiseg());
+                    c = myItems.get(position).getmMegnevezes1();
+                    d = myItems.get(position).getmMegnevezes2();
+                    b = String.valueOf(myItems.get(position).getmMennyiseg());
+                    e = myItems.get(position).getmMegjegyzes();
                     lastPos = position;
                    // count = 1;
                 } else if (lastPos == position) {

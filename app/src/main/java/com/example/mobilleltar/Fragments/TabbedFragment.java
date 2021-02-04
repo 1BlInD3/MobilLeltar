@@ -26,9 +26,10 @@ public class TabbedFragment extends Fragment{
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TextView cikkszam;
-    private TextView megnevezes;
-    private TextView megnevezes2;
-    private EditText mennyiseg;
+    private TextView desc1;
+    private TextView desc2;
+    private EditText cikkszamHeader;
+    private EditText megjegyzes;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,9 +81,7 @@ public class TabbedFragment extends Fragment{
 
         mainActivity = (MainActivity)getActivity();
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
-        cikkszam = (TextView)view.findViewById(R.id.cikkszamText);
-        mennyiseg = (EditText)view.findViewById(R.id.cikkszamHeader);
-        megnevezes2 = (TextView)view.findViewById(R.id.megjegyzesText);
+
         FragmentManager manager = getChildFragmentManager();
         tabLayout = (TabLayout)view.findViewById(R.id.tablayout);
         tabLayout.bringToFront();
@@ -101,16 +100,19 @@ public class TabbedFragment extends Fragment{
         TabLayout.Tab tab = tabLayout.getTabAt(a);
         tab.select();
     }
-    public void setDataForChange(String a,String b, String c, String d)
+    public void setDataForChange(String a,String b, String c, String d, String e)
     {
         cikkszam = (TextView)getActivity().findViewById(R.id.cikkszamText);
-        mennyiseg = (EditText)getActivity().findViewById(R.id.cikkszamHeader);
-        megnevezes2 = (TextView)getActivity().findViewById(R.id.megjegyzesText);
-
+        cikkszamHeader = (EditText)getActivity().findViewById(R.id.cikkszamHeader);
+        desc1 = (TextView)getActivity().findViewById(R.id.desc1);
+        desc2 = (TextView)getActivity().findViewById(R.id.desc2);
+        megjegyzes = (EditText) getActivity().findViewById(R.id.megjegyzesText);
 
         cikkszam.setText(a);
-        mennyiseg.setText(c);
-        megnevezes2.setText(d);
+        cikkszamHeader.setText(b);
+        desc1.setText(c);
+        desc2.setText(d);
+        megjegyzes.setText(e);
     }
 
     public void GetFragmentAtPosition(String code)
@@ -164,9 +166,6 @@ public class TabbedFragment extends Fragment{
     }
     public void PushData(String a,String b, String c, String d,String e)
     {
-
-        //MainFragment mainFragment = new MainFragment();
-       // mainFragment.AddDataToItems(a,b,c,d,e);
         mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);
     }
     public boolean IsMainFragment()
@@ -176,5 +175,19 @@ public class TabbedFragment extends Fragment{
           return true;
         }
         return false;
+    }
+    public void IsUpdate(boolean update)
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).IsUpdate(update);
+        }
+    }
+    public void EnableViews()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).EnableViews();
+        }
     }
 }

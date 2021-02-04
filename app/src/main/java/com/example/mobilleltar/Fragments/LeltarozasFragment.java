@@ -48,6 +48,7 @@ public class LeltarozasFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private String a,b,c,d, mDesc1,mDesc2,mUnit,mMegj;
+    private boolean mUpdate;
 
     public interface SetTableView
     {
@@ -143,11 +144,21 @@ public class LeltarozasFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("LELTAR", "onClick: MEGNYOMTAM");
-                b = String.valueOf(megjegyzesTxt.getText());
-                megjegyzesTxt.setEnabled(false);
-                mainActivity.ClearViews();
-              //  valami();
-                setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
+                if(mUpdate)
+                {
+                    Log.d("LELTAR", "onClick: Ez már update-ra megy");
+                    mainActivity.ClearViews();
+                    mUpdate = false;
+                }
+                else
+                {
+                    b = String.valueOf(megjegyzesTxt.getText());
+                    megjegyzesTxt.setEnabled(false);
+                    mainActivity.ClearViews();
+                    setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
+                    Log.d("UPDATE", "onClick: Ez már simán ment");
+                }
+
             }
         });
 
@@ -221,10 +232,6 @@ public class LeltarozasFragment extends Fragment {
         megjegyzesTxt.setText("");
 
     }
-  /*  public void TryToSet(String a, String b, String c, String d, String e)
-    {
-        tabbedFragment.PushData(String.valueOf(cikkszamTxt.getText()),String.valueOf(desc1Txt.getText()),String.valueOf(desc2Txt.getText()),String.valueOf(mennyisegTxt.getText()),String.valueOf(megjegyzesTxt.getText()));
-    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -243,5 +250,14 @@ public class LeltarozasFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         setTableView = null;
+    }
+    public void IsUpdate(boolean update)
+    {
+        mUpdate = update;
+    }
+    public void EnableViews()
+    {
+        mennyisegTxt.setEnabled(true);
+        mennyisegTxt.requestFocus();
     }
 }
