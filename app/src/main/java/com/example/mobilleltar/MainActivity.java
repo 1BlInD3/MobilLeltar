@@ -597,49 +597,24 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         {
                             //ide ha még nem volt ilyen polc
                             Log.d(TAG, "PolcCheck: ilyen még nem volt");
+                           // SendList("NINCS","NINCS","NINCS","NINCS","NINCS");
                             StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
                             //Ide ha már vettem fel rá valamit
-                            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                            connection = DriverManager.getConnection(connectionString);
-                            Statement polcItemState = connection.createStatement();
-                            String query = String.format(getResources().getString(R.string.polcItems),code);
-                            ResultSet itemResult = polcItemState.executeQuery(query);
-                            String item,quantity,x;
-                            if(!itemResult.next())
-                            {
+                            do {
+                                SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
+                                        polcResult.getString("Mennyiseg"),"");
+                            }while(polcResult.next());
 
-                            }
-                            else
-                                {
-                                    do {
-                                        item = itemResult.getString("Cikkszam");
-                                        quantity = itemResult.getString("Mennyiseg");
-                                        x = String.format(getResources().getString(R.string.cikkSql),item);
-                                        Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                                        connection = DriverManager.getConnection(connectionString);
-                                        Statement cikk = connection.createStatement();
-                                        ResultSet resultSet1 = cikk.executeQuery(x);
-                                        if(!resultSet1.next())
-                                        {
-
-                                        }
-                                        else
-                                        {
-                                            SendList(item,quantity,resultSet1.getString("Description1"),resultSet1.getString("Description2"),"");
-                                        }
-                                        Log.d(TAG, "PolcCheck: " + item+quantity+x);
-                                    }
-                                    while (itemResult.next());
-                                }
                             Log.d(TAG, "PolcCheck: van rajta valami");
                             StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==2)
                         {
                             //Ide ha fullosan zárolt
+                           // SendList("Zárolt","Zárolt","Zárolt","Zárolt","Zárolt");
                             Log.d(TAG, "PolcCheck: fullosan zárolt");
                             StopAnimation();
                         }
