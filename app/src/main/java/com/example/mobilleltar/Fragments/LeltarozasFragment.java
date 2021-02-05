@@ -160,8 +160,8 @@ public class LeltarozasFragment extends Fragment {
                     d = String.valueOf(rakhelyTxt.getText());
                     megjegyzesTxt.setEnabled(false);
                     mainActivity.ClearViews();
-                    setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
-                    mainActivity.InsertNewRow(a,c,ID,mainActivity.mRakt,d,b,"n","1","0");
+                    setTableView.setDataToSend(a,mDesc1,mDesc2,c,b); // frissítem a listát
+                    mainActivity.InsertNewRow(a,c,ID,mainActivity.mRakt,d,b,"n","1","0"); //feltöltöm a leltaradatot
                     Log.d("UPDATE", "onClick: Ez már simán ment");
                 }
 

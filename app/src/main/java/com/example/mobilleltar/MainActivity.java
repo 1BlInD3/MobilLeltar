@@ -38,7 +38,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 //jogosultsagot elmenteni és a nyomógombokat letiltani ahhoz képest
 
@@ -655,9 +659,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         if(!polcResult.next())
                         {
                             //ide ha még nem volt ilyen polc
-                            Log.d(TAG, "PolcCheck: ilyen még nem volt");
-                           // SendList("NINCS","NINCS","NINCS","NINCS","NINCS");
-                            StopAnimation();
+                            //ide jön a RaktHely ellenörzős feltöltés
+                          /*  try
+                            {
+                                do {
+                                    SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
+                                            polcResult.getString("Mennyiseg"),"");
+                                }while(polcResult.next());
+                            }catch (Exception e)
+                            {*/
+                                String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                String datetime = simpleDateFormat.format(new Date());
+                                String sql = String.format(s,code,DolgKod,1,datetime);
+                                Statement rakhEll = connection.createStatement();
+                                rakhEll.executeUpdate(sql);
+
+                                Log.d(TAG, "PolcCheck: ilyen még nem volt");
+                                // SendList("NINCS","NINCS","NINCS","NINCS","NINCS");
+                                StopAnimation();
+                          //  }
+
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
