@@ -164,6 +164,13 @@ public class TabbedFragment extends Fragment{
             ((LeltarozasFragment)page).ClearAllViews();
         }
     }
+    public void ClearAllViewsAndPolc()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).ClearPolc();
+        }
+    }
     public void PushData(String a,String b, String c, String d,String e)
     {
         mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);

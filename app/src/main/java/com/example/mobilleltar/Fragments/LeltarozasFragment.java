@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.mobilleltar.MainActivity;
 import com.example.mobilleltar.R;
 
+import java.sql.SQLException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LeltarozasFragment#newInstance} factory method to
@@ -155,9 +157,11 @@ public class LeltarozasFragment extends Fragment {
                 else
                 {
                     b = String.valueOf(megjegyzesTxt.getText());
+                    d = String.valueOf(rakhelyTxt.getText());
                     megjegyzesTxt.setEnabled(false);
                     mainActivity.ClearViews();
                     setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
+                    mainActivity.InsertNewRow(a,c,ID,"02",d,b,"n","1","0");
                     Log.d("UPDATE", "onClick: Ez már simán ment");
                 }
 
@@ -226,6 +230,17 @@ public class LeltarozasFragment extends Fragment {
     }
     public void ClearAllViews()
     {
+        cikkszamTxt.setText("");
+        desc1Txt.setText("");
+        desc2Txt.setText("");
+        unitTxt.setText("");
+        mennyisegTxt.setText("");
+        megjegyzesTxt.setText("");
+
+    }
+    public void ClearPolc()
+    {
+        rakhelyTxt.setText("");
         cikkszamTxt.setText("");
         desc1Txt.setText("");
         desc2Txt.setText("");

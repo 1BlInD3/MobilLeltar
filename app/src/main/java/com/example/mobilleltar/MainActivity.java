@@ -559,6 +559,34 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                });
         }
     };
+
+   class InsertRows implements Runnable
+   {
+       String a,b,c,d,e,f,g,h,i;
+       InsertRows(String cikk, String mennyiseg, String dolgozo, String raktar, String rakhely, String megjegyzes, String nyomtatva, String status, String ellStatus)
+       {
+           a = cikk;
+           b = mennyiseg;
+           c = dolgozo;
+           d = raktar;
+           e = rakhely;
+           f = megjegyzes;
+           g = nyomtatva;
+           h = status;
+           i = ellStatus;
+       }
+
+       @Override
+       public void run() {
+           try {
+               InsertRow(a,b,c,d,e,f,g,h,i);
+           } catch (ClassNotFoundException ex) {
+               ex.printStackTrace();
+           } catch (SQLException ex) {
+               ex.printStackTrace();
+           }
+       }
+   }
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -646,11 +674,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                            // SendList("Zárolt","Zárolt","Zárolt","Zárolt","Zárolt");
                             Log.d(TAG, "PolcCheck: fullosan zárolt");
                             StopAnimation();
+                            ClearPolc();
+                            isPolc = false;
+                            return;
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
                             //Ide ha üres a polc
+                            Log.d(TAG, "PolcCheck: a polc üres");
                             StopAnimation();
+                            ClearPolc();
+                            isPolc = false;
+                            return;
                         }
 
                     }
@@ -783,6 +818,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
 
     }
+   
+    public void InsertRow(String cikk, String mennyiseg, String dolgozo, String raktar, String rakhely, String megjegyzes, String nyomtatva, String status, String ellStatus) throws ClassNotFoundException, SQLException {
+        StartAnimation();
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(connectionString);
+        if(connection!=null) {
+            Statement statement = connection.createStatement();
+            String a = " INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')";
+            String sql;
+            sql = String.format(a,cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
+            Log.d(TAG, "InsertRow: "+sql);
+            statement.executeUpdate(sql);
+            StopAnimation();
+        }
+        else
+        {
+            //ide ha nincs connection
+            Log.d(TAG, "InsertRow: NO CONNECTION");
+            StopAnimation();
+        }
+    }
 
     public void SQL()
     {
@@ -831,6 +887,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         tabbedFragment.ClearAllViews();
     }
+    private void ClearPolc()
+    {
+        tabbedFragment.ClearAllViewsAndPolc();
+    }
     public void SendList(String a,String b,String c,String d,String e)
     {
         ListCucc listCucc = new ListCucc(a,b,c,d,e);
@@ -841,4 +901,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         RaktarName raktarName = new RaktarName(raktar);
         new Thread(raktarName).start();
     }
+    public void InsertNewRow(String cikk, String mennyiseg, String dolgozo, String raktar, String rakhely, String megjegyzes, String nyomtatva, String status, String ellStatus)
+    {
+        InsertRows insertRows = new InsertRows(cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
+        new Thread(insertRows).start();
+    }
+
 }
