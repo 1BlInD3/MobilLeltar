@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     public boolean isPolc = false;
     private String mdesc1,mdesc2,munit;
+    public String mRakt;
 
 
     @Override
@@ -633,6 +634,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             else
                 {   //HA MÁR VETTEM FEL POLCOT
                     String raktar = resultSet.getString("InternalName");
+                    mRakt = resultSet.getString("WarehouseID");
                     if(isPolc)
                     {
                         StopAnimation();

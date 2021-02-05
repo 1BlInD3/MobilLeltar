@@ -161,7 +161,7 @@ public class LeltarozasFragment extends Fragment {
                     megjegyzesTxt.setEnabled(false);
                     mainActivity.ClearViews();
                     setTableView.setDataToSend(a,mDesc1,mDesc2,c,b);
-                    mainActivity.InsertNewRow(a,c,ID,"02",d,b,"n","1","0");
+                    mainActivity.InsertNewRow(a,c,ID,mainActivity.mRakt,d,b,"n","1","0");
                     Log.d("UPDATE", "onClick: Ez már simán ment");
                 }
 
