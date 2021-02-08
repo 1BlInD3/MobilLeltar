@@ -1,7 +1,9 @@
 package com.example.mobilleltar;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public boolean isPolc = false;
     private String mdesc1,mdesc2,munit;
     public String mRakt;
+    public boolean isEmpty = false;
+    public boolean isContains = false;
+    private String polc;
 
 
     @Override
@@ -234,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           if(keyCode == 111)
           {
              isPolc = false;
+             isContains = false;
+            // isEmpty = true;
           }
 
       }
@@ -368,9 +375,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(loginFragment != null)
         {
             loginFragment.SetId(decodedData);
-           // loginFragment.SetId(barcodeData);
             CheckRights();
-            //loginFragment.onDestroy();
+
         }
         else if(tabbedFragment != null)
         {
@@ -392,6 +398,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     @Override
     public void setDataToSend(String a, String b, String c, String d, String e) {
         tabbedFragment.PushData(a,b,c,d,e);
+    }
+
+    @Override
+    public void isEmpty(boolean a) {
+        isEmpty = a;
+    }
+
+    @Override
+    public void isContains(boolean a) {
+        isContains = a;
     }
 
     class SqlRunnable implements Runnable
@@ -592,6 +608,50 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
+
+   Runnable rakhelyEll = new Runnable() {
+       @Override
+       public void run() {
+           try {
+               InsertRakhelyEll();
+           } catch (ClassNotFoundException e) {
+               e.printStackTrace();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+       }
+   };
+   Runnable polcClear = new Runnable() {
+       @Override
+       public void run() {
+           handler.post(new Runnable() {
+               @Override
+               public void run() {
+                   tabbedFragment.ClearAllViewsAndPolc();
+               }
+           });
+
+       }
+   };
+   class Dialog implements Runnable
+   {
+       String mText;
+
+       Dialog(String text)
+       {
+           mText = text;
+       }
+
+       @Override
+       public void run() {
+           handler.post(new Runnable() {
+               @Override
+               public void run() {
+                   Dialog(mText);
+               }
+           });
+       }
+   }
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -608,8 +668,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 ResultSet resultSet1 = statement1.executeQuery(sql);
                 if(code.equals("EMPTY")) //Megnézem hogy cikk-e
                 {
-                    StopAnimation();
-                    GetPolc("A polc üres");
+                    if(!isContains) {
+                        //ide ha nem lett felvéve
+                        InsertRakhelyEll();
+                        StopAnimation();
+                        //GetPolc("A polc üres");
+                        ClearPolc();
+                        isPolc = false;
+                        isContains = false;
+                    }
+                    else 
+                    {
+                        Log.d(TAG, "PolcCheck: NEM LEHET ÜRES VAN RAJTA CUCC");
+                        //IDE EGY DIALOGOT
+                        ShowDialog("A polcra már vételeztek, nem lehet üres");
+                        StopAnimation();
+                    }
                 }
                 else if (!resultSet1.next())
                 {
@@ -649,6 +723,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         // HA POLC, MEGNÉZEM A STÁTUSZÁT
                         isPolc = true;
                         GetPolc(barcodeData);
+                        polc = barcodeData;
                         SetRaktar(raktar);
                         Class.forName("net.sourceforge.jtds.jdbc.Driver");
                         connection = DriverManager.getConnection(connectionString);
@@ -658,31 +733,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         ResultSet polcResult = polcState.executeQuery(a);
                         if(!polcResult.next())
                         {
-                            //ide ha még nem volt ilyen polc
-                            //ide jön a RaktHely ellenörzős feltöltés
-                          /*  try
-                            {
-                                do {
-                                    SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
-                                            polcResult.getString("Mennyiseg"),"");
-                                }while(polcResult.next());
-                            }catch (Exception e)
-                            {*/
-                                String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                                String datetime = simpleDateFormat.format(new Date());
-                                String sql = String.format(s,code,DolgKod,1,datetime);
-                                Statement rakhEll = connection.createStatement();
-                                rakhEll.executeUpdate(sql);
-
-                                Log.d(TAG, "PolcCheck: ilyen még nem volt");
-                                // SendList("NINCS","NINCS","NINCS","NINCS","NINCS");
-                                StopAnimation();
-                          //  }
-
+                            //megnézem hogy üres -e a polc
+                            isEmpty = true;
+                            StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
+                            isContains = true;
                             //Ide ha már vettem fel rá valamit
                             do {
                                 SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
@@ -700,7 +757,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             StopAnimation();
                             ClearPolc();
                             isPolc = false;
-                            return;
+                           // return;
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
@@ -708,8 +765,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             Log.d(TAG, "PolcCheck: a polc üres");
                             StopAnimation();
                             ClearPolc();
+                            GetPolc("A polc üres");
+                            //IDE EGY DIALOGOT
+                            ShowDialog("A polc üres");
                             isPolc = false;
-                            return;
+                           // return;
                         }
 
                     }
@@ -864,6 +924,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
+    private void InsertRakhelyEll() throws ClassNotFoundException, SQLException {
+          Class.forName("net.sourceforge.jtds.jdbc.Driver");
+          connection = DriverManager.getConnection(connectionString);
+          if(connection!=null) {
+              String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+              SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+              String datetime = simpleDateFormat.format(new Date());
+              String sql;
+              if(isContains)
+              {
+                  sql = String.format(s, polc, DolgKod, 1, datetime);
+              }
+              else {
+                  sql = String.format(s, polc, DolgKod, 0, datetime);
+              }
+              Statement rakhEll = connection.createStatement();
+              rakhEll.executeUpdate(sql);
+              StopAnimation();
+          }
+    }
+
     public void SQL()
     {
         SqlRunnable sqlRunnable = new SqlRunnable();
@@ -913,7 +994,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
     private void ClearPolc()
     {
-        tabbedFragment.ClearAllViewsAndPolc();
+       // tabbedFragment.ClearAllViewsAndPolc();
+        new Thread(polcClear).start();
     }
     public void SendList(String a,String b,String c,String d,String e)
     {
@@ -929,6 +1011,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         InsertRows insertRows = new InsertRows(cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
         new Thread(insertRows).start();
+    }
+    public void InsertRakhEll()
+    {
+        new Thread(rakhelyEll).start();
+    }
+    private void Dialog(String text)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Figyelem")
+                .setMessage(text);
+        builder.create();
+        builder.show();
+    }
+    private void ShowDialog(String text)
+    {
+        Dialog dialog = new Dialog(text);
+        new Thread(dialog).start();
     }
 
 }

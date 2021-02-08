@@ -56,6 +56,8 @@ public class LeltarozasFragment extends Fragment {
     public interface SetTableView
     {
         void setDataToSend(String a, String b, String c, String d, String e);
+        void isEmpty (boolean a);
+        void isContains (boolean a);
     }
 
     public LeltarozasFragment() {
@@ -161,7 +163,17 @@ public class LeltarozasFragment extends Fragment {
                     megjegyzesTxt.setEnabled(false);
                     mainActivity.ClearViews();
                     setTableView.setDataToSend(a,mDesc1,mDesc2,c,b); // frissítem a listát
-                    mainActivity.InsertNewRow(a,c,ID,mainActivity.mRakt,d,b,"n","1","0"); //feltöltöm a leltaradatot
+                    if(mainActivity.isEmpty)
+                    {
+                        mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
+                        mainActivity.InsertRakhEll();
+                        setTableView.isEmpty(false);
+                        setTableView.isContains(true);
+                    }
+                    else
+                    {
+                        mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
+                    }
                     Log.d("UPDATE", "onClick: Ez már simán ment");
                 }
 
@@ -186,7 +198,7 @@ public class LeltarozasFragment extends Fragment {
         {
             rakhelyTxt.setText(code);
         }
-        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben")
+        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres")
         {
             rakhelyTxt.setText(code);
         }
