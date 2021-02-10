@@ -8,6 +8,9 @@
     <string name="jog">SELECT LeltarKuty_Jog as Jog FROM [Fusetech].[dbo].Jogok WHERE Pecset = \'%s\' </string>
     <string name ="polcItems">SELECT * FROM Leltaradat WHERE RaktHely= \'%s\'</string>
     <string name ="polcStatus">SELECT * FROM Kuty_Leltaradat_polc WHERE RaktHely = \'%s\'</string>
+    <string name="insertRow">INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')</string>
+    <string name="insertRakh">INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES(\'%s\',\'%s\',\'%s\',\'%s\')</string>
+    <string name="closeRakh">UPDATE [leltar].[dbo].[LeltarRakhEll] SET DolgozoBef = \'%s\', Statusz = \'%s\', BefDatum = \'%s\' WHERE RaktHely = \'%s\'</string>
     <string name="dw_action">com.dwexample.ACTION</string>
     <string name="datawedge_intent_key_source">com.symbol.datawedge.source</string>
     <string name="datawedge_intent_key_label_type">com.symbol.datawedge.label_type</string>

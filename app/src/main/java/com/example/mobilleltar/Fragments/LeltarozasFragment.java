@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.example.mobilleltar.MainActivity;
 import com.example.mobilleltar.R;
 
-import java.sql.SQLException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,8 +26,6 @@ import java.sql.SQLException;
  */
 public class LeltarozasFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -132,7 +129,10 @@ public class LeltarozasFragment extends Fragment {
                         .setNegativeButton("Igen", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
+                                mainActivity.CloseRakhely();
+                                ClearPolc();
+                                ClearAllViews();
                             }
                         })
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
@@ -259,6 +259,7 @@ public class LeltarozasFragment extends Fragment {
         unitTxt.setText("");
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
+        internalNameTxt.setText("");
 
     }
 

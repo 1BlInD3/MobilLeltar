@@ -652,6 +652,19 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            });
        }
    }
+
+   Runnable closeRakh = new Runnable() {
+       @Override
+       public void run() {
+           try {
+               CloseRakh();
+           } catch (ClassNotFoundException e) {
+               e.printStackTrace();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+       }
+   };
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -756,6 +769,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             Log.d(TAG, "PolcCheck: fullosan zárolt");
                             StopAnimation();
                             ClearPolc();
+                            ShowDialog("A polc zárolva van");
+                          //ClearViews();
                             isPolc = false;
                            // return;
                         }
@@ -909,9 +924,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
             Statement statement = connection.createStatement();
-            String a = " INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')";
+           // String a = "INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')";
             String sql;
-            sql = String.format(a,cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
+            sql = String.format(getResources().getString(R.string.insertRow),cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
             Log.d(TAG, "InsertRow: "+sql);
             statement.executeUpdate(sql);
             StopAnimation();
@@ -928,21 +943,52 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           Class.forName("net.sourceforge.jtds.jdbc.Driver");
           connection = DriverManager.getConnection(connectionString);
           if(connection!=null) {
-              String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+             // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
               SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
               String datetime = simpleDateFormat.format(new Date());
               String sql;
               if(isContains)
               {
-                  sql = String.format(s, polc, DolgKod, 1, datetime);
+                  sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "1", datetime);
               }
               else {
-                  sql = String.format(s, polc, DolgKod, 0, datetime);
+                  sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "0", datetime);
               }
               Statement rakhEll = connection.createStatement();
               rakhEll.executeUpdate(sql);
               StopAnimation();
           }
+    }
+
+    private void CloseRakh()throws ClassNotFoundException, SQLException
+    {
+        StartAnimation();
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(connectionString);
+        if(connection!=null) {
+            // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String datetime = simpleDateFormat.format(new Date());
+            String sql;
+            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,"2",datetime,polc);
+            Statement closeState = connection.createStatement();
+            try
+            {
+                closeState.executeUpdate(sql);
+                StopAnimation();
+                tabbedFragment.ClearAllViewsAndPolc();
+            }
+            catch (Exception e)
+            {
+                StopAnimation();
+                ShowDialog(String.valueOf(e));
+            }
+        }
+        else
+        {
+            StopAnimation();
+            ShowDialog("Hálózati probléma");
+        }
     }
 
     public void SQL()
@@ -1028,6 +1074,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         Dialog dialog = new Dialog(text);
         new Thread(dialog).start();
+    }
+    public void CloseRakhely()
+    {
+        new Thread(closeRakh).start();
     }
 
 }
