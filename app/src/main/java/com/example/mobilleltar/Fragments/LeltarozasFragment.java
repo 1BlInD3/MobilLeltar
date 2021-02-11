@@ -130,7 +130,7 @@ public class LeltarozasFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                // Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
-                                mainActivity.CloseRakhely();
+                                mainActivity.CloseRakhely("2");
                                 ClearPolc();
                                 ClearAllViews();
                                 mainActivity.mainFragment.ClearItems();
@@ -139,7 +139,8 @@ public class LeltarozasFragment extends Fragment {
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getContext(),"Ide tenni a nem lezárós részt",Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getContext(),"Ide tenni a nem lezárós részt",Toast.LENGTH_SHORT).show();
+                                mainActivity.LoadMenuFragment();
                             }
                         });
                 builder.create();

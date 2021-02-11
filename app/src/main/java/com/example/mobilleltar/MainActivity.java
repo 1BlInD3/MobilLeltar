@@ -142,11 +142,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,blankFragment).commit();
     }
 
-   /* public void LoadMenuFragment()
+    public void LoadMenuFragment()
     {
-        menuFragment = new MenuFragment();
+        menuFragment = MenuFragment.newInstance(hasRight);
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
-    }*/
+        isPolc = false;
+    }
 
     /*public void LoadPolcResults()
     {
@@ -653,18 +654,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        }
    }
 
-   Runnable closeRakh = new Runnable() {
+   class CloseRakh implements Runnable
+   {
+       String code;
+        CloseRakh(String a)
+        {
+            code = a;
+        }
        @Override
        public void run() {
            try {
-               CloseRakh();
+               CloseRakh(code);
            } catch (ClassNotFoundException e) {
                e.printStackTrace();
            } catch (SQLException e) {
                e.printStackTrace();
            }
        }
-   };
+   }
+
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -685,6 +693,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         //ide ha nem lett felvéve
                         InsertRakhelyEll();
                         //IDE KELL A LEZÁRÁS
+                        CloseRakh("0");
                         StopAnimation();
                         //GetPolc("A polc üres");
                         ClearPolc();
@@ -901,13 +910,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(resultSet.getInt("Jog") == 1)
                 {
                     hasRight = true;
-                    menuFragment = MenuFragment.newInstance(true,"");
+                    menuFragment = MenuFragment.newInstance(true);
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
                 else
                 {
                     hasRight = false;
-                    menuFragment = MenuFragment.newInstance(false,"");
+                    menuFragment = MenuFragment.newInstance(false);
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
             }
@@ -961,7 +970,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           }
     }
 
-    private void CloseRakh()throws ClassNotFoundException, SQLException
+    private void CloseRakh(String code)throws ClassNotFoundException, SQLException
     {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -971,7 +980,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String datetime = simpleDateFormat.format(new Date());
             String sql;
-            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,"2",datetime,polc);
+            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,code,datetime,polc);
             Statement closeState = connection.createStatement();
             try
             {
@@ -1077,8 +1086,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         Dialog dialog = new Dialog(text);
         new Thread(dialog).start();
     }
-    public void CloseRakhely()
+    public void CloseRakhely(String a)
     {
+        CloseRakh closeRakh = new CloseRakh(a);
         new Thread(closeRakh).start();
     }
 

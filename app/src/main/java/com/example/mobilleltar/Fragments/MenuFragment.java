@@ -46,15 +46,14 @@ public class MenuFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MenuFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MenuFragment newInstance(Boolean param1, String param2) {
+    public static MenuFragment newInstance(Boolean param1/*, String param2*/) {
         MenuFragment fragment = new MenuFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+      //  args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +64,7 @@ public class MenuFragment extends Fragment {
         if (getArguments() != null) {
             Log.d(TAG, "onCreate: ");
             mParam1 = getArguments().getBoolean(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+           // mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
