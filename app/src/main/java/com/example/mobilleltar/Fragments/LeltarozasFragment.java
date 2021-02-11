@@ -44,9 +44,10 @@ public class LeltarozasFragment extends Fragment {
     private TextView internalNameTxt;
     private TabbedFragment tabbedFragment;
     private SetTableView setTableView;
+    private String oldQuantity;
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //private String mParam1;
+  //  private String mParam2;
     private String a,b,c,d, mDesc1,mDesc2,mUnit,mMegj;
     private boolean mUpdate;
 
@@ -83,8 +84,8 @@ public class LeltarozasFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+           // mParam1 = getArguments().getString(ARG_PARAM1);
+            //mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -139,8 +140,8 @@ public class LeltarozasFragment extends Fragment {
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                               // Toast.makeText(getContext(),"Ide tenni a nem lezárós részt",Toast.LENGTH_SHORT).show();
-                                mainActivity.LoadMenuFragment();
+                                ClearPolc();
+                                mainActivity.isPolc=false;
                             }
                         });
                 builder.create();
@@ -154,6 +155,11 @@ public class LeltarozasFragment extends Fragment {
                 Log.d("LELTAR", "onClick: MEGNYOMTAM");
                 if(mUpdate)
                 {
+                    //ide kell az update sql
+                    String uMenny = String.valueOf(mennyisegTxt.getText());
+                    String uMegj = String.valueOf(megjegyzesTxt.getText());
+                    String cikk = String.valueOf(cikkszamTxt.getText()).trim();
+                    mainActivity.UpdateItems(uMenny,uMegj,cikk,d);
                     Log.d("LELTAR", "onClick: Ez már update-ra megy");
                     mainActivity.ClearViews();
                     mUpdate = false;
@@ -295,5 +301,9 @@ public class LeltarozasFragment extends Fragment {
     public void SetRaktar(String raktar)
     {
         internalNameTxt.setText(raktar);
+    }
+    public void setOld(String mennyiseg)
+    {
+        oldQuantity = mennyiseg;
     }
 }

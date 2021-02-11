@@ -11,6 +11,7 @@
     <string name="insertRow">INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')</string>
     <string name="insertRakh">INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES(\'%s\',\'%s\',\'%s\',\'%s\')</string>
     <string name="closeRakh">UPDATE [leltar].[dbo].[LeltarRakhEll] SET DolgozoBef = \'%s\', Statusz = \'%s\', BefDatum = \'%s\' WHERE RaktHely = \'%s\'</string>
+    <string name="updateItem">UPDATE [leltar].[dbo].[Leltaradat] SET Mennyiseg = \'%s\', Megjegyzes = \'%s\' WHERE Mennyiseg = \'%s\' AND Cikkszam = \'%s\'</string>
     <string name="dw_action">com.dwexample.ACTION</string>
     <string name="datawedge_intent_key_source">com.symbol.datawedge.source</string>
     <string name="datawedge_intent_key_label_type">com.symbol.datawedge.label_type</string>

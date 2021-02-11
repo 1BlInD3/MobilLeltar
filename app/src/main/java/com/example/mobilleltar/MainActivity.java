@@ -136,18 +136,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         tabbedFragment = new TabbedFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
     }
-    public void LoadBlank()
+   /* public void LoadBlank()
     {
         BlankFragment blankFragment = new BlankFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,blankFragment).commit();
-    }
+    }*/
 
-    public void LoadMenuFragment()
+   /* public void LoadMenuFragment()
     {
         menuFragment = MenuFragment.newInstance(hasRight);
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
         isPolc = false;
-    }
+    }*/
 
     /*public void LoadPolcResults()
     {
@@ -375,15 +375,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
         if(loginFragment != null)
         {
+            barcodeData = decodedData;
             loginFragment.SetId(decodedData);
             CheckRights();
 
         }
-        else if(tabbedFragment != null)
+        else if(tabbedFragment != null && tabbedFragment.isVisible())
+        {
+            barcodeData = decodedData;
+            if(!tabbedFragment.IsMainFragment()) {
+                PolcThread();
+                tabbedFragment.GetID(DolgKod);
+            }
+            //tabbedFragment.onDestroy();
+        }
+       /* else if(tabbedFragment != null)
         {
             tabbedFragment.GetFragmentAtPosition(decodedData);
             tabbedFragment.onDestroy();
-        }
+        }*/
         else if (cikklekerdezesFragment != null)
         {
             barcodeData = decodedData;
@@ -672,6 +682,45 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
+   class ResultView implements Runnable
+   {
+       int value;
+       ResultView(int a)
+       {
+           value = a;
+       }
+
+       @Override
+       public void run() {
+           handler.post(new Runnable() {
+               @Override
+               public void run() {
+                   tabbedFragment.updateTabView(value);
+               }
+           });
+       }
+   }
+   class UpdateItem implements Runnable
+   {
+        String a,b,c,d;
+        UpdateItem(String x, String y,String z,String w)
+        {
+            a = x;
+            b = y;
+            c = z;
+            d = w;
+        }
+       @Override
+       public void run() {
+           try {
+               UpdateItem(a,b,c,d);
+           } catch (ClassNotFoundException e) {
+               e.printStackTrace();
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+       }
+   }
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -766,23 +815,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             //Ide ha már vettem fel rá valamit
                             do {
                                 SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
-                                        polcResult.getString("Mennyiseg"),"");
+                                        polcResult.getString("Mennyiseg"),polcResult.getString("Megjegyzes"));
                             }while(polcResult.next());
-
-                            Log.d(TAG, "PolcCheck: van rajta valami");
                             StopAnimation();
+                            String x = String.format("A(z) %s polcon cikkek vannak",polc);
+                            ShowDialog(x);
+                            Log.d(TAG, "PolcCheck: van rajta valami");
+                            ChangeView(1);
                         }
                         else if(polcResult.getInt("Statusz")==2)
                         {
                             //Ide ha fullosan zárolt
-                           // SendList("Zárolt","Zárolt","Zárolt","Zárolt","Zárolt");
                             Log.d(TAG, "PolcCheck: fullosan zárolt");
                             StopAnimation();
                             ClearPolc();
-                            ShowDialog("A polc zárolva van");
-                          //ClearViews();
+                            String x = String.format("A(z) %s polc zárolva van",polc);
+                            ShowDialog(x);
                             isPolc = false;
-                           // return;
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
@@ -791,10 +840,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             StopAnimation();
                             ClearPolc();
                             GetPolc("A polc üres");
-                            //IDE EGY DIALOGOT
-                            ShowDialog("A polc üres");
+                            String x = String.format("A(z) %s polc üres",polc);
+                            ShowDialog(x);
                             isPolc = false;
-                           // return;
                         }
 
                     }
@@ -844,9 +892,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         intrem = resultSet1.getString("IntRem");
                         Log.d("HONEY", "Connect1: ");
                         do {
-
                             ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
-
                         }
                         while (resultSet1.next());
                         bundle.putSerializable("cikk",ci);
@@ -1002,6 +1048,32 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
+    private void UpdateItem(String mennyisegUj, String megjegyzesUj, String cikkszam, String mennyisegRegi) throws ClassNotFoundException, SQLException {
+        StartAnimation();
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(connectionString);
+        if(connection!=null)
+        {
+            String sql;
+            sql = String.format(getResources().getString(R.string.updateItem),mennyisegUj,megjegyzesUj,mennyisegRegi,cikkszam);
+            Statement updateStatement = connection.createStatement();
+            try
+            {
+                updateStatement.executeUpdate(sql);
+                StopAnimation();
+            }
+            catch (Exception e)
+            {
+                ShowDialog(String.valueOf(e));
+                StopAnimation();
+            }
+        }
+        else
+        {
+            ShowDialog("Hálózati probléma");
+        }
+    }
+
     public void SQL()
     {
         SqlRunnable sqlRunnable = new SqlRunnable();
@@ -1091,5 +1163,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         CloseRakh closeRakh = new CloseRakh(a);
         new Thread(closeRakh).start();
     }
-
+    private void ChangeView(int viewNum)
+    {
+        ResultView resultView = new ResultView(viewNum);
+        new Thread(resultView).start();
+    }
+    public void UpdateItems(String a, String b, String c, String d)
+    {
+        UpdateItem updateItem = new UpdateItem(a,b,c,d);
+        new Thread(updateItem).start();
+    }
 }
