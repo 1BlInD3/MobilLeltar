@@ -684,6 +684,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     if(!isContains) {
                         //ide ha nem lett felvéve
                         InsertRakhelyEll();
+                        //IDE KELL A LEZÁRÁS
                         StopAnimation();
                         //GetPolc("A polc üres");
                         ClearPolc();
@@ -976,7 +977,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 closeState.executeUpdate(sql);
                 StopAnimation();
-                tabbedFragment.ClearAllViewsAndPolc();
+                isPolc = false;
+                //tabbedFragment.ClearAllViewsAndPolc();
             }
             catch (Exception e)
             {

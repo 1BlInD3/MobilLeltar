@@ -133,6 +133,7 @@ public class LeltarozasFragment extends Fragment {
                                 mainActivity.CloseRakhely();
                                 ClearPolc();
                                 ClearAllViews();
+                                mainActivity.mainFragment.ClearItems();
                             }
                         })
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {

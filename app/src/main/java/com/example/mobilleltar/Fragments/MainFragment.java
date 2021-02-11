@@ -216,4 +216,9 @@ public class MainFragment extends Fragment {
         myItems.add(new Item(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes));
         adapter.notifyDataSetChanged();
     }
+    public void ClearItems()
+    {
+        myItems.clear();
+        adapter.notifyDataSetChanged();
+    }
 }
