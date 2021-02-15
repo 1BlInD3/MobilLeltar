@@ -437,11 +437,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         @Override
         public void run() {
-            try {
                 Connect(barcodeData);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     class SQLCheckrights implements Runnable
@@ -466,12 +462,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
         @Override
         public void run() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    loginFragment.SetId(mText);
-                    loginFragment.StopSpinning();
-                }
+            handler.post(() -> {
+                loginFragment.SetId(mText);
+                loginFragment.StopSpinning();
             });
         }
     }
@@ -481,9 +474,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         public void run() {
             try {
                 PolcCheck(barcodeData);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
+            } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -498,24 +489,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
-            handler1.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.GetFragmentAtPosition(mCode);
-                }
-            });
+            handler1.post(() -> tabbedFragment.GetFragmentAtPosition(mCode));
         }
     }
     class Animation implements Runnable
     {
         @Override
         public void run() {
-            handler2.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.StartSpinning();
-                }
-            });
+            handler2.post(() -> tabbedFragment.StartSpinning());
         }
     }
 
@@ -529,24 +510,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
-            handler5.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.SetViews(mdesc1,mdesc2,munit);
-                }
-            });
+            handler5.post(() -> tabbedFragment.SetViews(mdesc1,mdesc2,munit));
         }
     }
 
     Runnable Animation2 = new Runnable() {
         @Override
         public void run() {
-            handler3.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.StopSpinning();
-                }
-            });
+            handler3.post(() -> tabbedFragment.StopSpinning());
         }
     };
 
@@ -564,12 +535,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
        @Override
        public void run() {
-           handler6.post(new Runnable() {
-               @Override
-               public void run() {
-                   tabbedFragment.PushData(ma,mb,mc,md,me);
-               }
-           });
+           handler6.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me));
        }
    }
 
@@ -583,24 +549,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
        @Override
        public void run() {
-           handler.post(new Runnable() {
-               @Override
-               public void run() {
-                    tabbedFragment.SetInternalName(raktarName);
-               }
-           });
+           handler.post(() -> tabbedFragment.SetInternalName(raktarName));
        }
    }
 
     Runnable focus = new Runnable() {
         @Override
         public void run() {
-               handler4.post(new Runnable() {
-                   @Override
-                   public void run() {
-                        tabbedFragment.SetFocus();
-                   }
-               });
+               handler4.post(() -> tabbedFragment.SetFocus());
         }
     };
 
@@ -624,35 +580,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        public void run() {
            try {
                InsertRow(a,b,c,d,e,f,g,h,i);
-           } catch (ClassNotFoundException ex) {
-               ex.printStackTrace();
-           } catch (SQLException ex) {
+           } catch (ClassNotFoundException | SQLException ex) {
                ex.printStackTrace();
            }
        }
    }
 
-   Runnable rakhelyEll = new Runnable() {
-       @Override
-       public void run() {
-           try {
-               InsertRakhelyEll();
-           } catch (ClassNotFoundException e) {
-               e.printStackTrace();
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
+   Runnable rakhelyEll = () -> {
+       try {
+           InsertRakhelyEll();
+       } catch (ClassNotFoundException | SQLException e) {
+           e.printStackTrace();
        }
    };
    Runnable polcClear = new Runnable() {
        @Override
        public void run() {
-           handler.post(new Runnable() {
-               @Override
-               public void run() {
-                   tabbedFragment.ClearAllViewsAndPolc();
-               }
-           });
+           handler.post(() -> tabbedFragment.ClearAllViewsAndPolc());
 
        }
    };
@@ -667,12 +611,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
        @Override
        public void run() {
-           handler.post(new Runnable() {
-               @Override
-               public void run() {
-                   Dialog(mText);
-               }
-           });
+           handler.post(() -> Dialog(mText));
        }
    }
 
@@ -687,9 +626,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        public void run() {
            try {
                CloseRakh(code);
-           } catch (ClassNotFoundException e) {
-               e.printStackTrace();
-           } catch (SQLException e) {
+           } catch (ClassNotFoundException | SQLException e) {
                e.printStackTrace();
            }
        }
@@ -704,12 +641,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
        @Override
        public void run() {
-           handler.post(new Runnable() {
-               @Override
-               public void run() {
-                   tabbedFragment.updateTabView(value);
-               }
-           });
+           handler.post(() -> tabbedFragment.updateTabView(value));
        }
    }
    class UpdateItem implements Runnable
@@ -726,9 +658,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        public void run() {
            try {
                UpdateItem(a,b,c,d);
-           } catch (ClassNotFoundException e) {
-               e.printStackTrace();
-           } catch (SQLException e) {
+           } catch (ClassNotFoundException | SQLException e) {
                e.printStackTrace();
            }
        }
@@ -742,12 +672,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.UpdateTable(position);
-                }
-            });
+            handler.post(() -> tabbedFragment.UpdateTable(position));
         }
     }
 
@@ -884,7 +809,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    private void Connect(String code) throws SQLException {
+    private void Connect(String code) {
         PolcResultFragment polcResultFragment = new PolcResultFragment();
         CikkResultFragment cikkResultFragment = new CikkResultFragment();
         Bundle bundle = new Bundle();
