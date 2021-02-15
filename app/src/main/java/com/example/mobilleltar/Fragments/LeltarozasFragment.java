@@ -44,7 +44,7 @@ public class LeltarozasFragment extends Fragment {
     private TextView internalNameTxt;
     private TabbedFragment tabbedFragment;
     private SetTableView setTableView;
-    private String oldQuantity;
+    private String oldMegjegyzes;
     // TODO: Rename and change types of parameters
     //private String mParam1;
   //  private String mParam2;
@@ -156,10 +156,10 @@ public class LeltarozasFragment extends Fragment {
                 if(mUpdate)
                 {
                     //ide kell az update sql
-                    String uMenny = String.valueOf(mennyisegTxt.getText());
-                    String uMegj = String.valueOf(megjegyzesTxt.getText());
+                    String uMenny = String.valueOf(mennyisegTxt.getText()).trim();
+                    String uMegj = String.valueOf(megjegyzesTxt.getText()).trim();
                     String cikk = String.valueOf(cikkszamTxt.getText()).trim();
-                    mainActivity.UpdateItems(uMenny,uMegj,cikk,d);
+                    mainActivity.UpdateItems(uMenny,uMegj,cikk,mainActivity.megjegyzes);
                     Log.d("LELTAR", "onClick: Ez már update-ra megy");
                     mainActivity.ClearViews();
                     mUpdate = false;
@@ -301,9 +301,5 @@ public class LeltarozasFragment extends Fragment {
     public void SetRaktar(String raktar)
     {
         internalNameTxt.setText(raktar);
-    }
-    public void setOld(String mennyiseg)
-    {
-        oldQuantity = mennyiseg;
     }
 }

@@ -175,6 +175,10 @@ public class TabbedFragment extends Fragment{
     {
         mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);
     }
+    public void UpdateTable(int pos)
+    {
+        mainActivity.mainFragment.UpdateList(pos);
+    }
     public boolean IsMainFragment()
     {
          Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());

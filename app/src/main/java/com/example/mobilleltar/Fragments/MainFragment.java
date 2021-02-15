@@ -94,6 +94,8 @@ public class MainFragment extends Fragment {
         void tabChangeListener(int index);
         void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes);
         void isUpdate (boolean update);
+        void oldMegjegyz (String megjegyzes);
+        void getPos (int pos);
     }
 
     @Override
@@ -130,6 +132,8 @@ public class MainFragment extends Fragment {
                 tabChange.tabChangeListener(0);
                 tabChange.loadForChange(a, b, c, d, e);
                 tabChange.isUpdate(true);
+                tabChange.oldMegjegyz(b);
+                tabChange.getPos(lastPos);
             }
         });
 
@@ -220,5 +224,9 @@ public class MainFragment extends Fragment {
     {
         myItems.clear();
         adapter.notifyDataSetChanged();
+    }
+    public void UpdateList(int position)
+    {
+        adapter.notifyItemChanged(position);
     }
 }

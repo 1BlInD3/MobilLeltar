@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public boolean isEmpty = false;
     public boolean isContains = false;
     private String polc;
+    public String megjegyzes;
+    private int position;
 
 
     @Override
@@ -186,6 +188,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void isUpdate(boolean update) {
         tabbedFragment.IsUpdate(update);
         tabbedFragment.EnableViews();
+    }
+
+    @Override
+    public void oldMegjegyz(String megjegyzes) {
+        this.megjegyzes = megjegyzes;
+    }
+
+    @Override
+    public void getPos(int pos) {
+        position = pos;
     }
 
     public boolean FragmentName()
@@ -721,6 +733,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
+   class UpdateListItems implements Runnable
+    {
+        int position;
+        UpdateListItems(int a)
+        {
+            position = a;
+        }
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.UpdateTable(position);
+                }
+            });
+        }
+    }
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -1060,6 +1089,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             try
             {
                 updateStatement.executeUpdate(sql);
+               // tabbedFragment.UpdateTable();
+                UpdateList(position);
                 StopAnimation();
             }
             catch (Exception e)
@@ -1172,5 +1203,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         UpdateItem updateItem = new UpdateItem(a,b,c,d);
         new Thread(updateItem).start();
+    }
+    public void UpdateList(int pos)
+    {
+        UpdateListItems updateListItems = new UpdateListItems(pos);
+        new Thread(updateListItems).start();
     }
 }
