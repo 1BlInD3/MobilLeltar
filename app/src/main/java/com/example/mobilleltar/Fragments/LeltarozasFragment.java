@@ -160,7 +160,9 @@ public class LeltarozasFragment extends Fragment {
                     String uMegj = String.valueOf(megjegyzesTxt.getText()).trim();
                     String cikk = String.valueOf(cikkszamTxt.getText()).trim();
                     mainActivity.UpdateItems(uMenny,uMegj,cikk,mainActivity.megjegyzes);
+                    setTableView.setDataToSend(a,mDesc1,mDesc2,uMenny,uMegj);
                     Log.d("LELTAR", "onClick: Ez már update-ra megy");
+                   // mainActivity.mainFragment.Update();
                     mainActivity.ClearViews();
                     mUpdate = false;
                 }
