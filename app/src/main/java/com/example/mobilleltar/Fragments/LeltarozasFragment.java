@@ -135,12 +135,16 @@ public class LeltarozasFragment extends Fragment {
                                 ClearPolc();
                                 ClearAllViews();
                                 mainActivity.mainFragment.ClearItems();
+                                mainActivity.isPolc=false;
                             }
                         })
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                mainActivity.CloseRakhely("1");
                                 ClearPolc();
+                                ClearAllViews();
+                                mainActivity.mainFragment.ClearItems();
                                 mainActivity.isPolc=false;
                             }
                         });
@@ -208,7 +212,7 @@ public class LeltarozasFragment extends Fragment {
         {
             rakhelyTxt.setText(code);
         }
-        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres")
+        else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres" || rakhelyTxt.getText() == "A polc nem elérhető")
         {
             rakhelyTxt.setText(code);
         }

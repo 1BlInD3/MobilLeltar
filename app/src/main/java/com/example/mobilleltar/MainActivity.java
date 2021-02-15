@@ -253,6 +253,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           {
              isPolc = false;
              isContains = false;
+             if(!polc.isEmpty())
+             {
+                 //ide kell a thread
+                 UpdateLocked();
+             }
+            // CloseRakh("1");
             // isEmpty = true;
           }
 
@@ -675,6 +681,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.UpdateTable(position));
         }
     }
+    Runnable updateLocked = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                CloseRakh("1");
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -694,7 +710,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     if(!isContains) {
                         //ide ha nem lett felvéve
-                        InsertRakhelyEll();
+                        //InsertRakhelyEll();
                         //IDE KELL A LEZÁRÁS
                         CloseRakh("0");
                         StopAnimation();
@@ -760,22 +776,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         if(!polcResult.next())
                         {
                             //megnézem hogy üres -e a polc
+                            InsertLocked();
                             isEmpty = true;
                             StopAnimation();
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
-                            isContains = true;
+                            //isPolc = true;
+                            CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
                             do {
                                 SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
                                         polcResult.getString("Mennyiseg"),polcResult.getString("Megjegyzes"));
                             }while(polcResult.next());
                             StopAnimation();
-                            String x = String.format("A(z) %s polcon cikkek vannak",polc);
-                            ShowDialog(x);
-                            Log.d(TAG, "PolcCheck: van rajta valami");
-                            ChangeView(1);
+                            if(!isEmpty) {
+                                isContains = true;
+                                String x = String.format("A(z) %s polcon cikkek vannak", polc);
+                                ShowDialog(x);
+                                Log.d(TAG, "PolcCheck: van rajta valami");
+                                ChangeView(1);
+                            }
                         }
                         else if(polcResult.getInt("Statusz")==2)
                         {
@@ -797,6 +818,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             String x = String.format("A(z) %s polc üres",polc);
                             ShowDialog(x);
                             isPolc = false;
+                        }
+                        else if(polcResult.getInt("Statusz")==3)
+                        {
+                            Log.d(TAG, "PolcCheck: a polc leltár alatt van");
+                            StopAnimation();
+                            ClearPolc();
+                            GetPolc("A polc nem elérhető");
+                            isPolc = false;
+                            String x = String.format("A(z) %s polcon jelenleg leltároznak",polc);
+                            ShowDialog(x);
                         }
 
                     }
@@ -949,6 +980,28 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
+    public void InsertLocked()throws ClassNotFoundException, SQLException
+    {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(connectionString);
+        if(connection!=null) {
+            // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String datetime = simpleDateFormat.format(new Date());
+            String sql;
+            try {
+                sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "3", datetime);
+                Statement rakhEll = connection.createStatement();
+                rakhEll.executeUpdate(sql);
+                StopAnimation();
+            }
+            catch (Exception e)
+            {
+                ShowDialog(String.valueOf(e));
+            }
+        }
+    }
+
     private void InsertRakhelyEll() throws ClassNotFoundException, SQLException {
           Class.forName("net.sourceforge.jtds.jdbc.Driver");
           connection = DriverManager.getConnection(connectionString);
@@ -986,7 +1039,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 closeState.executeUpdate(sql);
                 StopAnimation();
-                isPolc = false;
+               // isPolc = false;
                 //tabbedFragment.ClearAllViewsAndPolc();
             }
             catch (Exception e)
@@ -1133,5 +1186,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         UpdateListItems updateListItems = new UpdateListItems(pos);
         new Thread(updateListItems).start();
+    }
+    private void UpdateLocked()
+    {
+        new Thread(updateLocked).start();
     }
 }
