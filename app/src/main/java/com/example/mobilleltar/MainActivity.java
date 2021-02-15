@@ -255,11 +255,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
              isContains = false;
              if(!polc.isEmpty())
              {
-                 //ide kell a thread
                  UpdateLocked();
              }
-            // CloseRakh("1");
-            // isEmpty = true;
           }
 
       }
@@ -269,50 +266,41 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     @Override
     public void onBarcodeEvent(
             BarcodeReadEvent barcodeReadEvent) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                barcodeData = barcodeReadEvent.getBarcodeData();
-                //String timestamp = barcodeReadEvent.getTimestamp();
-                FragmentManager manager = getSupportFragmentManager();
-                LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
-                TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
-                CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
-                if(loginFragment != null && loginFragment.isVisible())
-                {
-                    loginFragment.SetId(barcodeData);
-                    DolgKod = barcodeData;
-                    loginFragment.StartSpinning();
-                    CheckRights();
-                    //loginFragment.onDestroy();
+        runOnUiThread(() -> {
+            barcodeData = barcodeReadEvent.getBarcodeData();
+            FragmentManager manager = getSupportFragmentManager();
+            LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
+            TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
+            CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
+            if(loginFragment != null && loginFragment.isVisible())
+            {
+                loginFragment.SetId(barcodeData);
+                DolgKod = barcodeData;
+                loginFragment.StartSpinning();
+                CheckRights();
+            }
+            else if(tabbedFragment != null && tabbedFragment.isVisible())
+            {
+                if(!tabbedFragment.IsMainFragment()) {
+                    PolcThread();
+                    tabbedFragment.GetID(DolgKod);
                 }
-                else if(tabbedFragment != null && tabbedFragment.isVisible())
-                {
-                    if(!tabbedFragment.IsMainFragment()) {
-                        PolcThread();
-                        tabbedFragment.GetID(DolgKod);
-                    }
-                    //tabbedFragment.onDestroy();
-                }
-                else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
-                {
-                    LoadEmptyFragment();
-                    pi.clear();
-                    ci.clear();
-                    cikklekerdezesFragment.SetBinOrItem(barcodeData);
-                    SQL();
-                    //cikklekerdezesFragment.onDestroy();
-                }
+            }
+            else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
+            {
+                LoadEmptyFragment();
+                pi.clear();
+                ci.clear();
+                cikklekerdezesFragment.SetBinOrItem(barcodeData);
+                SQL();
             }
         });
     }
 
     @Override
     public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {
-
         runOnUiThread(() -> Toast.makeText(MainActivity.this, "Nem sikerült leolvasni",
                 Toast.LENGTH_SHORT).show());
-
     }
 
     @Override
@@ -382,10 +370,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private void displayScanResult(Intent initiatingIntent, String howDataReceived)
     {
-       // String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        //String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
-
 
         FragmentManager manager = getSupportFragmentManager();
         LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
@@ -681,14 +666,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.UpdateTable(position));
         }
     }
-    Runnable updateLocked = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                CloseRakh("1");
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-            }
+    Runnable updateLocked = () -> {
+        try {
+            CloseRakh("1");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
         }
     };
 
