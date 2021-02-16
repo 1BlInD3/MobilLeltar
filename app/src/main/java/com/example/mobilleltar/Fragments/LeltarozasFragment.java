@@ -56,6 +56,7 @@ public class LeltarozasFragment extends Fragment {
         void setDataToSend(String a, String b, String c, String d, String e);
         void isEmpty (boolean a);
         void isContains (boolean a);
+        void isClosed();
     }
 
     public LeltarozasFragment() {
@@ -112,7 +113,6 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
         tabbedFragment = new TabbedFragment();
-
         kilepesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +136,7 @@ public class LeltarozasFragment extends Fragment {
                                 ClearAllViews();
                                 mainActivity.mainFragment.ClearItems();
                                 mainActivity.isPolc=false;
+                                setTableView.isClosed();
                             }
                         })
                         .setPositiveButton("Nem", new DialogInterface.OnClickListener() {

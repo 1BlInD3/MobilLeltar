@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.mobilleltar.DataItems.CikkItems;
@@ -50,7 +52,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView {
 
-    private static final String TAG = "QUERY";
+    private static final String TAG = "MainActivity";
     private TabbedFragment tabbedFragment;
     public MainFragment mainFragment = new MainFragment();
     
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
         loginFragment = new LoginFragment();
         getSupportActionBar().hide();
-
+       // FullScreencall();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment,"LoginFrag").commit();
 
         IntentFilter filter = new IntentFilter();
@@ -132,6 +134,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         });
 
     }
+
+   /* public void FullScreencall() {
+        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if(Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }*/
 
     public void LoadTabbedFragment()
     {
@@ -220,6 +234,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(tabbedFragment != null && tabbedFragment.isVisible())
         {
             isPolc = false;
+            try {
+               CloseOccupied();
+            }
+            catch (Exception e)
+            {
+                ShowDialog(String.valueOf(e));
+            }
         }
         super.onBackPressed();
     }
@@ -255,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
              isContains = false;
              if(!polc.isEmpty())
              {
-                 UpdateLocked();
+                CloseOccupied();
              }
           }
 
@@ -326,6 +347,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 Toast.makeText(this, "Scanner unavailable", Toast.LENGTH_SHORT).show();
             }
         }
+        if(tabbedFragment != null && tabbedFragment.isVisible())
+        {
+            tabbedFragment.ClearAllViewsAndPolc();
+            ShowDialog("Újra be kell olvasnod a leltározandó polcot");
+        }
+        isPolc = false;
+
         Log.d(TAG, "onResume: ");
     }
 
@@ -335,10 +363,26 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if (barcodeReader != null) {
             barcodeReader.release();
         }
+        try
+        {
+            CloseOccupied();
+        }catch (Exception e)
+        {
+            Log.d(TAG, "onPause: nem írta fölül");
+        }
         Log.d(TAG, "onPause: ");
     }
     @Override
     public void onDestroy() {
+      /*  try {
+            if (!polc.isEmpty()) {
+                UpdateLocked();
+            }
+        }
+        catch (Exception e)
+        {
+            //ShowDialog(String.valueOf(e));
+        }*/
         super.onDestroy();
         if (barcodeReader != null) {
             barcodeReader.removeBarcodeListener(this);
@@ -422,6 +466,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     @Override
     public void isContains(boolean a) {
         isContains = a;
+    }
+
+    @Override
+    public void isClosed() {
+        polc = "";
     }
 
     class SqlRunnable implements Runnable
@@ -673,6 +722,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             e.printStackTrace();
         }
     };
+   Runnable setLocked = () -> {
+       try {
+           CloseVacant("1");
+       } catch (ClassNotFoundException | SQLException e) {
+           e.printStackTrace();
+       }
+   };
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -700,6 +756,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         ClearPolc();
                         isPolc = false;
                         isContains = false;
+                        polc = "";
                     }
                     else 
                     {
@@ -735,6 +792,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }//HA POLC
             else
                 {   //HA MÁR VETTEM FEL POLCOT
+                    isEmpty = false;
                     String raktar = resultSet.getString("InternalName");
                     mRakt = resultSet.getString("WarehouseID");
                     if(isPolc)
@@ -789,6 +847,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             String x = String.format("A(z) %s polc zárolva van",polc);
                             ShowDialog(x);
                             isPolc = false;
+                            polc = "";
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
@@ -1036,6 +1095,26 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             ShowDialog("Hálózati probléma");
         }
     }
+    private void CloseVacant(String code) throws ClassNotFoundException, SQLException {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(connectionString);
+        if(connection!=null) {
+            // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String datetime = simpleDateFormat.format(new Date());
+            String sql;
+            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,code,datetime,polc);
+            Statement closeState = connection.createStatement();
+            try {
+                closeState.executeUpdate(sql);
+            }catch (Exception e)
+            {
+                Log.d(TAG, "CloseVacant: ");
+            }
+        }
+        else
+            Log.d(TAG, "CloseVacant: Nincs hálózat");
+    }
 
     private void UpdateItem(String mennyisegUj, String megjegyzesUj, String cikkszam, String mennyisegRegi) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -1169,8 +1248,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         UpdateListItems updateListItems = new UpdateListItems(pos);
         new Thread(updateListItems).start();
     }
-    private void UpdateLocked()
+    public void UpdateLocked()
     {
         new Thread(updateLocked).start();
     }
+    public void CloseOccupied()
+    {
+        new Thread(setLocked).start();
+    }
+
 }
