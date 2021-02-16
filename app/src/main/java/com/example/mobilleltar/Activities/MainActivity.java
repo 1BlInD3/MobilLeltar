@@ -1,25 +1,20 @@
-package com.example.mobilleltar;
+package com.example.mobilleltar.Activities;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.mobilleltar.DataItems.CikkItems;
 import com.example.mobilleltar.DataItems.PolcItems;
-import com.example.mobilleltar.Fragments.BlankFragment;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
 import com.example.mobilleltar.Fragments.EmptyFragment;
@@ -29,6 +24,7 @@ import com.example.mobilleltar.Fragments.MainFragment;
 import com.example.mobilleltar.Fragments.MenuFragment;
 import com.example.mobilleltar.Fragments.PolcResultFragment;
 import com.example.mobilleltar.Fragments.TabbedFragment;
+import com.example.mobilleltar.R;
 import com.honeywell.aidc.AidcManager;
 import com.honeywell.aidc.BarcodeFailureEvent;
 import com.honeywell.aidc.BarcodeReadEvent;
@@ -44,7 +40,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -236,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             isPolc = false;
             try {
                CloseOccupied();
+               mainFragment.ClearItems();
             }
             catch (Exception e)
             {
@@ -366,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         try
         {
             CloseOccupied();
+            mainFragment.ClearItems();
         }catch (Exception e)
         {
             Log.d(TAG, "onPause: nem írta fölül");

@@ -1,12 +1,9 @@
 package com.example.mobilleltar.Fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
 import com.example.mobilleltar.Adapters.ItemAdapter;
-import com.example.mobilleltar.Adapters.ViewPagerAdapter;
 import com.example.mobilleltar.DataItems.Item;
-import com.example.mobilleltar.MainActivity;
+import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
 
 import java.util.ArrayList;
@@ -229,8 +223,5 @@ public class MainFragment extends Fragment {
     {
         adapter.notifyItemChanged(position);
     }
-    public void Update()
-    {
 
-    }
 }

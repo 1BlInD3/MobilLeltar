@@ -1,24 +1,16 @@
 package com.example.mobilleltar.Fragments;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mobilleltar.DataItems.PolcItems;
-import com.example.mobilleltar.MainActivity;
+import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * A simple {@link Fragment} subclass.

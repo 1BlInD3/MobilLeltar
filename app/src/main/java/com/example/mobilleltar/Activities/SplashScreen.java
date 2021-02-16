@@ -1,9 +1,11 @@
-package com.example.mobilleltar;
+package com.example.mobilleltar.Activities;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.mobilleltar.R;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -16,7 +18,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent i =new Intent(SplashScreen.this,MainActivity.class);
+                Intent i =new Intent(SplashScreen.this, MainActivity.class);
                 startActivity(i);
                 finish();
             }

@@ -13,9 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mobilleltar.MainActivity;
+import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
 
 

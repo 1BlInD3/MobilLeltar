@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.mobilleltar.Adapters.ViewPagerAdapter;
-import com.example.mobilleltar.MainActivity;
+import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
 
 /**
