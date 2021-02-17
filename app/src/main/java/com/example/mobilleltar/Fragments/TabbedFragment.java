@@ -115,6 +115,14 @@ public class TabbedFragment extends Fragment{
         megjegyzes.setText(e);
     }
 
+    public void SetEnabledFalse()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            ((LeltarozasFragment)page).SetEnabledFalse();
+        }
+    }
+
     public void GetFragmentAtPosition(String code)
     {
        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());

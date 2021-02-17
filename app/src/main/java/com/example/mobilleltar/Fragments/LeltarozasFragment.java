@@ -39,20 +39,19 @@ public class LeltarozasFragment extends Fragment {
     private TextView unitTxt;
     private TextView desc1Txt;
     private TextView desc2Txt;
-    private TextView megjegyzesTxt;
+    private EditText megjegyzesTxt;
     private TextView internalNameTxt;
     private TabbedFragment tabbedFragment;
     private SetTableView setTableView;
-    private String oldMegjegyzes;
     // TODO: Rename and change types of parameters
-    //private String mParam1;
-  //  private String mParam2;
+
     private String a,b,c,d, mDesc1,mDesc2,mUnit,mMegj;
     private boolean mUpdate;
 
     public interface SetTableView
     {
         void setDataToSend(String a, String b, String c, String d, String e);
+        void setDataToSendAndRemove();
         void isEmpty (boolean a);
         void isContains (boolean a);
         void isClosed();
@@ -62,15 +61,6 @@ public class LeltarozasFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LeltarozasFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static LeltarozasFragment newInstance(String param1, String param2) {
         LeltarozasFragment fragment = new LeltarozasFragment();
         Bundle args = new Bundle();
@@ -102,105 +92,90 @@ public class LeltarozasFragment extends Fragment {
         desc2Txt = (TextView)view.findViewById(R.id.desc2);
         cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
-        kilepesBtn = (Button)view.findViewById(R.id.kilepButton);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
         mennyisegTxt = (EditText)view.findViewById(R.id.cikkszamHeader);
-        megjegyzesTxt = (TextView)view.findViewById(R.id.megjegyzesText);
+        megjegyzesTxt = (EditText) view.findViewById(R.id.megjegyzesText);
         internalNameTxt = (TextView)view.findViewById(R.id.internalNameText);
         megjegyzesTxt.setEnabled(false);
         mennyisegTxt.setEnabled(false);
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
         tabbedFragment = new TabbedFragment();
-        kilepesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            //    mainActivity.LoadMenuFragment();
-            }
+
+        rakhelyBtn.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Figyelem")
+                    .setMessage("Lezárod?")
+                    .setNegativeButton("Igen", (dialog, which) -> {
+                       // Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
+                        mainActivity.CloseRakhely("2");
+                        ClearPolc();
+                        ClearAllViews();
+                        mainActivity.mainFragment.ClearItems();
+                        mainActivity.isPolc=false;
+                        setTableView.isClosed();
+                    })
+                    .setPositiveButton("Nem", (dialog, which) -> {
+                        mainActivity.CloseRakhely("1");
+                        ClearPolc();
+                        ClearAllViews();
+                        mainActivity.mainFragment.ClearItems();
+                        mainActivity.isPolc=false;
+                    });
+            builder.create();
+            builder.show();
         });
 
-        rakhelyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Figyelem")
-                        .setMessage("Lezárod?")
-                        .setNegativeButton("Igen", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                               // Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
-                                mainActivity.CloseRakhely("2");
-                                ClearPolc();
-                                ClearAllViews();
-                                mainActivity.mainFragment.ClearItems();
-                                mainActivity.isPolc=false;
-                                setTableView.isClosed();
-                            }
-                        })
-                        .setPositiveButton("Nem", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mainActivity.CloseRakhely("1");
-                                ClearPolc();
-                                ClearAllViews();
-                                mainActivity.mainFragment.ClearItems();
-                                mainActivity.isPolc=false;
-                            }
-                        });
-                builder.create();
-                builder.show();
+        megjegyzesTxt.setOnClickListener(v -> {
+            Log.d("LELTAR", "onClick: MEGNYOMTAM");
+            if(mUpdate)
+            {
+                //ide kell az update sql
+                String uMenny = String.valueOf(mennyisegTxt.getText()).trim();
+                String uMegj = String.valueOf(megjegyzesTxt.getText()).trim();
+                String cikk = String.valueOf(cikkszamTxt.getText()).trim();
+                String desc1 = String.valueOf(desc1Txt.getText()).trim();
+                String desc2 = String.valueOf(desc2Txt.getText()).trim();
+                mainActivity.UpdateItems(uMenny,uMegj,cikk,mainActivity.megjegyzes);
+                setTableView.setDataToSend(cikk,desc1,desc2,uMenny,uMegj);
+                setTableView.setDataToSendAndRemove();
+                Log.d("LELTAR", "onClick: Ez már update-ra megy");
+                mainActivity.ClearViews();
+                mUpdate = false;
+                mennyisegTxt.setEnabled(false);
+                megjegyzesTxt.setEnabled(false);
             }
-        });
-
-        megjegyzesTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("LELTAR", "onClick: MEGNYOMTAM");
-                if(mUpdate)
+            else
+            {
+                b = String.valueOf(megjegyzesTxt.getText());
+                d = String.valueOf(rakhelyTxt.getText());
+                megjegyzesTxt.setEnabled(false);
+                mainActivity.ClearViews();
+                setTableView.setDataToSend(a.trim(),mDesc1.trim(),mDesc2.trim(),c.trim(),b.trim()); // frissítem a listát
+                if(mainActivity.isEmpty)
                 {
-                    //ide kell az update sql
-                    String uMenny = String.valueOf(mennyisegTxt.getText()).trim();
-                    String uMegj = String.valueOf(megjegyzesTxt.getText()).trim();
-                    String cikk = String.valueOf(cikkszamTxt.getText()).trim();
-                    mainActivity.UpdateItems(uMenny,uMegj,cikk,mainActivity.megjegyzes);
-                    setTableView.setDataToSend(a,mDesc1,mDesc2,uMenny,uMegj);
-                    Log.d("LELTAR", "onClick: Ez már update-ra megy");
-                   // mainActivity.mainFragment.Update();
-                    mainActivity.ClearViews();
-                    mUpdate = false;
+                    mainActivity.InsertNewRow(a.trim(), c.trim(), ID.trim(), mainActivity.mRakt, d.trim(), b.trim(), "n", "1", "0"); //feltöltöm a leltaradatot
+                    mainActivity.InsertRakhEll();
+                    setTableView.isEmpty(false);
+                    setTableView.isContains(true);
                 }
                 else
                 {
-                    b = String.valueOf(megjegyzesTxt.getText());
-                    d = String.valueOf(rakhelyTxt.getText());
-                    megjegyzesTxt.setEnabled(false);
-                    mainActivity.ClearViews();
-                    setTableView.setDataToSend(a,mDesc1,mDesc2,c,b); // frissítem a listát
-                    if(mainActivity.isEmpty)
-                    {
-                        mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
-                        mainActivity.InsertRakhEll();
-                        setTableView.isEmpty(false);
-                        setTableView.isContains(true);
-                    }
-                    else
-                    {
-                        mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
-                    }
-                    Log.d("UPDATE", "onClick: Ez már simán ment");
+                    mainActivity.InsertNewRow(a.trim(), c.trim(), ID.trim(), mainActivity.mRakt, d.trim(), b.trim(), "n", "1", "0"); //feltöltöm a leltaradatot
                 }
-
+                Log.d("UPDATE", "onClick: Ez már simán ment");
+                mennyisegTxt.setEnabled(false);
+                megjegyzesTxt.setEnabled(false);
             }
+
         });
 
-        mennyisegTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    megjegyzesTxt.setEnabled(true);
-                    megjegyzesTxt.requestFocus();
-                    c = String.valueOf(mennyisegTxt.getText());
-            }
+        mennyisegTxt.setOnClickListener(v -> {
+                megjegyzesTxt.setEnabled(true);
+                megjegyzesTxt.setSelection(megjegyzesTxt.getText().length());
+                megjegyzesTxt.requestFocus();
+                c = String.valueOf(mennyisegTxt.getText());
         });
 
         return view;
@@ -302,10 +277,16 @@ public class LeltarozasFragment extends Fragment {
     public void EnableViews()
     {
         mennyisegTxt.setEnabled(true);
+        //mennyisegTxt.requestFocus();
+        mennyisegTxt.setSelection(mennyisegTxt.getText().length());
         mennyisegTxt.requestFocus();
     }
     public void SetRaktar(String raktar)
     {
         internalNameTxt.setText(raktar);
+    }
+    public void SetEnabledFalse()
+    {
+        mennyisegTxt.setEnabled(false);
     }
 }

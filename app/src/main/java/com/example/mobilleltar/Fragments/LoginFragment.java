@@ -19,7 +19,7 @@ import com.example.mobilleltar.R;
  */
 public class LoginFragment extends Fragment {
 
-    private Button okBtn;
+    private Button megseBtn;
     private TextView idTxt;
     private ProgressBar progressBar;
     // TODO: Rename parameter arguments, choose names that match
@@ -71,13 +71,11 @@ public class LoginFragment extends Fragment {
         progressBar = (ProgressBar)view.findViewById(R.id.loginProgress);
         progressBar.setVisibility(View.GONE);
         idTxt = (TextView)view.findViewById(R.id.idText);
-        okBtn = (Button)view.findViewById(R.id.okButton);
+        megseBtn = (Button)view.findViewById(R.id.cancelButton);
         final MainActivity mainActivity = (MainActivity)getActivity();
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // mainActivity.LoadMenuFragment();
-            }
+
+        megseBtn.setOnClickListener(v -> {
+            mainActivity.finishAndRemoveTask();
         });
 
         return view;

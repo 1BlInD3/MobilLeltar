@@ -128,6 +128,11 @@ public class MainFragment extends Fragment {
                 tabChange.isUpdate(true);
                 tabChange.oldMegjegyz(b);
                 tabChange.getPos(lastPos);
+                a = "";
+                b = "";
+                c = "";
+                d = "";
+                e = "";
             }
         });
 
@@ -137,11 +142,11 @@ public class MainFragment extends Fragment {
                 adapter.notifyDataSetChanged();
                 if (count == 0) {
                     editBtn.setEnabled(true);
-                    a = myItems.get(position).getmCikkszam();
-                    c = myItems.get(position).getmMegnevezes1();
-                    d = myItems.get(position).getmMegnevezes2();
-                    b = String.valueOf(myItems.get(position).getmMennyiseg());
-                    e = myItems.get(position).getmMegjegyzes();
+                    a = myItems.get(position).getmCikkszam().trim();
+                    c = myItems.get(position).getmMegnevezes1().trim();
+                    d = myItems.get(position).getmMegnevezes2().trim();
+                    b = String.valueOf(myItems.get(position).getmMennyiseg()).trim();
+                    e = myItems.get(position).getmMegjegyzes().trim();
                     lastPos = position;
                    // count = 1;
                 } else if (lastPos == position) {
@@ -221,7 +226,9 @@ public class MainFragment extends Fragment {
     }
     public void UpdateList(int position)
     {
-        adapter.notifyItemChanged(position);
+        myItems.remove(position);
+        adapter.notifyDataSetChanged();
+        Log.d("UPDATE/REMOVE", "UpdateList: lefutott");
     }
 
 }

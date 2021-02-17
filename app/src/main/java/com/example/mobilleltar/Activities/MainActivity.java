@@ -43,9 +43,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-//jogosultsagot elmenteni és a nyomógombokat letiltani ahhoz képest
-
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView {
+
+    /*
+    *
+    * két tizedes mennyiség, üres és negatív nem lehet
+    * tizedes jel az pont
+    * cikkszám kézzel felvitellel
+    * milliónál nem lehet nagyobb a mennyiség(6számjegy+2tizedes)
+    * layoutok (jobban látszódjon a fevlitel)
+    * leszedni a többi szart ha lefut az onPaused és van cikk infó
+    *
+    * */
 
     private static final String TAG = "MainActivity";
     private TabbedFragment tabbedFragment;
@@ -130,55 +139,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     }
 
-   /* public void FullScreencall() {
-        if(Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if(Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
-    }*/
-
     public void LoadTabbedFragment()
     {
         tabbedFragment = new TabbedFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
     }
-   /* public void LoadBlank()
-    {
-        BlankFragment blankFragment = new BlankFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,blankFragment).commit();
-    }*/
-
-   /* public void LoadMenuFragment()
-    {
-        menuFragment = MenuFragment.newInstance(hasRight);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
-        isPolc = false;
-    }*/
-
-    /*public void LoadPolcResults()
-    {
-        PolcResultFragment polcResultFragment = /*PolcResultFragment.newInstance(decodedData);      new PolcResultFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"LoadPolcFrag").commit();
-    }*/
-
     public void LoadCikklekerdezesFragment()
     {
         CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
     }
-
-   /* public void LoadCikkResult()
-    {
-        CikkResultFragment cikkResultFragment = CikkResultFragment.newInstance(decodedData);
-        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
-    }*/
-    public void LoadEmptyFragment()
-    {
+    public void LoadEmptyFragment() {
         EmptyFragment emptyFragment = new EmptyFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
     }
@@ -209,8 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         position = pos;
     }
 
-    public boolean FragmentName()
-  {
+    public boolean FragmentName() {
       FragmentManager manager = getSupportFragmentManager();
       menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
       if(menuFragment != null && menuFragment.isVisible())
@@ -240,7 +210,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         super.onBackPressed();
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -346,6 +315,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(tabbedFragment != null && tabbedFragment.isVisible())
         {
             tabbedFragment.ClearAllViewsAndPolc();
+            tabbedFragment.SetEnabledFalse();
             ShowDialog("Újra be kell olvasnod a leltározandó polcot");
         }
         isPolc = false;
@@ -362,7 +332,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         try
         {
             CloseOccupied();
+            tabbedFragment.updateTabView(0);
             mainFragment.ClearItems();
+            tabbedFragment.ClearAllViewsAndPolc();
         }catch (Exception e)
         {
             Log.d(TAG, "onPause: nem írta fölül");
@@ -371,15 +343,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
     @Override
     public void onDestroy() {
-      /*  try {
-            if (!polc.isEmpty()) {
-                UpdateLocked();
-            }
-        }
-        catch (Exception e)
-        {
-            //ShowDialog(String.valueOf(e));
-        }*/
         super.onDestroy();
         if (barcodeReader != null) {
             barcodeReader.removeBarcodeListener(this);
@@ -401,15 +364,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             if (action.equals(getResources().getString(R.string.dw_action))) {
 
                 try {
-                    displayScanResult(intent, "via Broadcast");
-                } catch (Exception e) {
+                    displayScanResult(intent);
+                } catch (Exception ignored) {
 
                 }
             }
         }
     };
 
-    private void displayScanResult(Intent initiatingIntent, String howDataReceived)
+    private void displayScanResult(Intent initiatingIntent)
     {
         decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
 
@@ -431,13 +394,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 PolcThread();
                 tabbedFragment.GetID(DolgKod);
             }
-            //tabbedFragment.onDestroy();
         }
-       /* else if(tabbedFragment != null)
-        {
-            tabbedFragment.GetFragmentAtPosition(decodedData);
-            tabbedFragment.onDestroy();
-        }*/
         else if (cikklekerdezesFragment != null)
         {
             barcodeData = decodedData;
@@ -453,6 +410,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     @Override
     public void setDataToSend(String a, String b, String c, String d, String e) {
         tabbedFragment.PushData(a,b,c,d,e);
+    }
+
+    @Override
+    public void setDataToSendAndRemove() {
+        tabbedFragment.UpdateTable(position);
     }
 
     @Override
@@ -474,9 +436,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         @Override
         public void run() {
-                Connect(barcodeData);
+                ConnectSql(barcodeData);
+            }
         }
-    }
     class SQLCheckrights implements Runnable
     {
         @Override
@@ -712,13 +674,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.UpdateTable(position));
         }
     }
-    Runnable updateLocked = () -> {
-        try {
-            CloseRakh("1");
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    };
    Runnable setLocked = () -> {
        try {
            CloseVacant("1");
@@ -878,84 +833,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    private void Connect(String code) {
-        PolcResultFragment polcResultFragment = new PolcResultFragment();
-        CikkResultFragment cikkResultFragment = new CikkResultFragment();
-        Bundle bundle = new Bundle();
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connection = DriverManager.getConnection(URL);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        if(connection != null)
-        {
-            try {
-                Statement statement = connection.createStatement();
-                sql = String.format(getResources().getString(R.string.polcSql),code);
-                ResultSet resultSet = statement.executeQuery(sql);
-                if(!resultSet.next())
-                {
-                    Log.d("HONEY", "DISConnect: ");
-                    Statement statement2 = connection.createStatement();
-                    statement2.setQueryTimeout(10);
-                    sql = String.format(getResources().getString(R.string.cikkSql),code);
-                    ResultSet resultSet1 = statement2.executeQuery(sql);
-                    if(!resultSet1.next())
-                    {
-                        Log.d("HONEY", "DUPLA NULLA: ");
-                        EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
-                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
-                    }else
-                    {
-                        String megjegyzes1,megjegyzes2,unit,intrem;
-                        megjegyzes1 = resultSet1.getString("Description1");
-                        megjegyzes2 = resultSet1.getString("Description2");
-                        unit = resultSet1.getString("Unit");
-                        intrem = resultSet1.getString("IntRem");
-                        Log.d("HONEY", "Connect1: ");
-                        do {
-                            ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
-                        }
-                        while (resultSet1.next());
-                        bundle.putSerializable("cikk",ci);
-                        bundle.putString("megjegyzes",megjegyzes1);
-                        bundle.putString("megjegyzes2",megjegyzes2);
-                        bundle.putString("unit",unit);
-                        bundle.putString("intrem",intrem);
-                        cikkResultFragment.setArguments(bundle);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
-                    }
-                }
-                else
-                {
-                    Log.d("HONEY", "Connect: ");
-                    do {
-
-                        pi.add(new PolcItems(resultSet.getDouble("BalanceQty"), resultSet.getString("Unit"), resultSet.getString("Description1"), resultSet.getString("Description2"), resultSet.getString("IntRem"), resultSet.getString("QcCategory")));
-
-                    }
-                    while (resultSet.next());
-                    bundle.putSerializable("polc",pi);
-                    polcResultFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
-                }
-            }
-            catch (Exception e)
-            {
-                String a = e.getMessage();
-                EmptyFragment emptyFragment = EmptyFragment.newInstance(a,"");
-                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
-            }
-        }
-        else
-        {
-            Log.d("HONEY", "XConnect: ");
-            EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs hálózat","");
-            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
-        }
-    }
-
     private void RightCheck(String barcodeData) throws SQLException {
         MenuFragment menuFragment;
         try {
@@ -971,7 +848,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             ResultSet resultSet = statement.executeQuery(rightSql);
             if(!resultSet.next())
             {
-               // loginFragment.SetId("Nincs jogosultságod belépni");
                 SetText("Nincs jogosultságod belépni");
             }
             else
@@ -996,14 +872,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
 
     }
-   
+
     public void InsertRow(String cikk, String mennyiseg, String dolgozo, String raktar, String rakhely, String megjegyzes, String nyomtatva, String status, String ellStatus) throws ClassNotFoundException, SQLException {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
             Statement statement = connection.createStatement();
-           // String a = "INSERT INTO [leltar].[dbo].[Leltaradat] (Cikkszam,Mennyiseg,Dolgozo,Raktar,RaktHely,Megjegyzes,Nyomtatva,Status,EllStatus) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')";
             String sql;
             sql = String.format(getResources().getString(R.string.insertRow),cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
             Log.d(TAG, "InsertRow: "+sql);
@@ -1018,8 +893,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    public void InsertLocked()throws ClassNotFoundException, SQLException
-    {
+    public void InsertLocked()throws ClassNotFoundException, SQLException {
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
@@ -1044,7 +918,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           Class.forName("net.sourceforge.jtds.jdbc.Driver");
           connection = DriverManager.getConnection(connectionString);
           if(connection!=null) {
-             // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
               SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
               String datetime = simpleDateFormat.format(new Date());
               String sql;
@@ -1061,13 +934,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           }
     }
 
-    private void CloseRakh(String code)throws ClassNotFoundException, SQLException
-    {
+    private void CloseRakh(String code)throws ClassNotFoundException, SQLException    {
         StartAnimation();
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
-            // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String datetime = simpleDateFormat.format(new Date());
             String sql;
@@ -1077,8 +948,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 closeState.executeUpdate(sql);
                 StopAnimation();
-               // isPolc = false;
-                //tabbedFragment.ClearAllViewsAndPolc();
             }
             catch (Exception e)
             {
@@ -1092,11 +961,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             ShowDialog("Hálózati probléma");
         }
     }
+
     private void CloseVacant(String code) throws ClassNotFoundException, SQLException {
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
-            // String s = "INSERT INTO [leltar].[dbo].[LeltarRakhEll] (RaktHely,DolgozoKezd,Statusz,KezdDatum) VALUES('%s','%s','%s','%s')";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String datetime = simpleDateFormat.format(new Date());
             String sql;
@@ -1125,8 +994,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             try
             {
                 updateStatement.executeUpdate(sql);
-               // tabbedFragment.UpdateTable();
-                UpdateList(position);
                 StopAnimation();
             }
             catch (Exception e)
@@ -1138,6 +1005,92 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         else
         {
             ShowDialog("Hálózati probléma");
+        }
+    }
+
+    private void ConnectSql(String code) {
+        PolcResultFragment polcResultFragment = new PolcResultFragment();
+        CikkResultFragment cikkResultFragment = new CikkResultFragment();
+        Bundle bundle = new Bundle();
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connection = DriverManager.getConnection(URL);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        if(connection != null){
+            try {
+                Statement statement = connection.createStatement();
+                sql = String.format(getResources().getString(R.string.isPolc), code);
+                ResultSet resultSet = statement.executeQuery(sql);
+                if(!resultSet.next())
+                {
+                    Statement statement1 = connection.createStatement();
+                    sql = String.format(getResources().getString(R.string.cikkSql), code);
+                    ResultSet resultSet1 = statement1.executeQuery(sql);
+                    if(!resultSet1.next())
+                    {
+                        EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                    }
+                    else
+                    {
+                        //itt kell a cikkeket feltölteni
+                        String megjegyzes1,megjegyzes2,unit,intrem;
+                        megjegyzes1 = resultSet1.getString("Description1");
+                        megjegyzes2 = resultSet1.getString("Description2");
+                        unit = resultSet1.getString("Unit");
+                        intrem = resultSet1.getString("IntRem");
+                        Log.d("HONEY", "Connect1: ");
+                        do {
+                            ci.add(new CikkItems(resultSet1.getDouble("BalanceQty"),resultSet1.getString("BinNumber"), resultSet1.getString("Warehouse"), resultSet1.getString("QcCategory")));
+                        }
+                        while (resultSet1.next());
+                        bundle.putSerializable("cikk",ci);
+                        bundle.putString("megjegyzes",megjegyzes1);
+                        bundle.putString("megjegyzes2",megjegyzes2);
+                        bundle.putString("unit",unit);
+                        bundle.putString("intrem",intrem);
+                        cikkResultFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
+                    }
+
+                }
+                else
+                {
+                    Statement statement2 = connection.createStatement();
+                    sql = String.format(getResources().getString(R.string.polcSql), code);
+                    ResultSet resultSet2 = statement2.executeQuery(sql);
+                    if(!resultSet2.next())
+                    {
+                        EmptyFragment emptyFragment = EmptyFragment.newInstance("A polc üres","");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                    }
+                    else
+                    {
+                        //itt kell a polcot feltölteni
+                        Log.d("HONEY", "Connect: ");
+                        do {
+
+                            pi.add(new PolcItems(resultSet2.getDouble("BalanceQty"), resultSet2.getString("Unit"), resultSet2.getString("Description1"), resultSet2.getString("Description2"), resultSet2.getString("IntRem"), resultSet2.getString("QcCategory")));
+                        }
+                        while (resultSet2.next());
+                        bundle.putSerializable("polc",pi);
+                        polcResultFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                EmptyFragment emptyFragment = EmptyFragment.newInstance(String.valueOf(e),"");
+                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+            }
+        }
+        else
+        {
+            EmptyFragment emptyFragment = EmptyFragment.newInstance("A feldolgozás során hiba történt","");
+            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
         }
     }
 
@@ -1159,7 +1112,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void PolcThread()
     {
         new Thread(checkPolc).start();
-        //return false;
     }
     public void GetPolc(String code)
     {
@@ -1190,7 +1142,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
     private void ClearPolc()
     {
-       // tabbedFragment.ClearAllViewsAndPolc();
         new Thread(polcClear).start();
     }
     public void SendList(String a,String b,String c,String d,String e)
@@ -1240,18 +1191,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         UpdateItem updateItem = new UpdateItem(a,b,c,d);
         new Thread(updateItem).start();
     }
-    public void UpdateList(int pos)
-    {
-        UpdateListItems updateListItems = new UpdateListItems(pos);
-        new Thread(updateListItems).start();
-    }
-    public void UpdateLocked()
-    {
-        new Thread(updateLocked).start();
-    }
     public void CloseOccupied()
     {
         new Thread(setLocked).start();
     }
-
 }
