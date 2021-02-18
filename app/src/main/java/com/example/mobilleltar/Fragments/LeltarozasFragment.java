@@ -218,7 +218,7 @@ public class LeltarozasFragment extends Fragment {
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres" || rakhelyTxt.getText() == "A polc nem elérhető")
         {
             rakhelyTxt.setText(code);
-            cikkszamTxt.setEnabled(false);
+            //cikkszamTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()!="")
         {
@@ -228,8 +228,8 @@ public class LeltarozasFragment extends Fragment {
                 }
                 cikkszamTxt.setText(code);
                 a = code;
-               /* cikkszamTxt.setEnabled(true);
-                cikkszamTxt.requestFocus();*/
+                cikkszamTxt.setEnabled(true);
+                cikkszamTxt.requestFocus();
 
         }
     }
@@ -352,5 +352,9 @@ public class LeltarozasFragment extends Fragment {
             return null;
         }
 
+    }
+    public void OffFocus()
+    {
+        cikkszamTxt.setEnabled(false);
     }
 }

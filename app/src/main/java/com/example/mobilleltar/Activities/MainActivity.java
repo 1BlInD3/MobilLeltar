@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     /*
     *
-    * két tizedes mennyiség, üres és negatív nem lehet
-    * tizedes jel az pont
-    * cikkszám kézzel felvitellel
-    * milliónál nem lehet nagyobb a mennyiség(6számjegy+2tizedes)
-    * layoutok (jobban látszódjon a fevlitel)
+    * két tizedes mennyiség, üres és negatív nem lehet kk
+    * tizedes jel az pont kk
+    * cikkszám kézzel felvitellel kk
+    * milliónál nem lehet nagyobb a mennyiség(6számjegy+2tizedes) kk
+    * layoutok (jobban látszódjon a fevlitel) mint a text box
     * leszedni a többi szart ha lefut az onPaused és van cikk infó
     *
     * */
@@ -733,14 +733,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
+            handler.post(() -> tabbedFragment.SetItem(itemCode));
+        }
+    }
+
+    Runnable offFocus = new Runnable() {
+        @Override
+        public void run() {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    tabbedFragment.SetItem(itemCode);
+                  tabbedFragment.SetFocusOff();
                 }
             });
         }
-    }
+    };
 
    private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
        StartAnimation();
@@ -889,17 +896,24 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             //isPolc = true;
                             CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
-                            do {
-                                SendList(polcResult.getString("Cikkszam"),polcResult.getString("Description1"),polcResult.getString("Description2"),
-                                        polcResult.getString("Mennyiseg"),polcResult.getString("Megjegyzes"));
-                            }while(polcResult.next());
-                            StopAnimation();
-                            if(!isEmpty) {
-                                isContains = true;
-                                String x = String.format("A(z) %s polcon cikkek vannak", polc);
-                                ShowDialog(x);
-                                Log.d(TAG, "PolcCheck: van rajta valami");
-                                ChangeView(1);
+
+                            if(!polcResult.next())
+                            {
+                                Log.d(TAG, "PolcCheck: üres a polc");
+                            }
+                            else {
+                                do {
+                                    SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"),
+                                            polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                } while (polcResult.next());
+                                StopAnimation();
+                                if (!isEmpty) {
+                                    isContains = true;
+                                    String x = String.format("A(z) %s polcon cikkek vannak", polc);
+                                    ShowDialog(x);
+                                    Log.d(TAG, "PolcCheck: van rajta valami");
+                                    ChangeView(1);
+                                }
                             }
                         }
                         else if(polcResult.getInt("Statusz")==2)
@@ -926,6 +940,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                         else if(polcResult.getInt("Statusz")==3)
                         {
+                            SetCikkFocus();
                             Log.d(TAG, "PolcCheck: a polc leltár alatt van");
                             StopAnimation();
                             ClearPolc();
@@ -1317,5 +1332,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         SetItem setItem = new SetItem(code);
         new Thread(setItem).start();
+    }
+    public void SetCikkFocus()
+    {
+        new Thread(offFocus).start();
     }
 }
