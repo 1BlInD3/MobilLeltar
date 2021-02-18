@@ -501,6 +501,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 PolcCheck(itemCode);
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
+                ShowDialog("Hálózati probléma");
+                StopAnimation();
             }
         }
     }
@@ -778,7 +780,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                }
            } else if (!resultSet1.next()) {
                StopAnimation();
-               GetPolc("Nincs a rendszerben");
+               SetCikkFocus();
+               ShowDialog("Nincs a rendszerben");
            } else {
                if (!isPolc) {
                    StopAnimation();
@@ -840,7 +843,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 else if (!resultSet1.next())
                 {
                     StopAnimation();
-                    GetPolc("Nincs a rendszerben");
+                    SetCikkFocus();
+                    ShowDialog("Nincs a rendszerben");
                 }
                 else
                 {
@@ -940,14 +944,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                         else if(polcResult.getInt("Statusz")==3)
                         {
-                            SetCikkFocus();
                             Log.d(TAG, "PolcCheck: a polc leltár alatt van");
                             StopAnimation();
                             ClearPolc();
-                            GetPolc("A polc nem elérhető");
+                            //GetPolc("A polc nem elérhető");
+                            GetPolc("");
                             isPolc = false;
                             String x = String.format("A(z) %s polcon jelenleg leltároznak",polc);
                             ShowDialog(x);
+                            SetCikkFocus();
                         }
 
                     }

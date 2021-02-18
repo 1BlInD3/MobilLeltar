@@ -222,14 +222,14 @@ public class LeltarozasFragment extends Fragment {
         }
         else if(rakhelyTxt.getText()!="")
         {
-            SetFocus1();
+                SetFocus1();
                 if (rakhelyTxt.getText() == code) {
                     cikkszamTxt.setText("Ez polc, cikket vegyél fel");
                 }
                 cikkszamTxt.setText(code);
                 a = code;
-                cikkszamTxt.setEnabled(true);
-                cikkszamTxt.requestFocus();
+                mennyisegTxt.setEnabled(true);
+                mennyisegTxt.requestFocus();
 
         }
     }
@@ -287,7 +287,7 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
         internalNameTxt.setText("");
-        //cikkszamTxt.setEnabled(false);
+        mennyisegTxt.setEnabled(false);
 
 
     }
