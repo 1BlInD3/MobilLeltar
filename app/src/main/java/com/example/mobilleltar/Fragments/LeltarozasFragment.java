@@ -31,7 +31,7 @@ public class LeltarozasFragment extends Fragment {
     private Button rakhelyBtn;
     private Button kilepesBtn;
     private TextView rakhelyTxt;
-    private TextView cikkszamTxt;
+    private EditText cikkszamTxt;
     private String ID;
     private MainActivity mainActivity;
     private ProgressBar progressBar;
@@ -43,6 +43,7 @@ public class LeltarozasFragment extends Fragment {
     private TextView internalNameTxt;
     private TabbedFragment tabbedFragment;
     private SetTableView setTableView;
+    private boolean cikkClick = false;
     // TODO: Rename and change types of parameters
 
     private String a,b,c,d, mDesc1,mDesc2,mUnit,mMegj;
@@ -90,7 +91,7 @@ public class LeltarozasFragment extends Fragment {
         unitTxt = (TextView)view.findViewById(R.id.unitLeltar);
         desc1Txt = (TextView)view.findViewById(R.id.desc1);
         desc2Txt = (TextView)view.findViewById(R.id.desc2);
-        cikkszamTxt = (TextView)view.findViewById(R.id.cikkszamText);
+        cikkszamTxt = (EditText) view.findViewById(R.id.cikkszamText);
         rakhelyBtn = (Button)view.findViewById(R.id.rakhelyButton);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar2);
         mennyisegTxt = (EditText)view.findViewById(R.id.cikkszamHeader);
@@ -145,6 +146,8 @@ public class LeltarozasFragment extends Fragment {
                 mUpdate = false;
                 mennyisegTxt.setEnabled(false);
                 megjegyzesTxt.setEnabled(false);
+                cikkszamTxt.setEnabled(true);
+                cikkszamTxt.requestFocus();
             }
             else
             {
@@ -167,6 +170,8 @@ public class LeltarozasFragment extends Fragment {
                 Log.d("UPDATE", "onClick: Ez már simán ment");
                 mennyisegTxt.setEnabled(false);
                 megjegyzesTxt.setEnabled(false);
+                cikkszamTxt.setEnabled(true);
+                cikkszamTxt.requestFocus();
             }
 
         });
@@ -178,6 +183,14 @@ public class LeltarozasFragment extends Fragment {
                 c = String.valueOf(mennyisegTxt.getText());
         });
 
+        cikkszamTxt.setOnClickListener(v -> {
+            String item = String.valueOf(cikkszamTxt.getText()).trim();
+            mainActivity.WriteItem(String.valueOf(cikkszamTxt.getText()).trim());
+            cikkszamTxt.setText(item);
+            cikkClick = true;
+            a = item;
+        });
+
         return view;
     }
     public void SetBinOrItem(String code)
@@ -186,20 +199,29 @@ public class LeltarozasFragment extends Fragment {
         if(rakhelyTxt.getText()=="")
         {
             rakhelyTxt.setText(code);
+            cikkszamTxt.setEnabled(true);
+            cikkszamTxt.requestFocus();
         }
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres" || rakhelyTxt.getText() == "A polc nem elérhető")
         {
             rakhelyTxt.setText(code);
+            cikkszamTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()!="")
         {
-            if(rakhelyTxt.getText() == code)
-            {
-                cikkszamTxt.setText("Ez polc, cikket vegyél fel");
-            }
-            cikkszamTxt.setText(code);
-            a = code;
+                if (rakhelyTxt.getText() == code) {
+                    cikkszamTxt.setText("Ez polc, cikket vegyél fel");
+                }
+                cikkszamTxt.setText(code);
+                a = code;
+                cikkszamTxt.setEnabled(true);
+                cikkszamTxt.requestFocus();
+
         }
+    }
+    public void SetItem(String code)
+    {
+        cikkszamTxt.setText(code);
     }
     public void SetID(String code)
     {
@@ -237,6 +259,8 @@ public class LeltarozasFragment extends Fragment {
         unitTxt.setText("");
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
+        cikkszamTxt.setEnabled(true);
+        cikkszamTxt.requestFocus();
 
     }
     public void ClearPolc()
@@ -249,6 +273,8 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
         internalNameTxt.setText("");
+        cikkszamTxt.setEnabled(false);
+
 
     }
 
@@ -288,5 +314,9 @@ public class LeltarozasFragment extends Fragment {
     public void SetEnabledFalse()
     {
         mennyisegTxt.setEnabled(false);
+    }
+    public void SetFocus1()
+    {
+        cikkszamTxt.requestFocus();
     }
 }

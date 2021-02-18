@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         app:tabGravity="fill"
         app:tabMode="fixed"
+        android:focusable="false"
         android:id="@+id/tablayout"
         app:tabTextColor="@color/textColor"
         app:tabIndicatorColor="@color/tabindicatorColor"

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public String mRakt;
     public boolean isEmpty = false;
     public boolean isContains = false;
-    private String polc;
+    private String polc ="";
     public String megjegyzes;
     private int position;
 
@@ -244,6 +244,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 CloseOccupied();
              }
           }
+          if(keyCode == 21 && !polc.isEmpty())//if(keyCode == 8 || keyCode == 9 || keyCode == 10|| keyCode == 11 || keyCode == 12 || keyCode == 13 || keyCode == 14 || keyCode == 15 || keyCode == 16)
+          {
+              try {
+                  tabbedFragment.SetFocus1();
+              }catch (Exception e)
+              {
+                  Log.d(TAG, "onKeyDown: ");
+              }
+          }
 
       }
       return super.onKeyDown(keyCode, event);
@@ -268,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             else if(tabbedFragment != null && tabbedFragment.isVisible())
             {
                 if(!tabbedFragment.IsMainFragment()) {
-                    PolcThread();
+                    PolcThread(barcodeData);
                     tabbedFragment.GetID(DolgKod);
                 }
             }
@@ -391,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         {
             barcodeData = decodedData;
             if(!tabbedFragment.IsMainFragment()) {
-                PolcThread();
+                PolcThread(barcodeData);
                 tabbedFragment.GetID(DolgKod);
             }
         }
@@ -478,6 +487,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     };
+
+    class CheckPolc implements Runnable
+    {
+        String itemCode;
+        CheckPolc(String code)
+        {
+            itemCode = code;
+        }
+        @Override
+        public void run() {
+            try {
+                PolcCheck(itemCode);
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     class IsPolc implements Runnable
     {
@@ -681,6 +707,92 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            e.printStackTrace();
        }
    };
+
+   class OnlyItemClass implements Runnable
+    {
+        String itemCode;
+        OnlyItemClass(String item)
+        {
+            itemCode = item;
+        }
+        @Override
+        public void run() {
+            try {
+                OnlyItem(itemCode);
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    class SetItem implements Runnable
+    {
+        String itemCode;
+        SetItem(String code)
+        {
+            itemCode = code;
+        }
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.SetItem(itemCode);
+                }
+            });
+        }
+    }
+
+   private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
+       StartAnimation();
+       Class.forName("net.sourceforge.jtds.jdbc.Driver");
+       connection = DriverManager.getConnection(URL);
+       if(connection != null) {
+           Statement statement1 = connection.createStatement();
+           sql = String.format(getResources().getString(R.string.cikkSql), code);
+           ResultSet resultSet1 = statement1.executeQuery(sql);
+           if (code.equals("EMPTY")) //Megnézem hogy cikk-e
+           {
+               if (!isContains) {
+                   //ide ha nem lett felvéve
+                   //InsertRakhelyEll();
+                   //IDE KELL A LEZÁRÁS
+                   CloseRakh("0");
+                   StopAnimation();
+                   //GetPolc("A polc üres");
+                   ClearPolc();
+                   isPolc = false;
+                   isContains = false;
+                   polc = "";
+               } else {
+                   Log.d(TAG, "PolcCheck: NEM LEHET ÜRES VAN RAJTA CUCC");
+                   //IDE EGY DIALOGOT
+                   ShowDialog("A polcra már vételeztek, nem lehet üres");
+                   StopAnimation();
+               }
+           } else if (!resultSet1.next()) {
+               StopAnimation();
+               GetPolc("Nincs a rendszerben");
+           } else {
+               if (!isPolc) {
+                   StopAnimation();
+                   GetPolc("Nem polc");
+               } else {
+                   mdesc1 = resultSet1.getString("Description1");
+                   mdesc2 = resultSet1.getString("Description2");
+                   munit = resultSet1.getString("Unit");
+                   SetViews(mdesc1, mdesc2, munit);
+                   StopAnimation();
+                   GetFocus();
+                   SetItem(code);
+                   StopAnimation();
+               }
+           }
+       }
+       else
+       {
+           ShowDialog("Hálózati probléma");
+       }
+   }
 
     private void PolcCheck(String code) throws ClassNotFoundException, SQLException {
         StartAnimation();
@@ -1109,9 +1221,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         TextChange textChange = new TextChange(text);
         new Thread(textChange).start();
     }
-    public void PolcThread()
+    public void PolcThread(String code)
     {
-        new Thread(checkPolc).start();
+        CheckPolc checkPolc2 = new CheckPolc(code);
+        new Thread(checkPolc2).start();
     }
     public void GetPolc(String code)
     {
@@ -1194,5 +1307,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void CloseOccupied()
     {
         new Thread(setLocked).start();
+    }
+    public void WriteItem(String item)
+    {
+        OnlyItemClass onlyItemClass = new OnlyItemClass(item);
+        new Thread(onlyItemClass).start();
+    }
+    public void SetItem(String code)
+    {
+        SetItem setItem = new SetItem(code);
+        new Thread(setItem).start();
     }
 }
