@@ -91,7 +91,8 @@ public class TabbedFragment extends Fragment{
         adapter.AddFragment(mainActivity.mainFragment,"Felvitt tételek");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.setFocusable(false);
+        viewPager.setFocusable(false);
         return view;
     }
 

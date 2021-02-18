@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 
 import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -102,6 +107,9 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
         tabbedFragment = new TabbedFragment();
+        cikkszamTxt.setFocusable(false);
+
+        mennyisegTxt.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(9,2)});
 
         rakhelyBtn.setOnClickListener(v -> {
 
@@ -116,6 +124,9 @@ public class LeltarozasFragment extends Fragment {
                         mainActivity.mainFragment.ClearItems();
                         mainActivity.isPolc=false;
                         setTableView.isClosed();
+                        cikkszamTxt.setFocusable(false);
+                        mennyisegTxt.setFocusable(false);
+                        megjegyzesTxt.setFocusable(false);
                     })
                     .setPositiveButton("Nem", (dialog, which) -> {
                         mainActivity.CloseRakhely("1");
@@ -155,17 +166,17 @@ public class LeltarozasFragment extends Fragment {
                 d = String.valueOf(rakhelyTxt.getText());
                 megjegyzesTxt.setEnabled(false);
                 mainActivity.ClearViews();
-                setTableView.setDataToSend(a.trim(),mDesc1.trim(),mDesc2.trim(),c.trim(),b.trim()); // frissítem a listát
+                setTableView.setDataToSend(a,mDesc1.trim(),mDesc2.trim(),c.trim(),b.trim()); // frissítem a listát
                 if(mainActivity.isEmpty)
                 {
-                    mainActivity.InsertNewRow(a.trim(), c.trim(), ID.trim(), mainActivity.mRakt, d.trim(), b.trim(), "n", "1", "0"); //feltöltöm a leltaradatot
+                    mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
                     mainActivity.InsertRakhEll();
                     setTableView.isEmpty(false);
                     setTableView.isContains(true);
                 }
                 else
                 {
-                    mainActivity.InsertNewRow(a.trim(), c.trim(), ID.trim(), mainActivity.mRakt, d.trim(), b.trim(), "n", "1", "0"); //feltöltöm a leltaradatot
+                    mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot
                 }
                 Log.d("UPDATE", "onClick: Ez már simán ment");
                 mennyisegTxt.setEnabled(false);
@@ -188,6 +199,7 @@ public class LeltarozasFragment extends Fragment {
             mainActivity.WriteItem(String.valueOf(cikkszamTxt.getText()).trim());
             cikkszamTxt.setText(item);
             cikkClick = true;
+            mennyisegTxt.requestFocus();
             a = item;
         });
 
@@ -200,6 +212,7 @@ public class LeltarozasFragment extends Fragment {
         {
             rakhelyTxt.setText(code);
             cikkszamTxt.setEnabled(true);
+            cikkszamTxt.setFocusable(true);
             cikkszamTxt.requestFocus();
         }
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres" || rakhelyTxt.getText() == "A polc nem elérhető")
@@ -209,13 +222,14 @@ public class LeltarozasFragment extends Fragment {
         }
         else if(rakhelyTxt.getText()!="")
         {
+            SetFocus1();
                 if (rakhelyTxt.getText() == code) {
                     cikkszamTxt.setText("Ez polc, cikket vegyél fel");
                 }
                 cikkszamTxt.setText(code);
                 a = code;
-                cikkszamTxt.setEnabled(true);
-                cikkszamTxt.requestFocus();
+               /* cikkszamTxt.setEnabled(true);
+                cikkszamTxt.requestFocus();*/
 
         }
     }
@@ -273,7 +287,7 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setText("");
         megjegyzesTxt.setText("");
         internalNameTxt.setText("");
-        cikkszamTxt.setEnabled(false);
+        //cikkszamTxt.setEnabled(false);
 
 
     }
@@ -317,6 +331,26 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetFocus1()
     {
+        cikkszamTxt.setFocusable(true);
+        cikkszamTxt.setEnabled(true);
         cikkszamTxt.requestFocus();
+    }
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
+            mPattern=Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher=mPattern.matcher(dest);
+            if(!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 }

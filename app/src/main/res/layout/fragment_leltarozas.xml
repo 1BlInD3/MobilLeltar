@@ -5,7 +5,6 @@
     android:id="@+id/leltarProgressBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
     android:focusable="false"
     tools:context=".Fragments.LeltarozasFragment">
 
@@ -66,7 +65,7 @@
         android:id="@+id/cikkszamText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
+        android:inputType="number"
         android:layout_marginStart="13dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
