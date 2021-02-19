@@ -1,10 +1,12 @@
 package com.example.mobilleltar.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.mobilleltar.Activities.MainActivity;
@@ -22,8 +24,10 @@ public class CikklekerdezesFragment extends Fragment {
     private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
     private Connection connection;
     private TextView lekerdezesTxt;
+    private EditText editText;
     private String sql ="";
     private MainActivity mainActivity;
+    private SetItemOrBinManually setItemOrBinManually;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +59,11 @@ public class CikklekerdezesFragment extends Fragment {
         return fragment;
     }
 
+    public interface SetItemOrBinManually
+    {
+        void setValue (String value);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,12 +78,19 @@ public class CikklekerdezesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
-
+        editText = (EditText)view.findViewById(R.id.binOrItemText);
+        editText.setSelection(editText.getText().length());
+        editText.requestFocus();
+        editText.setOnClickListener(v -> {
+            //editText.setSelection(editText.getText().length());
+           // editText.requestFocus();
+            setItemOrBinManually.setValue(String.valueOf(editText.getText()).trim());
+            editText.setSelection(editText.getText().length());
+            editText.requestFocus();
+        });
        // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
        // StrictMode.setThreadPolicy(policy);
-
-
-        lekerdezesTxt = (TextView)view.findViewById(R.id.lekerdezesText);
+        //lekerdezesTxt = (TextView)view.findViewById(R.id.lekerdezesText);
        // mainActivity = (MainActivity)getActivity();
        // mainActivity.LoadPolcResults();
 
@@ -82,77 +98,21 @@ public class CikklekerdezesFragment extends Fragment {
     }
     public void SetBinOrItem(String code)
     {
-        lekerdezesTxt.setText(code);
+        editText.setText(code);
+        editText.setSelection(editText.getText().length());
+        editText.requestFocus();
     }
 
-    /*
-    private boolean LoadPolc(String code)
-    {
-        try {
-            Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.polcSql),code);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next() == false)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-        } catch (Exception e){
-            Toast.makeText(getContext(),"",Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    private boolean LoadCikk(String code)
-    {
-        try {
-            Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.cikkSql),code);
-            ResultSet resultSet = statement.executeQuery(sql);
-            if(resultSet.next() == false)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-        } catch (Exception e){
-            Toast.makeText(getContext(),"Nem bírja az STD01-et",Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    private boolean Connected(String url)
-    {
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connection = DriverManager.getConnection(url);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        if(connection != null)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof SetItemOrBinManually)
         {
-           // Toast.makeText(getContext(),"10mp alatt megvolt",Toast.LENGTH_LONG).show();
-            return true;
+            setItemOrBinManually = (SetItemOrBinManually) context;
         }
         else
         {
-            Toast.makeText(getContext(),"10mp alatt nem volt meg ",Toast.LENGTH_LONG).show();
-            return false;
+            throw new RuntimeException(context.toString() + "must implement");
         }
     }
-    private void RunSql(String code) throws SQLException {
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        connection = DriverManager.getConnection(URL);
-    }*/
 }

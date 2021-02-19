@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardBackgroundColor="@color/header">
+        app:cardBackgroundColor="@color/headerszurke">
 
         <TextView
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
         android:layout_width="80dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
-        app:cardBackgroundColor="@color/header"
+        app:cardBackgroundColor="@color/headerszurke"
         app:cardCornerRadius="1dp"
         app:layout_constraintStart_toEndOf="@+id/cardView7"
         app:layout_constraintTop_toTopOf="@+id/cardView7">
@@ -58,7 +58,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@color/header"
+        app:cardBackgroundColor="@color/headerszurke"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView8"
         app:layout_constraintTop_toTopOf="@+id/cardView8">
@@ -79,7 +79,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@color/header"
+        app:cardBackgroundColor="@color/headerszurke"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView9"
         app:layout_constraintTop_toTopOf="@+id/cardView9">
@@ -100,7 +100,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="2dp"
-        app:cardBackgroundColor="@color/header"
+        app:cardBackgroundColor="@color/headerszurke"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView10"
         app:layout_constraintTop_toTopOf="@+id/cardView10">
@@ -122,7 +122,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginBottom="2dp"
         android:layout_marginEnd="4dp"
-        app:cardBackgroundColor="@color/header"
+        app:cardBackgroundColor="@color/headerszurke"
         app:cardCornerRadius="2dp"
         app:layout_constraintStart_toEndOf="@+id/cardView11"
         app:layout_constraintTop_toTopOf="@+id/cardView10">

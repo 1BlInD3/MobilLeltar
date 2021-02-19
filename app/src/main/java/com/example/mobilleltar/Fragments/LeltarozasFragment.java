@@ -130,10 +130,11 @@ public class LeltarozasFragment extends Fragment {
                     })
                     .setPositiveButton("Nem", (dialog, which) -> {
                         mainActivity.CloseRakhely("1");
+                        mainActivity.isPolc=false;
                         ClearPolc();
                         ClearAllViews();
+                        //setTableView.isClosed();
                         mainActivity.mainFragment.ClearItems();
-                        mainActivity.isPolc=false;
                     });
             builder.create();
             builder.show();
@@ -332,7 +333,7 @@ public class LeltarozasFragment extends Fragment {
     public void SetFocus1()
     {
         cikkszamTxt.setFocusable(true);
-        cikkszamTxt.setEnabled(true);
+        //cikkszamTxt.setEnabled(true);
         cikkszamTxt.requestFocus();
     }
     public class DecimalDigitsInputFilter implements InputFilter {
