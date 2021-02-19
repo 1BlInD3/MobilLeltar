@@ -891,9 +891,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         if(!polcResult.next())
                         {
                             //megnézem hogy üres -e a polc
-                            InsertLocked();
-                            isEmpty = true;
-                            StopAnimation();
+                            //if(!(polcResult.getInt("Statusz") ==2)) {
+                                InsertLocked();
+                                isEmpty = true;
+                                StopAnimation();
+
+
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {

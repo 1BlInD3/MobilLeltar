@@ -123,7 +123,7 @@ public class LeltarozasFragment extends Fragment {
                         ClearAllViews();
                         mainActivity.mainFragment.ClearItems();
                         mainActivity.isPolc=false;
-                        setTableView.isClosed();
+                        //setTableView.isClosed();
                         cikkszamTxt.setFocusable(false);
                         mennyisegTxt.setFocusable(false);
                         megjegyzesTxt.setFocusable(false);
