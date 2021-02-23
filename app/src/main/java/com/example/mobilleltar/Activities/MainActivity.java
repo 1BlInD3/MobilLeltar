@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.example.mobilleltar.DataItems.CikkItems;
+import com.example.mobilleltar.DataItems.Item;
 import com.example.mobilleltar.DataItems.PolcItems;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView {
+public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView, CikklekerdezesFragment.SetItemOrBinManually {
 
     /*
     *
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     * tizedes jel az pont kk
     * cikkszám kézzel felvitellel kk
     * milliónál nem lehet nagyobb a mennyiség(6számjegy+2tizedes) kk
-    * layoutok (jobban látszódjon a fevlitel) mint a text box
-    * leszedni a többi szart ha lefut az onPaused és van cikk infó
-    *
+    * layoutok (jobban látszódjon a fevlitel) mint a text box kk
+    * leszedni a többi szart ha lefut az onPaused és van cikk infó  kk
+    * kézi bevitel a 3as opciónál is kk
     * */
 
     private static final String TAG = "MainActivity";
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private String polc ="";
     public String megjegyzes;
     private int position;
+    private boolean onResume = false;
+    private boolean isClosed = false;
 
 
     @Override
@@ -244,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 CloseOccupied();
              }
           }
-          if(keyCode == 21 && !polc.isEmpty())//if(keyCode == 8 || keyCode == 9 || keyCode == 10|| keyCode == 11 || keyCode == 12 || keyCode == 13 || keyCode == 14 || keyCode == 15 || keyCode == 16)
+          if(keyCode == 21 && onResume)//if(keyCode == 8 || keyCode == 9 || keyCode == 10|| keyCode == 11 || keyCode == 12 || keyCode == 13 || keyCode == 14 || keyCode == 15 || keyCode == 16)
           {
               try {
                   tabbedFragment.SetFocus1();
@@ -279,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 if(!tabbedFragment.IsMainFragment()) {
                     PolcThread(barcodeData);
                     tabbedFragment.GetID(DolgKod);
+                    onResume = false;
                 }
             }
             else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
@@ -287,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 pi.clear();
                 ci.clear();
                 cikklekerdezesFragment.SetBinOrItem(barcodeData);
-                SQL();
+                SQL(barcodeData);
             }
         });
     }
@@ -326,6 +330,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             tabbedFragment.ClearAllViewsAndPolc();
             tabbedFragment.SetEnabledFalse();
             ShowDialog("Újra be kell olvasnod a leltározandó polcot");
+            SetCikkFocus();
+            isClosed = false;
+
         }
         isPolc = false;
 
@@ -340,10 +347,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         try
         {
-            CloseOccupied();
-            tabbedFragment.updateTabView(0);
-            mainFragment.ClearItems();
-            tabbedFragment.ClearAllViewsAndPolc();
+            if(!isClosed) {
+                CloseOccupied();
+                tabbedFragment.updateTabView(0);
+                mainFragment.ClearItems();
+                tabbedFragment.ClearAllViewsAndPolc();
+                onResume = true;
+            }
+
+            //polc = "";
         }catch (Exception e)
         {
             Log.d(TAG, "onPause: nem írta fölül");
@@ -411,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             pi.clear();
             ci.clear();
             cikklekerdezesFragment.SetBinOrItem(decodedData);
-            SQL();
+            SQL(barcodeData);
             cikklekerdezesFragment.onDestroy();
         }
     }
@@ -438,14 +450,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     @Override
     public void isClosed() {
-        polc = "";
+        isClosed = true;
+    }
+
+    @Override
+    public void setValue(String value) {
+        LoadEmptyFragment();
+        pi.clear();
+        ci.clear();
+        SQL(value);
     }
 
     class SqlRunnable implements Runnable
     {
+        String barcode;
+        SqlRunnable (String code)
+        {
+            barcode = code;
+        }
         @Override
         public void run() {
-                ConnectSql(barcodeData);
+                ConnectSql(barcode);
             }
         }
     class SQLCheckrights implements Runnable
@@ -477,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    Runnable checkPolc = new Runnable() {
+   /* Runnable checkPolc = new Runnable() {
         @Override
         public void run() {
             try {
@@ -487,7 +512,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     };
-
+*/
     class CheckPolc implements Runnable
     {
         String itemCode;
@@ -690,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
-   class UpdateListItems implements Runnable
+  /* class UpdateListItems implements Runnable
     {
         int position;
         UpdateListItems(int a)
@@ -701,7 +726,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         public void run() {
             handler.post(() -> tabbedFragment.UpdateTable(position));
         }
-    }
+    }*/
    Runnable setLocked = () -> {
        try {
            CloseVacant("1");
@@ -742,12 +767,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     Runnable offFocus = new Runnable() {
         @Override
         public void run() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                  tabbedFragment.SetFocusOff();
-                }
-            });
+            handler.post(() -> tabbedFragment.SetFocusOff());
         }
     };
 
@@ -903,15 +923,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             //isPolc = true;
                             CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
-
-                            if(!polcResult.next())
-                            {
-                                Log.d(TAG, "PolcCheck: üres a polc");
-                            }
-                            else {
+                            try{
                                 do {
-                                    SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"),
-                                            polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                    SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
                                 } while (polcResult.next());
                                 StopAnimation();
                                 if (!isEmpty) {
@@ -921,6 +935,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                     Log.d(TAG, "PolcCheck: van rajta valami");
                                     ChangeView(1);
                                 }
+                            }
+                            catch (Exception e)
+                            {
+                                Log.d(TAG, "PolcCheck: üres a polc");
                             }
                         }
                         else if(polcResult.getInt("Statusz")==2)
@@ -1229,9 +1247,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    public void SQL()
+    public void SQL(String code)
     {
-        SqlRunnable sqlRunnable = new SqlRunnable();
+        SqlRunnable sqlRunnable = new SqlRunnable(code);
         new Thread(sqlRunnable).start();
     }
     private void CheckRights()

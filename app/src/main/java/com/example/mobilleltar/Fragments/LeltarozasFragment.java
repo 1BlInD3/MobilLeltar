@@ -119,21 +119,27 @@ public class LeltarozasFragment extends Fragment {
                     .setNegativeButton("Igen", (dialog, which) -> {
                        // Toast.makeText(getContext(),"Ide tenni a lezárós részt",Toast.LENGTH_SHORT).show();
                         mainActivity.CloseRakhely("2");
+                        setTableView.isClosed();
                         ClearPolc();
                         ClearAllViews();
                         mainActivity.mainFragment.ClearItems();
                         mainActivity.isPolc=false;
+<<<<<<< HEAD
                         //setTableView.isClosed();
+=======
+>>>>>>> try
                         cikkszamTxt.setFocusable(false);
                         mennyisegTxt.setFocusable(false);
                         megjegyzesTxt.setFocusable(false);
                     })
                     .setPositiveButton("Nem", (dialog, which) -> {
                         mainActivity.CloseRakhely("1");
+                        mainActivity.isPolc=false;
                         ClearPolc();
                         ClearAllViews();
                         mainActivity.mainFragment.ClearItems();
-                        mainActivity.isPolc=false;
+                        //setTableView.isClosed();
+
                     });
             builder.create();
             builder.show();
@@ -288,8 +294,6 @@ public class LeltarozasFragment extends Fragment {
         megjegyzesTxt.setText("");
         internalNameTxt.setText("");
         mennyisegTxt.setEnabled(false);
-
-
     }
 
     @Override
@@ -317,7 +321,6 @@ public class LeltarozasFragment extends Fragment {
     public void EnableViews()
     {
         mennyisegTxt.setEnabled(true);
-        //mennyisegTxt.requestFocus();
         mennyisegTxt.setSelection(mennyisegTxt.getText().length());
         mennyisegTxt.requestFocus();
     }
@@ -332,7 +335,6 @@ public class LeltarozasFragment extends Fragment {
     public void SetFocus1()
     {
         cikkszamTxt.setFocusable(true);
-        cikkszamTxt.setEnabled(true);
         cikkszamTxt.requestFocus();
     }
     public class DecimalDigitsInputFilter implements InputFilter {
@@ -357,4 +359,5 @@ public class LeltarozasFragment extends Fragment {
     {
         cikkszamTxt.setEnabled(false);
     }
+
 }
