@@ -36,6 +36,7 @@ import com.honeywell.aidc.UnsupportedPropertyException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -770,7 +771,29 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.SetFocusOff());
         }
     };
+   Runnable focusOn = new Runnable() {
+       @Override
+       public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedFragment.SetFocus1();
+                }
+            });
+       }
+   };
 
+   Runnable focusOff = new Runnable() {
+       @Override
+       public void run() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                tabbedFragment.SetFocusOff();
+            }
+        });
+       }
+   };
    private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
        StartAnimation();
        Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -800,8 +823,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                }
            } else if (!resultSet1.next()) {
                StopAnimation();
-               SetCikkFocus();
-               ShowDialog("Nincs a rendszerben");
+               SetMennyFocusOff();
+               FocusOn();
+               //mennyiség fókuszt
+               ShowDialog("Biztos Nincs a rendszerben");
+
            } else {
                if (!isPolc) {
                    StopAnimation();
@@ -832,6 +858,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         {
             Statement statement = connection.createStatement();
             sql = String.format(getResources().getString(R.string.isPolc), code);
+           // sql = getResources().getString(R.string.isPolc);
             ResultSet resultSet = statement.executeQuery(sql);
             if (!resultSet.next())
             {             //Megnézem hogy polc-e
@@ -863,8 +890,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 else if (!resultSet1.next())
                 {
                     StopAnimation();
-                    SetCikkFocus();
+                    SetMennyFocusOff();
+                    FocusOn();
                     ShowDialog("Nincs a rendszerben");
+                   // SetCikkFocus();
                 }
                 else
                 {
@@ -893,7 +922,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     if(isPolc)
                     {
                         StopAnimation();
-                        GetPolc("Cikket vigyél fel");
+                       // GetPolc("Cikket vigyél fel");
+                       // SetCikkFocus();
+                        FocusOn();
+                        ShowDialog("Cikket vigyél fel");
                     }
                     else
                     {
@@ -911,36 +943,37 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         if(!polcResult.next())
                         {
                             //megnézem hogy üres -e a polc
-                            //if(!(polcResult.getInt("Statusz") ==2)) {
                                 InsertLocked();
                                 isEmpty = true;
                                 StopAnimation();
-
-
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
-                            //isPolc = true;
                             CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
-                            try{
-                                do {
-                                    SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
-                                } while (polcResult.next());
-                                StopAnimation();
-                                if (!isEmpty) {
-                                    isContains = true;
-                                    String x = String.format("A(z) %s polcon cikkek vannak", polc);
-                                    ShowDialog(x);
-                                    Log.d(TAG, "PolcCheck: van rajta valami");
-                                    ChangeView(1);
+                                try {
+                                    if(polcResult.next() == false)
+                                    {
+                                        FocusOn();
+                                    }
+                                    else {
+                                        isEmpty = false;
+                                        do {
+                                            SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                        }while (polcResult.next());
+                                        if (!isEmpty) {
+                                            isContains = true;
+                                            String x = String.format("A(z) %s polcon cikkek vannak", polc);
+                                            ShowDialog(x);
+                                            Log.d(TAG, "PolcCheck: van rajta valami");
+                                            ChangeView(1);
+                                        }
+                                    }
+                                    StopAnimation();
+                                } catch (Exception e) {
+                                    Log.d(TAG, "PolcCheck: üres a polc");
                                 }
                             }
-                            catch (Exception e)
-                            {
-                                Log.d(TAG, "PolcCheck: üres a polc");
-                            }
-                        }
                         else if(polcResult.getInt("Statusz")==2)
                         {
                             //Ide ha fullosan zárolt
@@ -951,6 +984,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             ShowDialog(x);
                             isPolc = false;
                             polc = "";
+                            SetCikkFocus();
+                            //tabbedFragment.SetFocusOff();
                         }
                         else if(polcResult.getInt("Statusz")==0)
                         {
@@ -1362,5 +1397,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void SetCikkFocus()
     {
         new Thread(offFocus).start();
+    }
+    public  void FocusOn()
+    {
+        new Thread(focusOn).start();
+    }
+    public void SetMennyFocusOff()
+    {
+        new Thread(focusOff).start();
     }
 }

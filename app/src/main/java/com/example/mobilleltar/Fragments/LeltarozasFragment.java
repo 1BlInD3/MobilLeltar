@@ -124,10 +124,7 @@ public class LeltarozasFragment extends Fragment {
                         ClearAllViews();
                         mainActivity.mainFragment.ClearItems();
                         mainActivity.isPolc=false;
-<<<<<<< HEAD
                         //setTableView.isClosed();
-=======
->>>>>>> try
                         cikkszamTxt.setFocusable(false);
                         mennyisegTxt.setFocusable(false);
                         megjegyzesTxt.setFocusable(false);
@@ -138,7 +135,7 @@ public class LeltarozasFragment extends Fragment {
                         ClearPolc();
                         ClearAllViews();
                         mainActivity.mainFragment.ClearItems();
-                        //setTableView.isClosed();
+                        cikkszamTxt.setEnabled(false);
 
                     });
             builder.create();
@@ -205,6 +202,7 @@ public class LeltarozasFragment extends Fragment {
             mainActivity.WriteItem(String.valueOf(cikkszamTxt.getText()).trim());
             cikkszamTxt.setText(item);
             cikkClick = true;
+            mennyisegTxt.setEnabled(true);
             mennyisegTxt.requestFocus();
             a = item;
         });
@@ -334,6 +332,8 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetFocus1()
     {
+        cikkszamTxt.setEnabled(true);
+        cikkszamTxt.setText("");
         cikkszamTxt.setFocusable(true);
         cikkszamTxt.requestFocus();
     }
@@ -357,7 +357,13 @@ public class LeltarozasFragment extends Fragment {
     }
     public void OffFocus()
     {
+        cikkszamTxt.setText("");
         cikkszamTxt.setEnabled(false);
+        mennyisegTxt.setEnabled(false);
+    }
+    public void OffMennyFocus()
+    {
+        mennyisegTxt.setEnabled(false);
     }
 
 }
