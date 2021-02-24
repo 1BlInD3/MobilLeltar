@@ -79,12 +79,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
-   /* private Handler handler1 = new Handler();
-    private Handler handler2 = new Handler();
-    private Handler handler3 = new Handler();
-    private Handler handler4 = new Handler();
-    private Handler handler5 = new Handler();
-    private Handler handler6 = new Handler();*/
 
     public String DolgKod;
     private boolean hasRight;
@@ -108,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
         loginFragment = new LoginFragment();
         getSupportActionBar().hide();
-       // FullScreencall();
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,loginFragment,"LoginFrag").commit();
 
         IntentFilter filter = new IntentFilter();
@@ -247,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 CloseOccupied();
              }
           }
-          if(keyCode == 21 && onResume)//if(keyCode == 8 || keyCode == 9 || keyCode == 10|| keyCode == 11 || keyCode == 12 || keyCode == 13 || keyCode == 14 || keyCode == 15 || keyCode == 16)
+          if(keyCode == 21 && onResume)
           {
               try {
                   tabbedFragment.SetFocus1();
@@ -766,9 +759,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        Class.forName("net.sourceforge.jtds.jdbc.Driver");
        connection = DriverManager.getConnection(URL);
        if(connection != null) {
-           Statement statement1 = connection.createStatement();
-           sql = String.format(getResources().getString(R.string.cikkSql), code);
-           ResultSet resultSet1 = statement1.executeQuery(sql);
+           PreparedStatement statement1 = connection.prepareStatement(getResources().getString(R.string.cikkSql));
+           statement1.setString(1,code);
+           //Statement statement1 = connection.createStatement();
+           //sql = String.format(getResources().getString(R.string.cikkSql), code);
+           ResultSet resultSet1 = statement1.executeQuery();
            if (code.equals("EMPTY")) //Megnézem hogy cikk-e
            {
                if (!isContains) {
@@ -813,6 +808,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                    StopAnimation();
                }
            }
+           connection.close();
        }
        else
        {
@@ -826,15 +822,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         connection = DriverManager.getConnection(URL);
         if(connection!=null)
         {
-            Statement statement = connection.createStatement();
-            sql = String.format(getResources().getString(R.string.isPolc), code);
-           // sql = getResources().getString(R.string.isPolc);
-            ResultSet resultSet = statement.executeQuery(sql);
+            PreparedStatement statement = connection.prepareStatement(getResources().getString(R.string.isPolc));
+            statement.setString(1,code);
+            ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next())
             {             //Megnézem hogy polc-e
-                Statement statement1 = connection.createStatement();
-                sql = String.format(getResources().getString(R.string.cikkSql),code);
-                ResultSet resultSet1 = statement1.executeQuery(sql);
+                PreparedStatement statement1 = connection.prepareStatement(getResources().getString(R.string.cikkSql));
+                statement1.setString(1,code);
+                ResultSet resultSet1 = statement1.executeQuery();
                 if(code.equals("EMPTY")) //Megnézem hogy cikk-e
                 {
                     if(!isContains) {
@@ -861,9 +856,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     StopAnimation();
                     SetMennyFocusOff();
-                    FocusOn();
+                    //FocusOn();
                     ShowDialog("Nincs a rendszerben");
-                   // SetCikkFocus();
+                    SetCikkFocus();
                 }
                 else
                 {
@@ -993,11 +988,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                     }
                 }
+            connection.close();
         }
         else
         {
             StopAnimation();
-           GetPolc("Nincs hálózat");
+           GetPolc("Hálózati probléma");
         }
     }
 
@@ -1011,9 +1007,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         if(connection != null)
         {
-            Statement statement = connection.createStatement();
-            String rightSql = String.format(getResources().getString(R.string.jog),barcodeData);
-            ResultSet resultSet = statement.executeQuery(rightSql);
+            PreparedStatement statement = connection.prepareStatement(getResources().getString(R.string.jog));
+            statement.setString(1,barcodeData);
+            //Statement statement = connection.createStatement();
+            //String rightSql = String.format(getResources().getString(R.string.jog),barcodeData);
+            ResultSet resultSet = statement.executeQuery();
             if(!resultSet.next())
             {
                 SetText("Nincs jogosultságod belépni");
@@ -1033,6 +1031,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
             }
+            connection.close();
         }
         else
         {
@@ -1046,12 +1045,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         Class.forName("net.sourceforge.jtds.jdbc.Driver");
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null) {
-            Statement statement = connection.createStatement();
-            String sql;
-            sql = String.format(getResources().getString(R.string.insertRow),cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
+            PreparedStatement statement = connection.prepareStatement(getResources().getString(R.string.insertRow));
+            statement.setString(1,cikk);
+            statement.setString(2,mennyiseg);
+            statement.setString(3,dolgozo);
+            statement.setString(4,raktar);
+            statement.setString(5,rakhely);
+            statement.setString(6,megjegyzes);
+            statement.setString(7,nyomtatva);
+            statement.setString(8,status);
+            statement.setString(9,ellStatus);
+            //Statement statement = connection.createStatement();
+           // String sql;
+            //sql = String.format(getResources().getString(R.string.insertRow),cikk,mennyiseg,dolgozo,raktar,rakhely,megjegyzes,nyomtatva,status,ellStatus);
             Log.d(TAG, "InsertRow: "+sql);
-            statement.executeUpdate(sql);
+            statement.executeUpdate();
             StopAnimation();
+            connection.close();
         }
         else
         {
@@ -1070,15 +1080,19 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             String datetime = simpleDateFormat.format(new Date());
             String sql;
             try {
-                sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "3", datetime);
-                Statement rakhEll = connection.createStatement();
-                rakhEll.executeUpdate(sql);
+                PreparedStatement rakhEll = connection.prepareStatement(getResources().getString(R.string.insertRakh));
+                rakhEll.setString(1,polc);
+                rakhEll.setString(2,DolgKod);
+                rakhEll.setString(3,"3");
+                rakhEll.setString(4,datetime);
+                rakhEll.executeUpdate();
                 StopAnimation();
             }
             catch (Exception e)
             {
                 ShowDialog(String.valueOf(e));
             }
+            connection.close();
         }
     }
 
@@ -1088,17 +1102,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           if(connection!=null) {
               SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
               String datetime = simpleDateFormat.format(new Date());
-              String sql;
+              PreparedStatement rakhEll = connection.prepareStatement(getResources().getString(R.string.insertRakh));
               if(isContains)
               {
-                  sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "1", datetime);
+                  rakhEll.setString(1,polc);
+                  rakhEll.setString(2,DolgKod);
+                  rakhEll.setString(3,"1");
+                  rakhEll.setString(4,datetime);
               }
               else {
-                  sql = String.format(getResources().getString(R.string.insertRakh), polc, DolgKod, "0", datetime);
+                  rakhEll.setString(1,polc);
+                  rakhEll.setString(2,DolgKod);
+                  rakhEll.setString(3,"0");
+                  rakhEll.setString(4,datetime);
               }
-              Statement rakhEll = connection.createStatement();
-              rakhEll.executeUpdate(sql);
+              rakhEll.executeUpdate();
               StopAnimation();
+              connection.close();
           }
     }
 
@@ -1109,12 +1129,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         if(connection!=null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String datetime = simpleDateFormat.format(new Date());
-            String sql;
-            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,code,datetime,polc);
-            Statement closeState = connection.createStatement();
+            PreparedStatement closeState = connection.prepareStatement(getResources().getString(R.string.closeRakh));
+            closeState.setString(1,DolgKod);
+            closeState.setString(2,code);
+            closeState.setString(3,datetime);
+            closeState.setString(4,polc);
             try
             {
-                closeState.executeUpdate(sql);
+                closeState.executeUpdate();
                 StopAnimation();
             }
             catch (Exception e)
@@ -1122,6 +1144,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 StopAnimation();
                 ShowDialog(String.valueOf(e));
             }
+            connection.close();
         }
         else
         {
@@ -1137,14 +1160,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String datetime = simpleDateFormat.format(new Date());
             String sql;
-            sql = String.format(getResources().getString(R.string.closeRakh),DolgKod,code,datetime,polc);
-            Statement closeState = connection.createStatement();
+            PreparedStatement closeState = connection.prepareStatement(getResources().getString(R.string.closeRakh));
+            closeState.setString(1,DolgKod);
+            closeState.setString(2,code);
+            closeState.setString(3,datetime);
+            closeState.setString(4,polc);
             try {
-                closeState.executeUpdate(sql);
+                closeState.executeUpdate();
             }catch (Exception e)
             {
                 Log.d(TAG, "CloseVacant: ");
             }
+            connection.close();
         }
         else
             Log.d(TAG, "CloseVacant: Nincs hálózat");
@@ -1188,14 +1215,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         if(connection != null){
             try {
-                Statement statement = connection.createStatement();
-                sql = String.format(getResources().getString(R.string.isPolc), code);
-                ResultSet resultSet = statement.executeQuery(sql);
+                PreparedStatement statement = connection.prepareStatement(getResources().getString(R.string.isPolc));
+                statement.setString(1,code);
+                ResultSet resultSet = statement.executeQuery();
                 if(!resultSet.next())
                 {
-                    Statement statement1 = connection.createStatement();
-                    sql = String.format(getResources().getString(R.string.cikkSql), code);
-                    ResultSet resultSet1 = statement1.executeQuery(sql);
+                    PreparedStatement statement1 = connection.prepareStatement(getResources().getString(R.string.cikkSql));
+                    statement1.setString(1,code);
+                    ResultSet resultSet1 = statement1.executeQuery();
                     if(!resultSet1.next())
                     {
                         EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
@@ -1225,9 +1252,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 }
                 else
                 {
-                    Statement statement2 = connection.createStatement();
-                    sql = String.format(getResources().getString(R.string.polcSql), code);
-                    ResultSet resultSet2 = statement2.executeQuery(sql);
+                    PreparedStatement statement2 = connection.prepareStatement(getResources().getString(R.string.polcSql));
+                    statement2.setString(1,code);
+                    ResultSet resultSet2 = statement2.executeQuery();
                     if(!resultSet2.next())
                     {
                         EmptyFragment emptyFragment = EmptyFragment.newInstance("A polc üres","");
@@ -1246,6 +1273,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
                     }
                 }
+                connection.close();
             }
             catch (Exception e)
             {
