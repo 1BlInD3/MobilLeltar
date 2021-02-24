@@ -191,10 +191,18 @@ public class LeltarozasFragment extends Fragment {
         });
 
         mennyisegTxt.setOnClickListener(v -> {
+            String string = mennyisegTxt.getText().toString();
+            if(!string.matches("")) {
                 megjegyzesTxt.setEnabled(true);
                 megjegyzesTxt.setSelection(megjegyzesTxt.getText().length());
                 megjegyzesTxt.requestFocus();
                 c = String.valueOf(mennyisegTxt.getText());
+            }
+            else
+            {
+                mennyisegTxt.requestFocus();
+            }
+
         });
 
         cikkszamTxt.setOnClickListener(v -> {
@@ -215,18 +223,14 @@ public class LeltarozasFragment extends Fragment {
         if(rakhelyTxt.getText()=="")
         {
             rakhelyTxt.setText(code);
-          /*  cikkszamTxt.setEnabled(true);
-            cikkszamTxt.setFocusable(true);
-            cikkszamTxt.requestFocus();*/
         }
         else if(rakhelyTxt.getText()=="Nem polc" || rakhelyTxt.getText()=="Nincs hálózat" || rakhelyTxt.getText()=="Nincs a rendszerben"||rakhelyTxt.getText()=="A polc üres" || rakhelyTxt.getText() == "A polc nem elérhető")
         {
             rakhelyTxt.setText(code);
-            //cikkszamTxt.setEnabled(false);
         }
         else if(rakhelyTxt.getText()!="")
         {
-                SetFocus1();
+                //SetFocus1();
                 if (rakhelyTxt.getText() == code) {
                     cikkszamTxt.setText("Ez polc, cikket vegyél fel");
                 }
@@ -234,7 +238,6 @@ public class LeltarozasFragment extends Fragment {
                 a = code;
                 mennyisegTxt.setEnabled(true);
                 mennyisegTxt.requestFocus();
-
         }
     }
     public void SetItem(String code)
@@ -245,7 +248,6 @@ public class LeltarozasFragment extends Fragment {
     {
         ID = code;
     }
-
     public void StartProgress()
     {
         progressBar.setVisibility(View.VISIBLE);
@@ -332,9 +334,10 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetFocus1()
     {
-        cikkszamTxt.setFocusable(true);
-        cikkszamTxt.setText("");
         cikkszamTxt.setEnabled(true);
+        //cikkszamTxt.setFocusable(true);
+        cikkszamTxt.setFocusableInTouchMode(true);
+        cikkszamTxt.setText("");
         cikkszamTxt.requestFocus();
     }
     public class DecimalDigitsInputFilter implements InputFilter {

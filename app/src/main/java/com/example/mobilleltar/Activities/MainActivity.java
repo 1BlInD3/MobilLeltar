@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.example.mobilleltar.DataItems.CikkItems;
-import com.example.mobilleltar.DataItems.Item;
 import com.example.mobilleltar.DataItems.PolcItems;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
@@ -503,17 +502,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-   /* Runnable checkPolc = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                PolcCheck(barcodeData);
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-*/
     class CheckPolc implements Runnable
     {
         String itemCode;
@@ -716,18 +704,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
-  /* class UpdateListItems implements Runnable
-    {
-        int position;
-        UpdateListItems(int a)
-        {
-            position = a;
-        }
-        @Override
-        public void run() {
-            handler.post(() -> tabbedFragment.UpdateTable(position));
-        }
-    }*/
+
    Runnable setLocked = () -> {
        try {
            CloseVacant("1");
@@ -884,7 +861,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     StopAnimation();
                     SetMennyFocusOff();
-                    SetCikkFocus();
+                    FocusOn();
                     ShowDialog("Nincs a rendszerben");
                    // SetCikkFocus();
                 }
@@ -912,15 +889,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             else
                 {   //HA MÁR VETTEM FEL POLCOT
                     isEmpty = false;
-                    FocusOn();
                     String raktar = resultSet.getString("InternalName");
                     mRakt = resultSet.getString("WarehouseID");
                     if(isPolc)
                     {
                         StopAnimation();
-                       // GetPolc("Cikket vigyél fel");
-                       // SetCikkFocus();
-                        FocusOn();
                         ShowDialog("Cikket vigyél fel");
                     }
                     else
@@ -942,6 +915,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                 InsertLocked();
                                 isEmpty = true;
                                 StopAnimation();
+                                FocusOn();
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
@@ -954,6 +928,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                         FocusOn();
                                     }
                                     else {
+                                        FocusOn();
                                         isEmpty = false;
                                         polcResult.beforeFirst();
                                         while(polcResult.next()){
@@ -1015,9 +990,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             SetCikkFocus();
                             String x = String.format("A(z) %s polcon jelenleg leltároznak",polc);
                             ShowDialog(x);
-
                         }
-
                     }
                 }
         }
@@ -1249,7 +1222,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         cikkResultFragment.setArguments(bundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,cikkResultFragment).commit();
                     }
-
                 }
                 else
                 {
@@ -1266,7 +1238,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         //itt kell a polcot feltölteni
                         Log.d("HONEY", "Connect: ");
                         do {
-
                             pi.add(new PolcItems(resultSet2.getDouble("BalanceQty"), resultSet2.getString("Unit"), resultSet2.getString("Description1"), resultSet2.getString("Description2"), resultSet2.getString("IntRem"), resultSet2.getString("QcCategory")));
                         }
                         while (resultSet2.next());
