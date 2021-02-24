@@ -332,9 +332,9 @@ public class LeltarozasFragment extends Fragment {
     }
     public void SetFocus1()
     {
-        cikkszamTxt.setEnabled(true);
-        cikkszamTxt.setText("");
         cikkszamTxt.setFocusable(true);
+        cikkszamTxt.setText("");
+        cikkszamTxt.setEnabled(true);
         cikkszamTxt.requestFocus();
     }
     public class DecimalDigitsInputFilter implements InputFilter {
@@ -357,12 +357,8 @@ public class LeltarozasFragment extends Fragment {
     }
     public void OffFocus()
     {
-        cikkszamTxt.setText("");
-        cikkszamTxt.setEnabled(false);
-        mennyisegTxt.setEnabled(false);
-    }
-    public void OffMennyFocus()
-    {
+       // cikkszamTxt.setText("");
+      //  cikkszamTxt.setEnabled(false);
         mennyisegTxt.setEnabled(false);
     }
 

@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             tabbedFragment.ClearAllViewsAndPolc();
             tabbedFragment.SetEnabledFalse();
             ShowDialog("Újra be kell olvasnod a leltározandó polcot");
-            SetCikkFocus();
+            SetCikkFocus();//ide egy másikat ami letiltja
             isClosed = false;
 
         }
@@ -823,15 +823,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                }
            } else if (!resultSet1.next()) {
                StopAnimation();
-               SetMennyFocusOff();
                FocusOn();
+               SetMennyFocusOff();
                //mennyiség fókuszt
-               ShowDialog("Biztos Nincs a rendszerben");
+               ShowDialog("Biztos nincs a rendszerben");
 
            } else {
                if (!isPolc) {
                    StopAnimation();
-                   GetPolc("Nem polc");
+                   SetMennyFocusOff();
+                   FocusOn();
+                   //mennyiség fókuszt
+                   ShowDialog("Biztos nincs a rendszerben");
                } else {
                    mdesc1 = resultSet1.getString("Description1");
                    mdesc2 = resultSet1.getString("Description2");
@@ -900,7 +903,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     if(!isPolc)
                     {
                         StopAnimation();
-                        GetPolc("Nem polc");
+                        SetMennyFocusOff();
+                        ShowDialog("Nem polc");
                     }
                     else
                     {
@@ -917,6 +921,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             else
                 {   //HA MÁR VETTEM FEL POLCOT
                     isEmpty = false;
+                    FocusOn();
                     String raktar = resultSet.getString("InternalName");
                     mRakt = resultSet.getString("WarehouseID");
                     if(isPolc)
@@ -936,7 +941,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         SetRaktar(raktar);
                         Class.forName("net.sourceforge.jtds.jdbc.Driver");
                         connection = DriverManager.getConnection(connectionString);
-                        Statement polcState = connection.createStatement();
+                        Statement polcState = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
                         String a;
                         a = String.format(getResources().getString(R.string.polcStatus),code);
                         ResultSet polcResult = polcState.executeQuery(a);
@@ -949,6 +954,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                         else if(polcResult.getInt("Statusz")==1)
                         {
+                            polcResult.beforeFirst();
                             CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
                                 try {
@@ -958,9 +964,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                     }
                                     else {
                                         isEmpty = false;
-                                        do {
+                                        polcResult.beforeFirst();
+                                        while(polcResult.next()){
                                             SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
-                                        }while (polcResult.next());
+                                        }
                                         if (!isEmpty) {
                                             isContains = true;
                                             String x = String.format("A(z) %s polcon cikkek vannak", polc);
@@ -972,6 +979,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                     StopAnimation();
                                 } catch (Exception e) {
                                     Log.d(TAG, "PolcCheck: üres a polc");
+                                    Log.d(TAG, "PolcCheck: "+ String.valueOf(e));
                                 }
                             }
                         else if(polcResult.getInt("Statusz")==2)
@@ -997,6 +1005,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             String x = String.format("A(z) %s polc üres",polc);
                             ShowDialog(x);
                             isPolc = false;
+                            SetCikkFocus();
                         }
                         else if(polcResult.getInt("Statusz")==3)
                         {
