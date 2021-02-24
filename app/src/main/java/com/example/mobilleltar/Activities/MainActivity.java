@@ -966,7 +966,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                         isEmpty = false;
                                         polcResult.beforeFirst();
                                         while(polcResult.next()){
-                                            SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                            if(!polcResult.getString("Cikkszam").equals("")) {
+                                                SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                            }
+                                            else
+                                            {
+                                                isEmpty = true;
+                                            }
                                         }
                                         if (!isEmpty) {
                                             isContains = true;
