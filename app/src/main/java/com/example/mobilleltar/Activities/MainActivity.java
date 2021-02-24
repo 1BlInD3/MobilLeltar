@@ -768,7 +768,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     Runnable offFocus = new Runnable() {
         @Override
         public void run() {
-            handler.post(() -> tabbedFragment.SetFocusOff());
+            handler.post(() -> tabbedFragment.SetCikkFocusOff());
         }
     };
    Runnable focusOn = new Runnable() {
@@ -1015,9 +1015,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             //GetPolc("A polc nem elérhető");
                             GetPolc("");
                             isPolc = false;
+                            polc = "";
+                            SetCikkFocus();
                             String x = String.format("A(z) %s polcon jelenleg leltároznak",polc);
                             ShowDialog(x);
-                            SetCikkFocus();
+
                         }
 
                     }
