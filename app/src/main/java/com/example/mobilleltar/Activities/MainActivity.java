@@ -80,12 +80,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
-    private Handler handler1 = new Handler();
+   /* private Handler handler1 = new Handler();
     private Handler handler2 = new Handler();
     private Handler handler3 = new Handler();
     private Handler handler4 = new Handler();
     private Handler handler5 = new Handler();
-    private Handler handler6 = new Handler();
+    private Handler handler6 = new Handler();*/
 
     public String DolgKod;
     private boolean hasRight;
@@ -542,14 +542,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
-            handler1.post(() -> tabbedFragment.GetFragmentAtPosition(mCode));
+            handler.post(() -> tabbedFragment.GetFragmentAtPosition(mCode));
         }
     }
     class Animation implements Runnable
     {
         @Override
         public void run() {
-            handler2.post(() -> tabbedFragment.StartSpinning());
+            handler.post(() -> tabbedFragment.StartSpinning());
         }
     }
 
@@ -563,14 +563,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         @Override
         public void run() {
-            handler5.post(() -> tabbedFragment.SetViews(mdesc1,mdesc2,munit));
+            handler.post(() -> tabbedFragment.SetViews(mdesc1,mdesc2,munit));
         }
     }
 
     Runnable Animation2 = new Runnable() {
         @Override
         public void run() {
-            handler3.post(() -> tabbedFragment.StopSpinning());
+            handler.post(() -> tabbedFragment.StopSpinning());
         }
     };
 
@@ -588,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
        @Override
        public void run() {
-           handler6.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me));
+           handler.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me));
        }
    }
 
@@ -609,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     Runnable focus = new Runnable() {
         @Override
         public void run() {
-               handler4.post(() -> tabbedFragment.SetFocus());
+               handler.post(() -> tabbedFragment.SetFocus());
         }
     };
 
@@ -774,24 +774,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
    Runnable focusOn = new Runnable() {
        @Override
        public void run() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedFragment.SetFocus1();
-                }
-            });
+            handler.post(() -> tabbedFragment.SetFocus1());
        }
    };
 
    Runnable focusOff = new Runnable() {
        @Override
        public void run() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                tabbedFragment.SetFocusOff();
-            }
-        });
+        handler.post(() -> tabbedFragment.SetFocusOff());
        }
    };
    private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
@@ -894,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     StopAnimation();
                     SetMennyFocusOff();
-                    FocusOn();
+                    SetCikkFocus();
                     ShowDialog("Nincs a rendszerben");
                    // SetCikkFocus();
                 }
@@ -904,6 +894,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     {
                         StopAnimation();
                         SetMennyFocusOff();
+                        SetCikkFocus();
                         ShowDialog("Nem polc");
                     }
                     else
@@ -958,7 +949,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                             CloseRakh("3");
                             //Ide ha már vettem fel rá valamit
                                 try {
-                                    if(polcResult.next() == false)
+                                    if(!polcResult.next())
                                     {
                                         FocusOn();
                                     }
@@ -969,8 +960,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                             if(!polcResult.getString("Cikkszam").equals("")) {
                                                 SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
                                             }
-                                            else
-                                            {
+                                            else {
                                                 isEmpty = true;
                                             }
                                         }
@@ -985,7 +975,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                     StopAnimation();
                                 } catch (Exception e) {
                                     Log.d(TAG, "PolcCheck: üres a polc");
-                                    Log.d(TAG, "PolcCheck: "+ String.valueOf(e));
+                                    //Log.d(TAG, "PolcCheck: "+ String.valueOf(e));
                                 }
                             }
                         else if(polcResult.getInt("Statusz")==2)
