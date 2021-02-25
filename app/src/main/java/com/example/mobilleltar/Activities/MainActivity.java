@@ -426,7 +426,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         tabbedFragment.PushData(a,b,c,d,e,biz);
     }
 
-
     @Override
     public void setDataToSendAndRemove() {
         tabbedFragment.UpdateTable(position);
@@ -756,6 +755,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         handler.post(() -> tabbedFragment.SetFocusOff());
        }
    };
+   Runnable readItems = () -> {
+       try {
+           ReadItems(polc);
+       } catch (ClassNotFoundException | SQLException e) {
+           e.printStackTrace();
+       }
+   };
+
    private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
        StartAnimation();
        Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -996,6 +1003,48 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         {
             StopAnimation();
            GetPolc("Hálózati probléma");
+        }
+    }
+
+    private void ReadItems (String code) throws ClassNotFoundException, SQLException {
+        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+        connection = DriverManager.getConnection(URL);
+        if(connection != null) {
+            Statement polcState = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String a;
+            a = String.format(getResources().getString(R.string.polcStatus), code);
+            try {
+                ResultSet res = polcState.executeQuery(a);
+
+            if (!res.next()) {
+                //megnézem hogy üres -e a polc
+
+            } else if (res.getInt("Statusz") == 3) {
+                res.beforeFirst();
+                //Ide ha már vettem fel rá valamit
+                try {
+                    if (!res.next()) {
+                    } else {
+                        res.beforeFirst();
+                        while (res.next()) {
+                            if (!res.getString("Cikkszam").equals("")) {
+                                SendList(res.getString("Cikkszam"), res.getString("Description1"), res.getString("Description2"), res.getString("Mennyiseg"), res.getString("Megjegyzes"), res.getString("Bizszam"));
+                            } else {
+
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, "PolcCheck: üres a polc");
+                    //Log.d(TAG, "PolcCheck: "+ String.valueOf(e));
+                }
+            }
+            }catch (Exception ad)
+            {
+                Log.d(TAG, String.valueOf(ad));
+            }
+            connection.close();
         }
     }
 
@@ -1418,5 +1467,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     public void SetMennyFocusOff()
     {
         new Thread(focusOff).start();
+    }
+    public void ReadNewItems()
+    {
+        new Thread(readItems).start();
     }
 }

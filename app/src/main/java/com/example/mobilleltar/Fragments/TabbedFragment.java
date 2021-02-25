@@ -100,6 +100,8 @@ public class TabbedFragment extends Fragment{
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
                 if (viewPager.getCurrentItem() == 1 && page != null) {
+                    mainActivity.mainFragment.ClearItems();
+                    mainActivity.ReadNewItems();
                     Log.d("Tabbed", "onTabSelected: ");
                 }
             }
