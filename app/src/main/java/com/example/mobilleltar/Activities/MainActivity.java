@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private int position;
     private boolean onResume = false;
     private boolean isClosed = false;
+    private String mBiz = "";
 
 
     @Override
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     @Override
     public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes,String biz) {
         tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes);
+        mBiz = biz;
     }
 
     @Override
@@ -1183,12 +1185,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         connection = DriverManager.getConnection(connectionString);
         if(connection!=null)
         {
-            String sql;
+            PreparedStatement updateStatement = connection.prepareStatement(getResources().getString(R.string.updateItem));
+            updateStatement.setString(1,mennyisegUj);
+            updateStatement.setString(2,megjegyzesUj);
+            updateStatement.setString(3,mBiz);
+           /* String sql;
             sql = String.format(getResources().getString(R.string.updateItem),mennyisegUj,megjegyzesUj,mennyisegRegi,cikkszam);
-            Statement updateStatement = connection.createStatement();
+            Statement updateStatement = connection.createStatement();*/
             try
             {
-                updateStatement.executeUpdate(sql);
+                updateStatement.executeUpdate();
                 StopAnimation();
             }
             catch (Exception e)
@@ -1196,6 +1202,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 ShowDialog(String.valueOf(e));
                 StopAnimation();
             }
+            connection.close();
         }
         else
         {
