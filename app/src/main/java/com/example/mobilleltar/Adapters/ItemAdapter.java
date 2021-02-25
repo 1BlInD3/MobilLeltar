@@ -42,6 +42,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         private TextView textView3;
         private TextView textView4;
         private TextView textView5;
+        private TextView textView6;
 
 
         public ItemViewHolder(final View itemView, final OnItemClick listener) {
@@ -52,6 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             textView3 = (TextView)itemView.findViewById(R.id.desc2Header);
             textView4 = (TextView)itemView.findViewById(R.id.mennyisegHeader);
             textView5 = (TextView)itemView.findViewById(R.id.megjegyzesHeader);
+            textView6 = (TextView)itemView.findViewById(R.id.bizszamTxt);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -131,6 +133,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.textView3.setText(currentItem.getmMegnevezes2());
         holder.textView4.setText(currentItem.getmMennyiseg());
         holder.textView5.setText(currentItem.getmMegjegyzes());
+        holder.textView6.setText(currentItem.getmBizsszam());
         if(lastPosition == position)
         {
             selectedItems.get(position,true);

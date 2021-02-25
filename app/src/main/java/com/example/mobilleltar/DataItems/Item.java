@@ -7,14 +7,16 @@ public class Item
     private String mMegnevezes2;
     private String mMennyiseg;
     private String mMegjegyzes;
+    private String mBizsszam;
 
-    public Item(String cikk, String megn1, String megn2,String mennyiseg,String megj)
+    public Item(String cikk, String megn1, String megn2,String mennyiseg,String megj,String bizszam)
     {
         mCikkszam = cikk;
         mMegnevezes1 = megn1;
         mMegnevezes2 = megn2;
         mMennyiseg = mennyiseg;
         mMegjegyzes = megj;
+        mBizsszam = bizszam;
     }
 
     public String getmCikkszam() {
@@ -35,5 +37,9 @@ public class Item
 
     public String getmMegjegyzes() {
         return mMegjegyzes;
+    }
+
+    public String getmBizsszam() {
+        return mBizsszam;
     }
 }

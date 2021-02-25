@@ -56,7 +56,7 @@ public class LeltarozasFragment extends Fragment {
 
     public interface SetTableView
     {
-        void setDataToSend(String a, String b, String c, String d, String e);
+        void setDataToSend(String a, String b, String c, String d, String e, String biz);
         void setDataToSendAndRemove();
         void isEmpty (boolean a);
         void isContains (boolean a);
@@ -153,7 +153,7 @@ public class LeltarozasFragment extends Fragment {
                 String desc1 = String.valueOf(desc1Txt.getText()).trim();
                 String desc2 = String.valueOf(desc2Txt.getText()).trim();
                 mainActivity.UpdateItems(uMenny,uMegj,cikk,mainActivity.megjegyzes);
-                setTableView.setDataToSend(cikk,desc1,desc2,uMenny,uMegj);
+                setTableView.setDataToSend(cikk,desc1,desc2,uMenny,uMegj,"");
                 setTableView.setDataToSendAndRemove();
                 Log.d("LELTAR", "onClick: Ez már update-ra megy");
                 mainActivity.ClearViews();
@@ -169,7 +169,7 @@ public class LeltarozasFragment extends Fragment {
                 d = String.valueOf(rakhelyTxt.getText());
                 megjegyzesTxt.setEnabled(false);
                 mainActivity.ClearViews();
-                setTableView.setDataToSend(a,mDesc1.trim(),mDesc2.trim(),c.trim(),b.trim()); // frissítem a listát
+                setTableView.setDataToSend(a,mDesc1.trim(),mDesc2.trim(),c.trim(),b.trim(),""); // frissítem a listát
                 if(mainActivity.isEmpty)
                 {
                     mainActivity.InsertNewRow(a, c, ID, mainActivity.mRakt, d, b, "n", "1", "0"); //feltöltöm a leltaradatot

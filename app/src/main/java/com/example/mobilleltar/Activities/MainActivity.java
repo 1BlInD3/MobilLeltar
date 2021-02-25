@@ -132,9 +132,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 barcodeReader.addBarcodeListener(MainActivity.this);
             }
         });
-
     }
-
     public void LoadTabbedFragment()
     {
         tabbedFragment = new TabbedFragment();
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
 
     @Override
-    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes) {
+    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes,String biz) {
         tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes);
     }
 
@@ -422,9 +420,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
 
     @Override
-    public void setDataToSend(String a, String b, String c, String d, String e) {
-        tabbedFragment.PushData(a,b,c,d,e);
+    public void setDataToSend(String a, String b, String c, String d, String e,String biz) {
+        tabbedFragment.PushData(a,b,c,d,e,biz);
     }
+
 
     @Override
     public void setDataToSendAndRemove() {
@@ -557,19 +556,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
    class ListCucc implements Runnable
    {
-        String ma,mb,mc,md,me;
-        ListCucc (String a,String b,String c,String d,String e)
+        String ma,mb,mc,md,me,mBiz;
+        ListCucc (String a,String b,String c,String d,String e,String biz)
        {
            ma = a;
            mb = b;
            mc = c;
            md = d;
            me = e;
+           mBiz = biz;
        }
 
        @Override
        public void run() {
-           handler.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me));
+           handler.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me,mBiz));
        }
    }
 
@@ -928,7 +928,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                                         polcResult.beforeFirst();
                                         while(polcResult.next()){
                                             if(!polcResult.getString("Cikkszam").equals("")) {
-                                                SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"));
+                                                SendList(polcResult.getString("Cikkszam"), polcResult.getString("Description1"), polcResult.getString("Description2"), polcResult.getString("Mennyiseg"), polcResult.getString("Megjegyzes"),polcResult.getString("Bizszam"));
                                             }
                                             else {
                                                 isEmpty = true;
@@ -1339,9 +1339,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     {
         new Thread(polcClear).start();
     }
-    public void SendList(String a,String b,String c,String d,String e)
+    public void SendList(String a,String b,String c,String d,String e,String biz)
     {
-        ListCucc listCucc = new ListCucc(a,b,c,d,e);
+        ListCucc listCucc = new ListCucc(a,b,c,d,e,biz);
         new Thread(listCucc).start();
     }
     public void SetRaktar(String raktar)

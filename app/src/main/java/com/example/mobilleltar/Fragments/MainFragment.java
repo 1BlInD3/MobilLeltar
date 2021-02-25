@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
     private TabChange tabChange;
     private Button editBtn;
-    private String a, b, c, d, e;
+    private String a, b, c, d, e,biz;
     private int lastPos = -1;
     private int count = 0;
 
@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
 
     public interface TabChange {
         void tabChangeListener(int index);
-        void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes);
+        void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes, String biz);
         void isUpdate (boolean update);
         void oldMegjegyz (String megjegyzes);
         void getPos (int pos);
@@ -124,7 +124,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 tabChange.tabChangeListener(0);
-                tabChange.loadForChange(a, b, c, d, e);
+                tabChange.loadForChange(a, b, c, d, e,biz);
                 tabChange.isUpdate(true);
                 tabChange.oldMegjegyz(b);
                 tabChange.getPos(lastPos);
@@ -133,6 +133,7 @@ public class MainFragment extends Fragment {
                 c = "";
                 d = "";
                 e = "";
+                biz = "";
             }
         });
 
@@ -147,6 +148,7 @@ public class MainFragment extends Fragment {
                     d = myItems.get(position).getmMegnevezes2().trim();
                     b = String.valueOf(myItems.get(position).getmMennyiseg()).trim();
                     e = myItems.get(position).getmMegjegyzes().trim();
+                    biz = myItems.get(position).getmBizsszam().trim();
                     lastPos = position;
                    // count = 1;
                 } else if (lastPos == position) {
@@ -214,9 +216,9 @@ public class MainFragment extends Fragment {
         super.onDestroy();
         Log.d("VALTAS", "DESTROY");
     }
-    public void AddDataToItems(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes)
+    public void AddDataToItems(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes, String bizszam)
     {
-        myItems.add(new Item(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes));
+        myItems.add(new Item(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes,bizszam));
         adapter.notifyDataSetChanged();
     }
     public void ClearItems()

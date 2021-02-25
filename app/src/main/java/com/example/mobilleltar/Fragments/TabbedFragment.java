@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class TabbedFragment extends Fragment{
     private TextView desc2;
     private EditText cikkszamHeader;
     private EditText megjegyzes;
+    private TextView bizszam;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +95,25 @@ public class TabbedFragment extends Fragment{
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setFocusable(false);
         viewPager.setFocusable(false);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+                if (viewPager.getCurrentItem() == 1 && page != null) {
+                    Log.d("Tabbed", "onTabSelected: ");
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         return view;
     }
 
@@ -108,6 +129,7 @@ public class TabbedFragment extends Fragment{
         desc1 = (TextView)getActivity().findViewById(R.id.desc1);
         desc2 = (TextView)getActivity().findViewById(R.id.desc2);
         megjegyzes = (EditText) getActivity().findViewById(R.id.megjegyzesText);
+
 
         cikkszam.setText(a);
         cikkszamHeader.setText(b);
@@ -196,9 +218,9 @@ public class TabbedFragment extends Fragment{
             ((LeltarozasFragment)page).ClearPolc();
         }
     }
-    public void PushData(String a,String b, String c, String d,String e)
+    public void PushData(String a,String b, String c, String d,String e,String biz)
     {
-        mainActivity.mainFragment.AddDataToItems(a,b,c,d,e);
+        mainActivity.mainFragment.AddDataToItems(a,b,c,d,e,biz);
     }
     public void UpdateTable(int pos)
     {
