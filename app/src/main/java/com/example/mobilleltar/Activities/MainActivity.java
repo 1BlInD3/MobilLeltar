@@ -1015,22 +1015,23 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             a = String.format(getResources().getString(R.string.polcStatus), code);
             try {
                 ResultSet res = polcState.executeQuery(a);
-
             if (!res.next()) {
                 //megnézem hogy üres -e a polc
+                Log.d(TAG, "ReadItems: ");
 
             } else if (res.getInt("Statusz") == 3) {
                 res.beforeFirst();
                 //Ide ha már vettem fel rá valamit
                 try {
                     if (!res.next()) {
+                        Log.d(TAG, "ReadItems: ");
                     } else {
                         res.beforeFirst();
                         while (res.next()) {
                             if (!res.getString("Cikkszam").equals("")) {
                                 SendList(res.getString("Cikkszam"), res.getString("Description1"), res.getString("Description2"), res.getString("Mennyiseg"), res.getString("Megjegyzes"), res.getString("Bizszam"));
                             } else {
-
+                                Log.d(TAG, "ReadItems: ");
                             }
                         }
 
