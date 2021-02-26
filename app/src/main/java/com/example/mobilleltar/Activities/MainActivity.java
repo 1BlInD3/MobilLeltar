@@ -46,17 +46,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.TabChange, BarcodeReader.BarcodeListener, LeltarozasFragment.SetTableView, CikklekerdezesFragment.SetItemOrBinManually {
 
-    /*
-    *
-    * két tizedes mennyiség, üres és negatív nem lehet kk
-    * tizedes jel az pont kk
-    * cikkszám kézzel felvitellel kk
-    * milliónál nem lehet nagyobb a mennyiség(6számjegy+2tizedes) kk
-    * layoutok (jobban látszódjon a fevlitel) mint a text box kk
-    * leszedni a többi szart ha lefut az onPaused és van cikk infó  kk
-    * kézi bevitel a 3as opciónál is kk
-    *
-    * */
 
     private static final String TAG = "MainActivity";
     private TabbedFragment tabbedFragment;
@@ -135,60 +124,28 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         });
     }
-    public void LoadTabbedFragment()
-    {
-        tabbedFragment = new TabbedFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
-    }
-    public void LoadCikklekerdezesFragment()
-    {
-        CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
-    }
-    public void LoadEmptyFragment() {
-        EmptyFragment emptyFragment = new EmptyFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
-    }
 
-    @Override
-    public void tabChangeListener(int index) {
-        tabbedFragment.updateTabView(index);
-    }
+    //OVERRIDE METHODOK
 
-    @Override
-    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes,String biz) {
-        tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes);
-        mBiz = biz;
-    }
+    private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // Bundle b = intent.getExtras();
 
-    @Override
-    public void isUpdate(boolean update) {
-        tabbedFragment.IsUpdate(update);
-        tabbedFragment.EnableViews();
-    }
+            if (action.equals(getResources().getString(R.string.dw_action))) {
 
-    @Override
-    public void oldMegjegyz(String megjegyzes) {
-        this.megjegyzes = megjegyzes;
-    }
+                try {
+                    displayScanResult(intent);
+                } catch (Exception ignored) {
 
-    @Override
-    public void getPos(int pos) {
-        position = pos;
-    }
+                }
+            }
+        }
+    };
 
-    public boolean FragmentName() {
-      FragmentManager manager = getSupportFragmentManager();
-      menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
-      if(menuFragment != null && menuFragment.isVisible())
-      {
-          return  true;
-      }
-      else
-      {
-          return false;
-      }
-  }
+    //SYSTEM OVERRIDE
+
     @Override
     public void onBackPressed() {
         //
@@ -206,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         super.onBackPressed();
     }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
       if(FragmentName())
@@ -252,10 +208,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
       }
       return super.onKeyDown(keyCode, event);
     }
-
     @Override
-    public void onBarcodeEvent(
-            BarcodeReadEvent barcodeReadEvent) {
+    public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
         runOnUiThread(() -> {
             barcodeData = barcodeReadEvent.getBarcodeData();
             FragmentManager manager = getSupportFragmentManager();
@@ -287,25 +241,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         });
     }
-
     @Override
     public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {
         runOnUiThread(() -> Toast.makeText(MainActivity.this, "Nem sikerült leolvasni",
                 Toast.LENGTH_SHORT).show());
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop: ");
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -330,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
 
         Log.d(TAG, "onResume: ");
     }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -368,83 +317,49 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         unregisterReceiver(myBroadcastReceiver);
     }
 
-    private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-           // Bundle b = intent.getExtras();
-
-            if (action.equals(getResources().getString(R.string.dw_action))) {
-
-                try {
-                    displayScanResult(intent);
-                } catch (Exception ignored) {
-
-                }
-            }
-        }
-    };
-
-    private void displayScanResult(Intent initiatingIntent)
-    {
-        decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-
-        FragmentManager manager = getSupportFragmentManager();
-        LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
-        TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
-        CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
-        if(loginFragment != null)
-        {
-            barcodeData = decodedData;
-            loginFragment.SetId(decodedData);
-            CheckRights();
-
-        }
-        else if(tabbedFragment != null && tabbedFragment.isVisible())
-        {
-            barcodeData = decodedData;
-            if(!tabbedFragment.IsMainFragment()) {
-                PolcThread(barcodeData);
-                tabbedFragment.GetID(DolgKod);
-            }
-        }
-        else if (cikklekerdezesFragment != null)
-        {
-            barcodeData = decodedData;
-            LoadEmptyFragment();
-            pi.clear();
-            ci.clear();
-            cikklekerdezesFragment.SetBinOrItem(decodedData);
-            SQL(barcodeData);
-            cikklekerdezesFragment.onDestroy();
-        }
+    // INTERFACEK
+    @Override
+    public void tabChangeListener(int index) {
+        tabbedFragment.updateTabView(index);
     }
-
+    @Override
+    public void loadForChange(String cikkszam, String megnevezes1, String megnevezes2, String mennyiseg, String megjegyzes,String biz) {
+        tabbedFragment.setDataForChange(cikkszam,megnevezes1,megnevezes2,mennyiseg,megjegyzes);
+        mBiz = biz;
+    }
+    @Override
+    public void isUpdate(boolean update) {
+        tabbedFragment.IsUpdate(update);
+        tabbedFragment.EnableViews();
+    }
+    @Override
+    public void oldMegjegyz(String megjegyzes) {
+        this.megjegyzes = megjegyzes;
+    }
+    @Override
+    public void getPos(int pos) {
+        position = pos;
+    }
     @Override
     public void setDataToSend(String a, String b, String c, String d, String e,String biz) {
         tabbedFragment.PushData(a,b,c,d,e,biz);
     }
-
     @Override
     public void setDataToSendAndRemove() {
         tabbedFragment.UpdateTable(position);
     }
-
     @Override
     public void isEmpty(boolean a) {
         isEmpty = a;
     }
-
     @Override
     public void isContains(boolean a) {
         isContains = a;
     }
-
     @Override
     public void isClosed() {
         isClosed = true;
     }
-
     @Override
     public void setValue(String value) {
         LoadEmptyFragment();
@@ -453,8 +368,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         SQL(value);
     }
 
-    class SqlRunnable implements Runnable
-    {
+    // OSZTÁLYOK/RUNNABLE
+
+   class SqlRunnable implements Runnable
+   {
         String barcode;
         SqlRunnable (String code)
         {
@@ -465,8 +382,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 ConnectSql(barcode);
             }
         }
-    class SQLCheckrights implements Runnable
-    {
+   class SQLCheckrights implements Runnable
+   {
         @Override
         public void run() {
             try {
@@ -476,8 +393,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     }
-    class TextChange implements Runnable
-    {
+   class TextChange implements Runnable
+   {
         String mText;
 
         TextChange(String text)
@@ -493,9 +410,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             });
         }
     }
-
-    class CheckPolc implements Runnable
-    {
+   class CheckPolc implements Runnable
+   {
         String itemCode;
         CheckPolc(String code)
         {
@@ -512,9 +428,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     }
-
-    class IsPolc implements Runnable
-    {
+   class IsPolc implements Runnable
+   {
         String mCode;
         IsPolc(String code)
         {
@@ -525,16 +440,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.GetFragmentAtPosition(mCode));
         }
     }
-    class Animation implements Runnable
-    {
+   class Animation implements Runnable
+   {
         @Override
         public void run() {
             handler.post(() -> tabbedFragment.StartSpinning());
         }
     }
-
-    class SetViews implements Runnable
-    {
+   class SetViews implements Runnable
+   {
         SetViews(String desc1, String desc2, String unit)
         {
             mdesc1 = desc1;
@@ -546,14 +460,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.SetViews(mdesc1,mdesc2,munit));
         }
     }
-
-    Runnable Animation2 = new Runnable() {
-        @Override
-        public void run() {
-            handler.post(() -> tabbedFragment.StopSpinning());
-        }
-    };
-
    class ListCucc implements Runnable
    {
         String ma,mb,mc,md,me,mBiz;
@@ -572,7 +478,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            handler.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me,mBiz));
        }
    }
-
    class RaktarName implements Runnable
    {
        String raktarName;
@@ -586,14 +491,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            handler.post(() -> tabbedFragment.SetInternalName(raktarName));
        }
    }
-
-    Runnable focus = new Runnable() {
-        @Override
-        public void run() {
-               handler.post(() -> tabbedFragment.SetFocus());
-        }
-    };
-
    class InsertRows implements Runnable
    {
        String a,b,c,d,e,f,g,h,i;
@@ -619,21 +516,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
-
-   Runnable rakhelyEll = () -> {
-       try {
-           InsertRakhelyEll();
-       } catch (ClassNotFoundException | SQLException e) {
-           e.printStackTrace();
-       }
-   };
-   Runnable polcClear = new Runnable() {
-       @Override
-       public void run() {
-           handler.post(() -> tabbedFragment.ClearAllViewsAndPolc());
-
-       }
-   };
    class Dialog implements Runnable
    {
        String mText;
@@ -648,7 +530,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            handler.post(() -> Dialog(mText));
        }
    }
-
    class CloseRakh implements Runnable
    {
        String code;
@@ -697,17 +578,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            }
        }
    }
-
-   Runnable setLocked = () -> {
-       try {
-           CloseVacant("1");
-       } catch (ClassNotFoundException | SQLException e) {
-           e.printStackTrace();
-       }
-   };
-
    class OnlyItemClass implements Runnable
-    {
+   {
         String itemCode;
         OnlyItemClass(String item)
         {
@@ -722,8 +594,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
         }
     }
-    class SetItem implements Runnable
-    {
+   class SetItem implements Runnable
+   {
         String itemCode;
         SetItem(String code)
         {
@@ -735,7 +607,40 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
     }
 
-    Runnable offFocus = new Runnable() {
+   Runnable setLocked = () -> {
+        try {
+            CloseVacant("1");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    };
+   Runnable focus = new Runnable() {
+        @Override
+        public void run() {
+            handler.post(() -> tabbedFragment.SetFocus());
+        }
+    };
+   Runnable Animation2 = new Runnable() {
+        @Override
+        public void run() {
+            handler.post(() -> tabbedFragment.StopSpinning());
+        }
+    };
+   Runnable rakhelyEll = () -> {
+        try {
+            InsertRakhelyEll();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    };
+   Runnable polcClear = new Runnable() {
+        @Override
+        public void run() {
+            handler.post(() -> tabbedFragment.ClearAllViewsAndPolc());
+
+        }
+    };
+   Runnable offFocus = new Runnable() {
         @Override
         public void run() {
             handler.post(() -> tabbedFragment.SetCikkFocusOff());
@@ -747,7 +652,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             handler.post(() -> tabbedFragment.SetFocus1());
        }
    };
-
    Runnable focusOff = new Runnable() {
        @Override
        public void run() {
@@ -762,7 +666,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
        }
    };
 
-   private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
+   //SQL KEZELÉS
+
+    private void OnlyItem (String code) throws ClassNotFoundException, SQLException {
        StartAnimation();
        Class.forName("net.sourceforge.jtds.jdbc.Driver");
        connection = DriverManager.getConnection(URL);
@@ -1346,6 +1252,72 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
         }
     }
+
+    // MEZEI FÜGGVÉNYEK
+
+    public void LoadTabbedFragment(){
+        tabbedFragment = new TabbedFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,tabbedFragment,"TabbedFrag").addToBackStack(null).commit();
+    }
+
+    public void LoadCikklekerdezesFragment(){
+        CikklekerdezesFragment cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
+    }
+
+    public void LoadEmptyFragment() {
+        EmptyFragment emptyFragment = new EmptyFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+    }
+
+    public boolean FragmentName() {
+        FragmentManager manager = getSupportFragmentManager();
+        menuFragment = (MenuFragment)manager.findFragmentByTag("MenuFrag");
+        if(menuFragment != null && menuFragment.isVisible())
+        {
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void displayScanResult(Intent initiatingIntent){
+        decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+
+        FragmentManager manager = getSupportFragmentManager();
+        LoginFragment loginFragment = (LoginFragment)manager.findFragmentByTag("LoginFrag");
+        TabbedFragment tabbedFragment = (TabbedFragment)manager.findFragmentByTag("TabbedFrag");
+        CikklekerdezesFragment cikklekerdezesFragment = (CikklekerdezesFragment)manager.findFragmentByTag("CikkFrag");
+        if(loginFragment != null)
+        {
+            barcodeData = decodedData;
+            loginFragment.SetId(decodedData);
+            CheckRights();
+
+        }
+        else if(tabbedFragment != null && tabbedFragment.isVisible())
+        {
+            barcodeData = decodedData;
+            if(!tabbedFragment.IsMainFragment()) {
+                PolcThread(barcodeData);
+                tabbedFragment.GetID(DolgKod);
+            }
+        }
+        else if (cikklekerdezesFragment != null)
+        {
+            barcodeData = decodedData;
+            LoadEmptyFragment();
+            pi.clear();
+            ci.clear();
+            cikklekerdezesFragment.SetBinOrItem(decodedData);
+            SQL(barcodeData);
+            cikklekerdezesFragment.onDestroy();
+        }
+    }
+
+    // THREAD FÜGGVÉNYEK
 
     public void SQL(String code)
     {
