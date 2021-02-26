@@ -171,15 +171,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
               {
                   LoadTabbedFragment();
               }
-              else if (keyCode == 9)
+             /* else if (keyCode == 9)
               {
                   Toast.makeText(getApplicationContext(), "Nincs jogosultságod belépni ", Toast.LENGTH_SHORT).show();
-              }
-              else if (keyCode == 10)
+              }*/
+              else if (keyCode == 9)
               {
                   LoadCikklekerdezesFragment();
               }
-              else if(keyCode == 11)
+              else if(keyCode == 10)
               {
                   finishAndRemoveTask();
               }

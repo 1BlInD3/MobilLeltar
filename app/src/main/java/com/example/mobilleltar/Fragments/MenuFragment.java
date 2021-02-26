@@ -78,7 +78,6 @@ public class MenuFragment extends Fragment {
         leltarBtn = (Button) view.findViewById(R.id.leltarButton);
         kilepBtn = (Button)view.findViewById(R.id.kilepButton);
         lekerdezesBtn = (Button)view.findViewById(R.id.lekerdezesButton);
-        ellenorzoBtn = (Button)view.findViewById(R.id.ellenorzoButton);
 
         if(!mParam1)
         {

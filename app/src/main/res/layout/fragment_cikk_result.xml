@@ -8,11 +8,13 @@
     app:layout_constraintStart_toStartOf="parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="false">
+    android:focusableInTouchMode="false">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="false"
+        >
 
         <FrameLayout
             android:id="@+id/polcHeaderFrame"
@@ -22,7 +24,8 @@
             app:layout_constraintBottom_toTopOf="@+id/recycler"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:focusableInTouchMode="false">
 
         </FrameLayout>
 
@@ -33,7 +36,8 @@
             android:scrollbars="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
+            android:focusableInTouchMode="false">
 
         </android.support.v7.widget.RecyclerView>
     </android.support.constraint.ConstraintLayout>

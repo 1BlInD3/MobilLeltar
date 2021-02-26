@@ -111,6 +111,8 @@ public class CikkResultFragment extends Fragment {
 
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setFocusable(false);
+        frameLayout.setFocusable(false);
 
         return view;
     }

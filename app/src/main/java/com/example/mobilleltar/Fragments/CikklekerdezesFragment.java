@@ -71,6 +71,7 @@ public class CikklekerdezesFragment extends Fragment {
         editText.setOnClickListener(v -> {
             setItemOrBinManually.setValue(String.valueOf(editText.getText()).trim());
             editText.setSelection(editText.getText().length());
+            editText.selectAll();
             editText.requestFocus();
         });
 
@@ -80,6 +81,7 @@ public class CikklekerdezesFragment extends Fragment {
     {
         editText.setText(code);
         editText.setSelection(editText.getText().length());
+        editText.selectAll();
         editText.requestFocus();
     }
 
