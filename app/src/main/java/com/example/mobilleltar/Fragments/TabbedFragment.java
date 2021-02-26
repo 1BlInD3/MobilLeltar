@@ -271,5 +271,17 @@ public class TabbedFragment extends Fragment{
             ((LeltarozasFragment)page).OffFocusCikk();
         }
     }
+    public boolean GetPolcText()
+    {
+        Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        if (viewPager.getCurrentItem() == 0 && page != null) {
+            boolean a = ((LeltarozasFragment)page).GetPolcText();
+            if(a)
+                return false;
+            else
+                return true;
+        }
+        return false;
+    }
 
 }

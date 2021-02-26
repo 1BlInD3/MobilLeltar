@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     * layoutok (jobban látszódjon a fevlitel) mint a text box kk
     * leszedni a többi szart ha lefut az onPaused és van cikk infó  kk
     * kézi bevitel a 3as opciónál is kk
+    *
     * */
 
     private static final String TAG = "MainActivity";
@@ -188,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
           return false;
       }
   }
-
     @Override
     public void onBackPressed() {
         //
@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                   Log.d(TAG, "onKeyDown: ");
               }
           }
-
       }
       return super.onKeyDown(keyCode, event);
     }
@@ -835,7 +834,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             statement.setString(1,code);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next())
-            {             //Megnézem hogy polc-e
+            {//Megnézem hogy polc-e
                 PreparedStatement statement1 = connection.prepareStatement(getResources().getString(R.string.cikkSql));
                 statement1.setString(1,code);
                 ResultSet resultSet1 = statement1.executeQuery();
@@ -865,9 +864,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 {
                     StopAnimation();
                     SetMennyFocusOff();
-                    //FocusOn();
+                    if(tabbedFragment.GetPolcText()) {
+                        SetCikkFocus();
+                    } else {
+                        FocusOn();
+                    }
                     ShowDialog("Nincs a rendszerben");
-                    SetCikkFocus();
                 }
                 else
                 {

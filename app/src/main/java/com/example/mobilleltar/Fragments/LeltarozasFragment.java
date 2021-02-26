@@ -107,6 +107,7 @@ public class LeltarozasFragment extends Fragment {
         mennyisegTxt.setFocusable(true);
         progressBar.setVisibility(View.GONE);
         tabbedFragment = new TabbedFragment();
+        cikkszamTxt.setEnabled(false);
         cikkszamTxt.setFocusable(false);
 
         mennyisegTxt.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(9,2)});
@@ -367,6 +368,13 @@ public class LeltarozasFragment extends Fragment {
     {
          cikkszamTxt.setText("");
          cikkszamTxt.setEnabled(false);
+    }
+    public boolean GetPolcText()
+    {
+        if(rakhelyTxt.getText()=="")
+            return false;
+        else
+            return true;
     }
 
 }
