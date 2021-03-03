@@ -69,6 +69,7 @@ public class CikklekerdezesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
         captureButton = view.findViewById(R.id.captureBtn);
+        captureButton.setFocusable(false);
         editText = (EditText)view.findViewById(R.id.binOrItemText);
         editText.setSelection(editText.getText().length());
         editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});

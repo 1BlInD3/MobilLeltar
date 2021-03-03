@@ -25,8 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:textAlignment="textEnd"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
+            android:paddingStart="10dp"
             android:paddingEnd="5dp"
             android:textSize="16sp"
             tools:text="ELSO SOR" />
@@ -46,8 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textAlignment="textEnd"
+            android:textAlignment="textStart"
             android:paddingEnd="5dp"
+            android:paddingStart="10dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="ELSO SOR" />
@@ -68,7 +70,8 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:paddingEnd="5dp"
-            android:textAlignment="textEnd"
+            android:paddingStart="10dp"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </android.support.v7.widget.CardView>
@@ -88,7 +91,8 @@
             android:layout_height="match_parent"
             android:maxLines="1"
             android:paddingEnd="5dp"
-            android:textAlignment="textEnd"
+            android:paddingStart="10dp"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </android.support.v7.widget.CardView>
@@ -108,7 +112,8 @@
             android:layout_height="match_parent"
             android:maxLines="1"
             android:paddingEnd="5dp"
-            android:textAlignment="textEnd"
+            android:paddingStart="10dp"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </android.support.v7.widget.CardView>
@@ -129,7 +134,8 @@
             android:layout_height="match_parent"
             android:maxLines="1"
             android:paddingEnd="5dp"
-            android:textAlignment="textEnd"
+            android:paddingStart="10dp"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </android.support.v7.widget.CardView>
