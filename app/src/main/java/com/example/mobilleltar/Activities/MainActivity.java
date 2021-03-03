@@ -1269,6 +1269,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         EmptyFragment emptyFragment = new EmptyFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
     }
+    public void MenuFragment() {
+        MenuFragment menuFragment = MenuFragment.newInstance(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
+    }
 
     public boolean FragmentName() {
         FragmentManager manager = getSupportFragmentManager();

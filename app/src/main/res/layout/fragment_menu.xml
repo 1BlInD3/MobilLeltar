@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fusetech_kek"
+    android:background="@color/pocakszin2"
     tools:context=".Fragments.MenuFragment">
 
     <Button
@@ -14,7 +14,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="20dp"
-        android:background="@android:color/white"
+        android:textColor="@android:color/white"
+        android:background="@drawable/buttn"
         android:text="3. Kilépés"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -28,7 +29,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="20dp"
-        android:background="@android:color/white"
+        android:textColor="@android:color/white"
+        android:background="@drawable/buttn"
         android:text="2. Lekérdezés polcra/cikkre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -42,7 +44,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="20dp"
-        android:background="@android:color/white"
+        android:textColor="@android:color/white"
+        android:background="@drawable/buttn"
         android:text="1. Leltározás"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

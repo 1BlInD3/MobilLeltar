@@ -76,6 +76,7 @@ public class LoginFragment extends Fragment {
 
         megseBtn.setOnClickListener(v -> {
             mainActivity.finishAndRemoveTask();
+            //mainActivity.MenuFragment();
         });
 
         return view;

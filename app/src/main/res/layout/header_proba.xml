@@ -18,7 +18,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
             android:background="@drawable/background_selector"
-            app:cardBackgroundColor="@color/header"
+            app:cardBackgroundColor="@color/pocakszin4"
             app:cardCornerRadius="1dp">
 
             <TextView
@@ -27,7 +27,7 @@
                 android:maxLines="1"
                 android:text="Cikkszám"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
 
@@ -37,7 +37,7 @@
             android:layout_marginLeft="102dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            app:cardBackgroundColor="@color/header"
+            app:cardBackgroundColor="@color/pocakszin4"
             app:cardCornerRadius="1dp">
 
             <TextView
@@ -46,7 +46,7 @@
                 android:maxLines="1"
                 android:text="Megnevezés1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
 
@@ -56,7 +56,7 @@
             android:layout_marginLeft="204dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            app:cardBackgroundColor="@color/header"
+            app:cardBackgroundColor="@color/pocakszin4"
             app:cardCornerRadius="2dp">
 
             <TextView
@@ -65,7 +65,7 @@
                 android:maxLines="1"
                 android:text="Megnevezés2"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
 
@@ -75,7 +75,7 @@
             android:layout_marginLeft="306dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            app:cardBackgroundColor="@color/header"
+            app:cardBackgroundColor="@color/pocakszin4"
             app:cardCornerRadius="2dp">
 
             <TextView
@@ -84,7 +84,7 @@
                 android:maxLines="1"
                 android:text="Mennyiség"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
 
@@ -94,16 +94,15 @@
             android:layout_marginLeft="408dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            app:cardBackgroundColor="@color/header"
-            app:cardCornerRadius="2dp">>
-
+            app:cardBackgroundColor="@color/pocakszin4"
+            app:cardCornerRadius="2dp">
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Megjegyzés"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -112,16 +111,15 @@
             android:layout_marginLeft="510dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            app:cardBackgroundColor="@color/header"
-            app:cardCornerRadius="2dp">>
-
+            app:cardBackgroundColor="@color/pocakszin4"
+            app:cardCornerRadius="2dp">
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Bizszam"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.v7.widget.CardView>
 
