@@ -7,8 +7,10 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobilleltar.Activities.MainActivity;
 import com.example.mobilleltar.R;
@@ -24,6 +26,8 @@ public class CikklekerdezesFragment extends Fragment {
 
     private EditText editText;
     private SetItemOrBinManually setItemOrBinManually;
+    private Button captureButton;
+    private MainActivity mainActivity;
 
     public CikklekerdezesFragment() {
         // Required empty public constructor
@@ -64,17 +68,26 @@ public class CikklekerdezesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
+        captureButton = view.findViewById(R.id.captureBtn);
         editText = (EditText)view.findViewById(R.id.binOrItemText);
         editText.setSelection(editText.getText().length());
         editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         editText.requestFocus();
+        mainActivity = (MainActivity)getActivity();
         editText.setOnClickListener(v -> {
             setItemOrBinManually.setValue(String.valueOf(editText.getText()).trim());
             editText.setSelection(editText.getText().length());
             editText.selectAll();
             editText.requestFocus();
         });
-
+        captureButton.setOnClickListener(v -> {
+           try {
+               mainActivity.ScanCode();
+           }catch (Exception e)
+           {
+               Toast.makeText(view.getContext(),String.valueOf(e),Toast.LENGTH_LONG).show();
+           }
+        });
         return view;
     }
     public void SetBinOrItem(String code)
@@ -97,4 +110,5 @@ public class CikklekerdezesFragment extends Fragment {
             throw new RuntimeException(context.toString() + "must implement");
         }
     }
+
 }
