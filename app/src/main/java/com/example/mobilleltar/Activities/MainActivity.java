@@ -315,6 +315,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         }
         Log.d(TAG, "onDestroy: ");
         unregisterReceiver(myBroadcastReceiver);
+        try {
+            connection.close();
+        }catch (Exception e)
+        {
+            Log.d(TAG, "onDestroy: Connection close failed");
+        }
     }
 
     // INTERFACEK
@@ -722,7 +728,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                    StopAnimation();
                }
            }
-           connection.close();
+         //  connection.close();
        }
        else
        {
@@ -905,7 +911,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         }
                     }
                 }
-            connection.close();
+           // connection.close();
         }
         else
         {
@@ -953,7 +959,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 Log.d(TAG, String.valueOf(ad));
             }
-            connection.close();
+           // connection.close();
         }
     }
 
@@ -991,7 +997,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
                 }
             }
-            connection.close();
+          //  connection.close();
         }
         else
         {
@@ -1021,7 +1027,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             Log.d(TAG, "InsertRow: "+sql);
             statement.executeUpdate();
             StopAnimation();
-            connection.close();
+          //  connection.close();
         }
         else
         {
@@ -1052,7 +1058,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 ShowDialog(String.valueOf(e));
             }
-            connection.close();
+          //  connection.close();
         }
     }
 
@@ -1078,7 +1084,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
               }
               rakhEll.executeUpdate();
               StopAnimation();
-              connection.close();
+             // connection.close();
           }
     }
 
@@ -1104,7 +1110,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 StopAnimation();
                 ShowDialog(String.valueOf(e));
             }
-            connection.close();
+           // connection.close();
         }
         else
         {
@@ -1131,7 +1137,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             {
                 Log.d(TAG, "CloseVacant: ");
             }
-            connection.close();
+          //  connection.close();
         }
         else
             Log.d(TAG, "CloseVacant: Nincs hálózat");
@@ -1160,7 +1166,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                 ShowDialog(String.valueOf(e));
                 StopAnimation();
             }
-            connection.close();
+          //  connection.close();
         }
         else
         {
@@ -1238,7 +1244,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
                     }
                 }
-                connection.close();
             }
             catch (Exception e)
             {
