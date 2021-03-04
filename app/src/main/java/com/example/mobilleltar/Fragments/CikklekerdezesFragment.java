@@ -83,6 +83,7 @@ public class CikklekerdezesFragment extends Fragment {
         });
         captureButton.setOnClickListener(v -> {
            try {
+               mainActivity.LoadEmptyFragment();
                mainActivity.ScanCode();
            }catch (Exception e)
            {

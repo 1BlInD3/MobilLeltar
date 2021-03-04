@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
     private  CikklekerdezesFragment cikklekerdezesFragment;
-
+    private EmptyFragment emptyFragment = new EmptyFragment();
     // public String DolgKod;
  //   private boolean hasRight;
 
@@ -231,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     public void LoadEmptyFragment() {
         EmptyFragment emptyFragment = new EmptyFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+    }
+    public void RemoveFragment()
+    {
+        if(emptyFragment.isVisible())
+        getSupportFragmentManager().beginTransaction().remove(emptyFragment).commit();
     }
 
     // THREAD FÜGGVÉNYEK
