@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            connection.close();
+        }catch (Exception e)
+        {
+            Log.d(TAG, "setValue: Nem fut a connection");
+        }
     }
     @Override
     public void setValue(String value) {
@@ -118,12 +124,6 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
         pi.clear();
         ci.clear();
         SQL(value);
-        try {
-            connection.close();
-        }catch (Exception e)
-        {
-            Log.d(TAG, "setValue: Nem fut a connection");
-        }
     }
 
     // OSZTÁLYOK/RUNNABLE
@@ -144,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
 
 
     private void ConnectSql(String code) {
+        pi.clear();
+        ci.clear();
         PolcResultFragment polcResultFragment = new PolcResultFragment();
         CikkResultFragment cikkResultFragment = new CikkResultFragment();
         Bundle bundle = new Bundle();

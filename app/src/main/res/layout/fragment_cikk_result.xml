@@ -30,12 +30,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/polcRecycler"
             android:layout_width="wrap_content"
-            android:layout_height="300dp"
+            android:layout_height="370dp"
+            android:focusableInTouchMode="false"
             android:scrollbars="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
-            android:focusableInTouchMode="false">
+            app:layout_constraintStart_toStartOf="parent">
 
         </android.support.v7.widget.RecyclerView>
     </android.support.constraint.ConstraintLayout>
