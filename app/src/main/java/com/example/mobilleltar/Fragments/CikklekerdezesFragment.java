@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,27 +71,48 @@ public class CikklekerdezesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cikklekerdezes, container, false);
-        captureButton = view.findViewById(R.id.captureBtn);
-        captureButton.setFocusable(false);
+        ImageView keyboard = view.findViewById(R.id.imageView2);
+        ImageView camera = view.findViewById(R.id.captureView);
+        keyboard.setFocusable(false);
+        camera.setFocusable(false);
         editText = (EditText)view.findViewById(R.id.binOrItemText);
         editText.setSelection(editText.getText().length());
         editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         editText.requestFocus();
         mainActivity = (MainActivity)getActivity();
+
+        camera.setOnClickListener(v -> {
+            try {
+                mainActivity.LoadEmptyFragment();
+                // mainActivity.RemoveFragment();
+                mainActivity.ScanCode();
+            }catch (Exception e)
+            {
+                Toast.makeText(view.getContext(),String.valueOf(e),Toast.LENGTH_LONG).show();
+            }
+        });
+        keyboard.setOnClickListener(v -> {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInputFromWindow(
+                    view.getApplicationWindowToken(),
+                    InputMethodManager.SHOW_FORCED, 0);
+        });
         editText.setOnClickListener(v -> {
             setItemOrBinManually.setValue(String.valueOf(editText.getText()).trim());
             editText.setSelection(editText.getText().length());
             editText.selectAll();
             editText.requestFocus();
-        });
-        captureButton.setOnClickListener(v -> {
-           try {
-               mainActivity.LoadEmptyFragment();
-               mainActivity.ScanCode();
-           }catch (Exception e)
-           {
-               Toast.makeText(view.getContext(),String.valueOf(e),Toast.LENGTH_LONG).show();
-           }
+            try {
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInputFromWindow(
+                        view.getApplicationWindowToken(),
+                        InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            }catch (Exception e)
+            {
+                Log.d("Cikklekerdezes", "onCreateView: ");
+            }
         });
         return view;
     }

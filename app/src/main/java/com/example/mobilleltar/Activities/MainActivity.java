@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.example.mobilleltar.DataItems.CikkItems;
 import com.example.mobilleltar.DataItems.PolcItems;
+import com.example.mobilleltar.Fragments.BlankFragment;
 import com.example.mobilleltar.Fragments.CikkResultFragment;
 import com.example.mobilleltar.Fragments.CikklekerdezesFragment;
 import com.example.mobilleltar.Fragments.EmptyFragment;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     @Override
     public void onResume() {
         super.onResume();
+        //RemoveFragment();
         Log.d(TAG, "onResume: ");
     }
     @Override
@@ -116,8 +118,13 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
         pi.clear();
         ci.clear();
         SQL(value);
+        try {
+            connection.close();
+        }catch (Exception e)
+        {
+            Log.d(TAG, "setValue: Nem fut a connection");
+        }
     }
-
 
     // OSZTÁLYOK/RUNNABLE
 
@@ -206,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
                         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,polcResultFragment,"PolcResultFrag").commit();
                     }
                 }
-                connection.close();
             }
             catch (Exception e)
             {
@@ -235,10 +241,9 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     }
     public void RemoveFragment()
     {
-        if(emptyFragment.isVisible())
-        getSupportFragmentManager().beginTransaction().remove(emptyFragment).commit();
+        BlankFragment blankFragment = new BlankFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,blankFragment).commit();
     }
-
     // THREAD FÜGGVÉNYEK
     public void SQL(String code)
     {
