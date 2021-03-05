@@ -31,6 +31,8 @@
         android:focusable="false"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +82,10 @@
         android:layout_marginEnd="20dp"
         android:background="@drawable/editbuttn"
         android:inputType="number"
-        android:paddingLeft="7dp"
+        android:paddingLeft="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
@@ -119,6 +124,8 @@
         android:inputType="numberDecimal"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toTopOf="@+id/megjegyzesText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -133,6 +140,8 @@
         android:background="@drawable/editbuttn"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"

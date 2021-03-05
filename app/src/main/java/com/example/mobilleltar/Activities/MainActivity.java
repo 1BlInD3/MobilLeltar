@@ -1275,8 +1275,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
     }
     public void MenuFragment() {
-        MenuFragment menuFragment = MenuFragment.newInstance(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment).commit();
+        MenuFragment menuFragment = MenuFragment.newInstance(false);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,menuFragment,"MenuFrag").commit();
     }
 
     public boolean FragmentName() {

@@ -17,10 +17,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="75dp"
-            android:textColor="@android:color/white"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/buttn"
             android:text="Szerkesztés"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

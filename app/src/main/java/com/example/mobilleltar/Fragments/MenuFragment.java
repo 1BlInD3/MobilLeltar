@@ -82,7 +82,7 @@ public class MenuFragment extends Fragment {
         if(!mParam1)
         {
             leltarBtn.setEnabled(false);
-            ellenorzoBtn.setEnabled(false);
+            leltarBtn.setBackgroundResource(R.drawable.disabled);
         }
 
         lekerdezesBtn.setOnClickListener(new View.OnClickListener() {

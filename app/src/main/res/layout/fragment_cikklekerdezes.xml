@@ -42,7 +42,7 @@ tools:context=".Fragments.CikklekerdezesFragment">
 <FrameLayout
     android:id="@+id/cikk_container"
     android:layout_width="0dp"
-    android:layout_height="390dp"
+    android:layout_height="400dp"
     android:focusable="false"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,10 @@ tools:context=".Fragments.CikklekerdezesFragment">
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
+        android:paddingEnd="4dp"
         android:paddingLeft="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lekerdezesText" />
 
