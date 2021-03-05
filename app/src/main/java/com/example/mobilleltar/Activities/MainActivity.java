@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
   //  private String decodedData;
 
     private String URL = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=Fusetech;user=scala_read;password=scala_read;loginTimeout=10";
-    private String connectionString = "jdbc:jtds:sqlserver://10.0.0.11;databaseName=leltar;user=Raktarrendszer;password=PaNNoN0132;loginTimeout=10";
     private Connection connection;
 
     private String sql="";
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
 
     private ArrayList<CikkItems> ci = new ArrayList<>();
     private Handler handler = new Handler();
-    private  CikklekerdezesFragment cikklekerdezesFragment;
+    private CikklekerdezesFragment cikklekerdezesFragment;
     private EmptyFragment emptyFragment = new EmptyFragment();
     // public String DolgKod;
  //   private boolean hasRight;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         LoadCikklekerdezesFragment();
 
     }
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
     public void onBackPressed() {
         //
         super.onBackPressed();
+       // finishAndRemoveTask();
     }
     @Override
     protected void onStart() {
@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
         ci.clear();
         SQL(value);
     }
+
 
     // OSZTÁLYOK/RUNNABLE
 
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements CikklekerdezesFra
 
     public void LoadCikklekerdezesFragment(){
         cikklekerdezesFragment = new CikklekerdezesFragment();//CikklekerdezesFragment.newInstance(barcodeData);//
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").commit();
     }
 
     public void LoadEmptyFragment() {
