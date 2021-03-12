@@ -78,14 +78,14 @@ android:focusable="false">
     app:layout_constraintBottom_toTopOf="@+id/unitCikkText"
     app:layout_constraintStart_toStartOf="parent" />
 
-<TextView
-    android:id="@+id/intRemCikkText"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:text="TextView"
-    android:textColor="@android:color/black"
-    app:layout_constraintBottom_toTopOf="@+id/megjegyzes2CikkText"
-    app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/intRemCikkText"
+        android:layout_width="50dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/megjegyzes2CikkText"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

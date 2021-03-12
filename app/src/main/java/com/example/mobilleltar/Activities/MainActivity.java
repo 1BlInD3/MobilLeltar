@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     private boolean isClosed = false;
     private String mBiz = "";
 
-
+ //2021.03.18 zebra elküldés
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -478,7 +478,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
            me = e;
            mBiz = biz;
        }
-
        @Override
        public void run() {
            handler.post(() -> tabbedFragment.PushData(ma,mb,mc,md,me,mBiz));
