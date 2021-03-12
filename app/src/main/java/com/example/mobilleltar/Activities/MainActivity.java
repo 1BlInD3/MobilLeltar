@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
             else if (cikklekerdezesFragment != null && cikklekerdezesFragment.isVisible())
             {
-                LoadEmptyFragment();
+                LoadEmptyFragment("Várom az eredményt");
                 pi.clear();
                 ci.clear();
                 cikklekerdezesFragment.SetBinOrItem(barcodeData);
@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
     }
     @Override
     public void setValue(String value) {
-        LoadEmptyFragment();
+        LoadEmptyFragment("Várom az eredményt");
         pi.clear();
         ci.clear();
         SQL(value);
@@ -1195,8 +1195,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     ResultSet resultSet1 = statement1.executeQuery();
                     if(!resultSet1.next())
                     {
-                        EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
-                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                       /* EmptyFragment emptyFragment = EmptyFragment.newInstance("Nincs találat","");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
+                        LoadEmptyFragment("");
                     }
                     else
                     {
@@ -1227,8 +1228,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
                     ResultSet resultSet2 = statement2.executeQuery();
                     if(!resultSet2.next())
                     {
-                        EmptyFragment emptyFragment = EmptyFragment.newInstance("A polc üres","");
-                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                        /*EmptyFragment emptyFragment = EmptyFragment.newInstance("A polc üres","");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
+                        LoadEmptyFragment("A poc üres");
                     }
                     else
                     {
@@ -1246,14 +1248,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
             }
             catch (Exception e)
             {
-                EmptyFragment emptyFragment = EmptyFragment.newInstance(String.valueOf(e),"");
-                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+                /*EmptyFragment emptyFragment = EmptyFragment.newInstance(String.valueOf(e),"");
+                getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
+                LoadEmptyFragment(String.valueOf(e));
             }
         }
         else
         {
-            EmptyFragment emptyFragment = EmptyFragment.newInstance("A feldolgozás során hiba történt","");
-            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
+           /* EmptyFragment emptyFragment = EmptyFragment.newInstance("A feldolgozás során hiba történt","");
+            getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();*/
+           LoadEmptyFragment("A feldolgozás során hiba történt");
         }
     }
 
@@ -1269,8 +1273,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_container,cikklekerdezesFragment,"CikkFrag").addToBackStack(null).commit();
     }
 
-    public void LoadEmptyFragment() {
-        EmptyFragment emptyFragment = new EmptyFragment();
+    public void LoadEmptyFragment(String value) {
+        EmptyFragment emptyFragment = EmptyFragment.newInstance(value);
         getSupportFragmentManager().beginTransaction().replace(R.id.cikk_container,emptyFragment).commit();
     }
     public void MenuFragment() {
@@ -1316,7 +1320,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.TabC
         else if (cikklekerdezesFragment != null)
         {
             barcodeData = decodedData;
-            LoadEmptyFragment();
+            LoadEmptyFragment("Várom az eredményt");
             pi.clear();
             ci.clear();
             cikklekerdezesFragment.SetBinOrItem(decodedData);
