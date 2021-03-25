@@ -103,6 +103,7 @@ public class CikklekerdezesFragment extends Fragment {
             editText.setSelection(editText.getText().length());
             editText.selectAll();
             editText.requestFocus();
+
             try {
                 InputMethodManager inputMethodManager =
                         (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);

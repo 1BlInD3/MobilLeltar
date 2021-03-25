@@ -60,7 +60,7 @@
         android:background="@drawable/editbuttn"
         android:ems="10"
         android:inputType="textPersonName"
-        android:paddingLeft="4dp"
+        android:paddingStart="4dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="parent"
